@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "608007490100",
+    "firebase_url": "https://liderfacilities-d080f.firebaseio.com",
+    "project_id": "liderfacilities-d080f",
+    "storage_bucket": "liderfacilities-d080f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:608007490100:android:2c688a8b49587711e25861",
+        "android_client_info": {
+          "package_name": "com.maritooliveira.liderfacilites"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "608007490100-ppgc6qem7cv5p3dr8nt1g05ttll0faf3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.maritooliveira.liderfacilites",
+            "certificate_hash": "3d8bf591aafd586d9dda1f73aabd472b5594962d"
+          }
+        },
+        {
+          "client_id": "608007490100-j87preguq9h64hkd36uqjrkal6in2qf1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRbtdxTcJikLyhi_JZp3Xk7tEQ7dthx-Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "608007490100-j87preguq9h64hkd36uqjrkal6in2qf1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
