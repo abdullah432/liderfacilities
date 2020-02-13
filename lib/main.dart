@@ -1,86 +1,97 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:liderfacilites/screens/login.dart';
+
+import 'models/app_localization.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
- @override
- Widget build(BuildContext context) {
-   return MaterialApp(
-     title: 'Baby Names',
-     home: MyHomePage(),
-   );
- }
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Lider Facilities',
+      // List all of the app's supported locales here
+      supportedLocales: [
+        Locale('en', 'US'),
+        Locale('br', 'BR'),
+        // Locale('br', 'BR'),
+      ],
+      // These delegates make sure that the localization data for the proper language is loaded
+      localizationsDelegates: [
+        // THIS CLASS WILL BE ADDED LATER
+        // A class which loads the translations from JSON files
+        AppLocalizations.delegate,
+        // Built-in localization of basic text for Material widgets
+        GlobalMaterialLocalizations.delegate,
+        // Built-in localization for text direction LTR/RTL
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      // Returns a locale which will be used by the app
+      localeResolutionCallback: (locale, supportedLocales) {
+        // Check if the current device locale is supported
+        for (var supportedLocale in supportedLocales) {
+          if (supportedLocale.languageCode == locale.languageCode &&
+              supportedLocale.countryCode == locale.countryCode) {
+            return supportedLocale;
+          }
+
+          // if (supportedLocale.languageCode == locale?.languageCode ||
+          //     supportedLocale.countryCode == locale?.countryCode) {
+          //   return supportedLocale;
+          // }
+        }
+        // If the locale of the device is not supported, use the first one
+        // from the list (English, in this case).
+        return supportedLocales.first;
+      },
+      home: MyHomePage(),
+    );
+  }
 }
 
 class MyHomePage extends StatefulWidget {
- @override
- _MyHomePageState createState() {
-   return _MyHomePageState();
- }
+  @override
+  _MyHomePageState createState() {
+    return _MyHomePageState();
+  }
 }
 
 class _MyHomePageState extends State<MyHomePage> {
- @override
- Widget build(BuildContext context) {
-   return Scaffold(
-     appBar: AppBar(title: Text('Baby Name Votes')),
-     body: _buildBody(context),
-   );
- }
+  @override
+  void initState() {
+    Future.delayed(const Duration(seconds: 2), () {
+      setState(() {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) {
+          return Login();
+        }));
+      });
+    });
+    super.initState();
+  }
 
- Widget _buildBody(BuildContext context) {
-   return StreamBuilder<QuerySnapshot>(
-     stream: Firestore.instance.collection('bandnames').snapshots(),
-     builder: (context, snapshot) {
-       if (!snapshot.hasData) return LinearProgressIndicator();
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Color.fromRGBO(26, 119, 186, 1),
+      body: _buildBody(context),
+    );
+  }
 
-       return _buildList(context, snapshot.data.documents);
-     },
-   );
- }
-
- Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
-   return ListView(
-     padding: const EdgeInsets.only(top: 20.0),
-     children: snapshot.map((data) => _buildListItem(context, data)).toList(),
-   );
- }
-
- Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
-   final record = Record.fromSnapshot(data);
-
-   return Padding(
-     key: ValueKey(record.name),
-     padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-     child: Container(
-       decoration: BoxDecoration(
-         border: Border.all(color: Colors.grey),
-         borderRadius: BorderRadius.circular(5.0),
-       ),
-       child: ListTile(
-         title: Text(record.name),
-         trailing: Text(record.votes.toString()),
-         onTap: () => record.reference.updateData({'votes': FieldValue.increment(1)}),       ),
-     ),
-   );
- }
-}
-
-class Record {
- final String name;
- final int votes;
- final DocumentReference reference;
-
- Record.fromMap(Map<String, dynamic> map, {this.reference})
-     : assert(map['name'] != null),
-       assert(map['votes'] != null),
-       name = map['name'],
-       votes = map['votes'];
-
- Record.fromSnapshot(DocumentSnapshot snapshot)
-     : this.fromMap(snapshot.data, reference: snapshot.reference);
-
-//  @override
-//  String toString() => "Record<$name:$votes>";
+  Widget _buildBody(BuildContext context) {
+    return Center(
+        child: Container(
+      height: 170.0,
+      width: 170.0,
+      decoration: new BoxDecoration(
+        image: DecorationImage(
+          image: new AssetImage('assets/images/logo.png'),
+          fit: BoxFit.fill,
+        ),
+        shape: BoxShape.circle,
+      ),
+    ));
+  }
 }
