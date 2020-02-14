@@ -10,6 +10,10 @@
     "Signup": " Sign up",
     "Name": "Name",
     "PhoneNumber": "Phone number",
-    "Have an account": "Have an account?"
+    "Have an account": "Have an account?",
+    "Enter Valid Email": "Enter Valid Email",
+    "Name must be more than 2 charater": "Name must be more than 2 charater",
+    "Mobile Number must be of 10 digit": "Mobile Number must be of 10 digit",
+    "Your password need to be atleast 6 characters": "Your password need to be atleast 6 characters"
 
 }

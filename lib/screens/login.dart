@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:liderfacilites/models/app_localization.dart';
+import 'package:liderfacilites/screens/home.dart';
 import 'package:liderfacilites/screens/register.dart';
 
 class Login extends StatefulWidget {
@@ -11,8 +14,13 @@ class Login extends StatefulWidget {
 
 class LoginState extends State<Login> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController emailC = new TextEditingController();
-  TextEditingController pasC = new TextEditingController();
+  // TextEditingController emailC = new TextEditingController();
+  // TextEditingController pasC = new TextEditingController();
+  String _email;
+  String _pass;
+  //error visiblity
+  bool errorVisibility = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,33 +34,36 @@ class LoginState extends State<Login> {
               emailTF(),
               passTF(),
               loginBtn(),
+              errorMessage(),
               orText(),
               fgAccounts(),
               Padding(
                 padding: const EdgeInsets.only(top: 25, bottom: 10),
                 child: Center(
                     child: GestureDetector(
-                      onTap: (){
-                        navigateToRegisterPage();
-                      },
-                      child: RichText(
-                  text: TextSpan(
-                    // text: 'New user?',
-                    text: AppLocalizations.of(context).translate('Newuser'),
-                    style: TextStyle(
-                        color: Colors.black45,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold),
-                    children: <TextSpan>[
-                      TextSpan(
-                        // text: ' Sign up',
-                        text: AppLocalizations.of(context).translate('Signup'),
-                        style:
-                            TextStyle(color: Colors.blueAccent, fontSize: 18),
-                      )
-                    ],
-                  ),
-                ))),
+                        onTap: () {
+                          navigateToRegisterPage();
+                        },
+                        child: RichText(
+                          text: TextSpan(
+                            // text: 'New user?',
+                            text: AppLocalizations.of(context)
+                                .translate('Newuser'),
+                            style: TextStyle(
+                                color: Colors.black45,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold),
+                            children: <TextSpan>[
+                              TextSpan(
+                                // text: ' Sign up',
+                                text: AppLocalizations.of(context)
+                                    .translate('Signup'),
+                                style: TextStyle(
+                                    color: Colors.blueAccent, fontSize: 18),
+                              )
+                            ],
+                          ),
+                        ))),
               )
             ],
           ),
@@ -111,7 +122,10 @@ class LoginState extends State<Login> {
                 // textAlign: TextAlign.center,
                 keyboardType: TextInputType.emailAddress,
                 validator: validateEmail,
-                controller: emailC,
+                // controller: emailC,
+                onSaved: (value) {
+                  _email = value;
+                },
                 decoration: InputDecoration(
                     // hintText: 'Email',
                     hintText: AppLocalizations.of(context).translate('Email'),
@@ -140,14 +154,12 @@ class LoginState extends State<Login> {
                   boxShadow: [BoxShadow(color: Colors.black, blurRadius: 1)]),
               child: TextFormField(
                 // textAlign: TextAlign.center,
-                validator: (input) {
-                  if (input.length < 6) {
-                    return 'Your password need to be atleast 6 characters';
-                  } 
-                  else
-                    return null;
+                validator: validatePassword,
+                // controller: pasC,
+                obscureText: true,
+                onSaved: (value) {
+                  _pass = value;
                 },
-                controller: pasC,
                 decoration: InputDecoration(
                     // hintText: 'Password',
                     hintText:
@@ -174,7 +186,9 @@ class LoginState extends State<Login> {
           color: Color.fromRGBO(26, 119, 186, 1),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
-          onPressed: () {},
+          onPressed: () {
+            validateUser();
+          },
           child: Text(
             // 'Login',
             AppLocalizations.of(context).translate('Login'),
@@ -184,6 +198,20 @@ class LoginState extends State<Login> {
         ),
       ),
     );
+  }
+
+  errorMessage() {
+    return Visibility(
+        visible: errorVisibility,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Center(
+            child: Text(
+              'Invalid Email or Password',
+              style: TextStyle(color: Colors.red, fontSize: 16),
+            ),
+          ),
+        ));
   }
 
   orText() {
@@ -281,10 +309,44 @@ class LoginState extends State<Login> {
       return null;
   }
 
-  void navigateToRegisterPage(){
-    Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) {
-          return Register();
-        }));
+  String validatePassword(String valule) {
+    if (valule.length < 6) {
+      return AppLocalizations.of(context)
+          .translate('Your password need to be atleast 6 characters');
+    } else
+      return null;
+  }
+
+  void navigateToRegisterPage() {
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+      return Register();
+    }));
+  }
+
+  void validateUser() async {
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
+      try {
+        AuthResult result = await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: _email, password: _pass);
+        FirebaseUser user = result.user;
+        if (user.uid != null) {
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) {
+            return HomePage();
+          }));
+        } else {
+          setState(() {
+            errorVisibility = true;
+          });
+          print('error');
+        }
+      } catch (e) {
+        setState(() {
+          errorVisibility = true;
+        });
+        print(e.toString());
+      }
+    }
   }
 }

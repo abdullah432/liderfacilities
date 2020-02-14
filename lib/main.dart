@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
         // from the list (English, in this case).
         return supportedLocales.first;
       },
-      locale: Locale('pt', 'BR'),
+      // locale: Locale('pt', 'BR'),
       home: MyHomePage(),
     );
   }
