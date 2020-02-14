@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:liderfacilites/models/app_localization.dart';
+import 'package:liderfacilites/screens/register.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -8,11 +10,16 @@ class Login extends StatefulWidget {
 }
 
 class LoginState extends State<Login> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  TextEditingController emailC = new TextEditingController();
+  TextEditingController pasC = new TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
+        body: SingleChildScrollView(
+      child: Container(
+        child: Form(
+          key: _formKey,
           child: Column(
             children: <Widget>[
               uperPart(),
@@ -20,28 +27,38 @@ class LoginState extends State<Login> {
               passTF(),
               loginBtn(),
               orText(),
-              f_gAccounts(),
+              fgAccounts(),
               Padding(
-                padding: const EdgeInsets.only(top: 15),
+                padding: const EdgeInsets.only(top: 25, bottom: 10),
                 child: Center(
-                    child: RichText(
+                    child: GestureDetector(
+                      onTap: (){
+                        navigateToRegisterPage();
+                      },
+                      child: RichText(
                   text: TextSpan(
-                    text: 'New user?',
-                    style: TextStyle(color: Colors.black45, fontSize: 18, fontWeight: FontWeight.bold),
+                    // text: 'New user?',
+                    text: AppLocalizations.of(context).translate('Newuser'),
+                    style: TextStyle(
+                        color: Colors.black45,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold),
                     children: <TextSpan>[
                       TextSpan(
-                        text: ' Sign up',
-                        style: TextStyle(color: Colors.blueAccent, fontSize: 18),
+                        // text: ' Sign up',
+                        text: AppLocalizations.of(context).translate('Signup'),
+                        style:
+                            TextStyle(color: Colors.blueAccent, fontSize: 18),
                       )
                     ],
                   ),
-                )),
+                ))),
               )
             ],
           ),
         ),
       ),
-    );
+    ));
   }
 
   uperPart() {
@@ -65,7 +82,8 @@ class LoginState extends State<Login> {
           Expanded(
               flex: 1,
               child: Text(
-                'Login',
+                // 'Login',
+                AppLocalizations.of(context).translate('Login'),
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 22,
@@ -89,10 +107,14 @@ class LoginState extends State<Login> {
                   borderRadius: BorderRadius.circular(25),
                   color: Colors.white,
                   boxShadow: [BoxShadow(color: Colors.black, blurRadius: 1)]),
-              child: TextField(
+              child: TextFormField(
                 // textAlign: TextAlign.center,
+                keyboardType: TextInputType.emailAddress,
+                validator: validateEmail,
+                controller: emailC,
                 decoration: InputDecoration(
-                    hintText: 'Email',
+                    // hintText: 'Email',
+                    hintText: AppLocalizations.of(context).translate('Email'),
                     border: InputBorder.none,
                     fillColor: Colors.blue),
               ),
@@ -116,10 +138,20 @@ class LoginState extends State<Login> {
                   borderRadius: BorderRadius.circular(25),
                   color: Colors.white,
                   boxShadow: [BoxShadow(color: Colors.black, blurRadius: 1)]),
-              child: TextField(
+              child: TextFormField(
                 // textAlign: TextAlign.center,
+                validator: (input) {
+                  if (input.length < 6) {
+                    return 'Your password need to be atleast 6 characters';
+                  } 
+                  else
+                    return null;
+                },
+                controller: pasC,
                 decoration: InputDecoration(
-                    hintText: 'Password',
+                    // hintText: 'Password',
+                    hintText:
+                        AppLocalizations.of(context).translate('Password'),
                     border: InputBorder.none,
                     fillColor: Colors.blue),
               ),
@@ -144,7 +176,8 @@ class LoginState extends State<Login> {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
           onPressed: () {},
           child: Text(
-            'Login',
+            // 'Login',
+            AppLocalizations.of(context).translate('Login'),
             style: TextStyle(
                 fontWeight: FontWeight.bold, fontSize: 17, color: Colors.white),
           ),
@@ -170,7 +203,8 @@ class LoginState extends State<Login> {
               flex: 1,
               child: Center(
                 child: Text(
-                  'OR',
+                  // 'OR',
+                  AppLocalizations.of(context).translate('OR'),
                   style: TextStyle(
                       fontWeight: FontWeight.bold, color: Colors.black26),
                 ),
@@ -188,7 +222,7 @@ class LoginState extends State<Login> {
     );
   }
 
-  f_gAccounts() {
+  fgAccounts() {
     return Padding(
       padding: EdgeInsets.only(top: 1.0),
       child: Container(
@@ -235,5 +269,22 @@ class LoginState extends State<Login> {
             ],
           )),
     );
+  }
+
+  String validateEmail(String value) {
+    Pattern pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regex = new RegExp(pattern);
+    if (!regex.hasMatch(value))
+      return 'Enter Valid Email';
+    else
+      return null;
+  }
+
+  void navigateToRegisterPage(){
+    Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) {
+          return Register();
+        }));
   }
 }

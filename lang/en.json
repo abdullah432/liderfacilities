@@ -1,3 +1,15 @@
 {
-    "nextbutton": "Next"
+    
+    "nextbutton": "Next",
+
+    "Login": "Login",
+    "Email": "Email",
+    "Password": "Password",
+    "OR": "OR",
+    "Newuser": "New user",
+    "Signup": " Sign up",
+    "Name": "Name",
+    "PhoneNumber": "Phone number",
+    "Have an account": "Have an account?"
+
 }

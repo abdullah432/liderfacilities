@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       // List all of the app's supported locales here
       supportedLocales: [
         Locale('en', 'US'),
-        Locale('br', 'BR'),
+        Locale('pt', 'BR'),
         // Locale('br', 'BR'),
       ],
       // These delegates make sure that the localization data for the proper language is loaded
@@ -46,6 +46,7 @@ class MyApp extends StatelessWidget {
         // from the list (English, in this case).
         return supportedLocales.first;
       },
+      locale: Locale('pt', 'BR'),
       home: MyHomePage(),
     );
   }
