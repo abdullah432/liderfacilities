@@ -13,5 +13,16 @@
     "Enter Valid Email": "Digite um email válido",
     "Name must be more than 2 charater": "O nome deve ter mais de 2 caracteres",
     "Mobile Number must be of 10 digit": "O número do celular deve ter 10 dígitos",
-    "Your password need to be atleast 6 characters": "Sua senha precisa ter pelo menos 6 caracteres"
+    "Your password need to be atleast 6 characters": "Sua senha precisa ter pelo menos 6 caracteres",
+    "Logout": "Sair",
+    "EditInfo": "Editar informação",
+    "Explore": "Explorar",
+    "Booking": "Agendamentors",
+    "Saved": "Favoritos",
+    "Account": "Conta",
+    "Switch": "Mode\nPrestador",
+    "My Services": "Meus serviços",
+    "My Payments": "Meus pagamentos",
+    "Language": "Língua",
+    "Become a tasker": "Torne-se um Prestador"
 }

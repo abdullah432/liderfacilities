@@ -1,12 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:liderfacilites/models/setting.dart';
 import 'package:liderfacilites/screens/login.dart';
 
 import 'models/app_localization.dart';
 
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+     static void setLocale(BuildContext context, Locale newLocale) async {
+      MyAppState state =
+           context.findAncestorStateOfType<MyAppState>();
+        state.changeLanguage(newLocale);
+     }
+  @override
+  State<StatefulWidget> createState() {
+    return MyAppState();
+  }
+
+}
+
+class MyAppState extends State<MyApp> {
+  Setting setting = new Setting();
+    Locale _locale;
+
+   changeLanguage(Locale locale) {
+     setState(() {
+      _locale = locale;
+     });
+    }
+
+    @override
+  void initState() {
+    setLanguage();
+    super.initState();
+  }
+
+  setLanguage() async{
+    String selectedLanguage = await setting.getLanguageFromSP();
+    if (selectedLanguage == 'English'){
+      _locale = Locale('en', 'EN');
+    }else {
+      _locale = Locale('pt', 'BR');
+    }
+  }
+    
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -47,6 +85,7 @@ class MyApp extends StatelessWidget {
         return supportedLocales.first;
       },
       // locale: Locale('pt', 'BR'),
+      locale: _locale,
       home: MyHomePage(),
     );
   }
