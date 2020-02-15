@@ -242,9 +242,11 @@ class FourthPageState extends State<FourthPage> {
   }
 
   navigateToEditPage(){
-    Navigator.push(context,
-            MaterialPageRoute(builder: (context) {
-          return EditInfo();
-        }));
+ Navigator.push(
+      context, 
+      PageRouteBuilder(
+        pageBuilder: (context, animation1, animation2) => EditInfo(),
+    ),
+);
   }
 }

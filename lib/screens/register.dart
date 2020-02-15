@@ -63,7 +63,7 @@ class RegisterState extends State<Register> {
                               TextSpan(
                                 // text: ' Sign up',
                                 text: AppLocalizations.of(context)
-                                    .translate('Signup'),
+                                    .translate('Login'),
                                 style: TextStyle(
                                     color: Colors.blueAccent, fontSize: 18),
                               )
@@ -369,13 +369,15 @@ class RegisterState extends State<Register> {
   registerUserInFireStore() async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
+      FirebaseUser user;
       try {
         await _auth
             .createUserWithEmailAndPassword(email: _email, password: _password)
             .then((authData) => {
                   createRecord(authData),
+                  user = authData.user,
                   Navigator.pushReplacement(context,
-                      new MaterialPageRoute(builder: (context) => HomePage()))
+                      new MaterialPageRoute(builder: (context) => HomePage(user)))
                 })
             .catchError((e) => {
               print(e.toString())});
@@ -396,6 +398,8 @@ class RegisterState extends State<Register> {
       'password': _password
 
     });
+
+    
 
     // DocumentReference ref = await databaseReference.collection("books")
     //     .add({

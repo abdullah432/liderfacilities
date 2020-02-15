@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:liderfacilites/models/app_localization.dart';
 import 'package:liderfacilites/screens/userhome/first_page.dart';
@@ -6,15 +7,20 @@ import 'package:liderfacilites/screens/userhome/third_page.dart';
 import 'package:liderfacilites/screens/userhome/fourth_page.dart';
 
 class HomePage extends StatefulWidget {
+  final FirebaseUser user;
+  HomePage(this.user);
   @override
   _HomePageState createState() =>
-      _HomePageState();
+      _HomePageState(user);
 }
 
 class _HomePageState
     extends State<HomePage> {
       static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  
+  FirebaseUser _firebaseUser;
+  _HomePageState(this._firebaseUser);
 
   List<Widget> pages = [
     FirstPage(

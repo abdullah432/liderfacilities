@@ -39,9 +39,15 @@ class MyAppState extends State<MyApp> {
   setLanguage() async{
     String selectedLanguage = await setting.getLanguageFromSP();
     if (selectedLanguage == 'English'){
-      _locale = Locale('en', 'EN');
+      setState(() {
+              _locale = Locale('en', 'EN');
+      });
+      debugPrint('local: '+_locale.toString());
     }else {
-      _locale = Locale('pt', 'BR');
+            setState(() {
+              _locale = Locale('pt', 'BR');
+      });
+       debugPrint('local: '+_locale.toString());
     }
   }
     
