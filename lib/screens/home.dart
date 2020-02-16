@@ -7,11 +7,11 @@ import 'package:liderfacilites/screens/userhome/third_page.dart';
 import 'package:liderfacilites/screens/userhome/fourth_page.dart';
 
 class HomePage extends StatefulWidget {
-  final FirebaseUser user;
-  HomePage(this.user);
+  final useruid;
+  HomePage(this.useruid);
   @override
   _HomePageState createState() =>
-      _HomePageState(user);
+      _HomePageState(useruid);
 }
 
 class _HomePageState
@@ -19,8 +19,8 @@ class _HomePageState
       static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   
-  FirebaseUser _firebaseUser;
-  _HomePageState(this._firebaseUser);
+  var useruid;
+  _HomePageState(this.useruid);
 
   List<Widget> pages = [
     FirstPage(

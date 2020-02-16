@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:liderfacilites/models/auth_provider.dart';
+import 'package:liderfacilites/models/authentication.dart';
 import 'package:liderfacilites/models/setting.dart';
 import 'package:liderfacilites/screens/login.dart';
+import 'package:liderfacilites/screens/rootpage.dart';
 
 import 'models/app_localization.dart';
 
@@ -53,7 +56,7 @@ class MyAppState extends State<MyApp> {
     
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return AuthProvider(auth: Auth(), child: MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Lider Facilities',
       // List all of the app's supported locales here
@@ -93,7 +96,7 @@ class MyAppState extends State<MyApp> {
       // locale: Locale('pt', 'BR'),
       locale: _locale,
       home: MyHomePage(),
-    );
+    ));
   }
 }
 
@@ -111,7 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) {
-          return Login();
+          return RootPage();
         }));
       });
     });
