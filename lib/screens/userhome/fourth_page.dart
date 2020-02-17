@@ -6,6 +6,7 @@ import 'package:liderfacilites/models/auth_provider.dart';
 import 'package:liderfacilites/models/authentication.dart';
 import 'package:liderfacilites/models/setting.dart';
 import 'package:liderfacilites/screens/editInfo.dart';
+import 'package:liderfacilites/screens/servicespage.dart';
 
 class FourthPage extends StatefulWidget {
   FourthPage({Key key}) : super(key: key);
@@ -26,17 +27,25 @@ class FourthPageState extends State<FourthPage> {
 
   //User is singleton
   User _userData = new User();
+  //this value will be assign to tasker button
+  String taskerBtnTxt;
 
   @override
   void initState() {
     language = setting.getLanguage();
-    print('lan: '+language);
     _imageUrl = _userData.imageUrl;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+
+    if (_userData.isTasker) {
+      taskerBtnTxt = AppLocalizations.of(context).translate('Edit My Services');
+    } else {
+      taskerBtnTxt = AppLocalizations.of(context).translate('Become a tasker');
+    }
+
     return Scaffold(
       backgroundColor: Color.fromRGBO(246, 248, 250, 1),
       body: SingleChildScrollView(
@@ -100,8 +109,16 @@ class FourthPageState extends State<FourthPage> {
     return CircleAvatar(
       radius: 35,
       // backgroundColor: Colors.black,
-      child: ClipOval(child: _imageUrl == null ? Image.asset('assets/images/account.png',)
-                :Image.network(_imageUrl,fit: BoxFit.fill, width: 100,)),
+      child: ClipOval(
+          child: _imageUrl == null
+              ? Image.asset(
+                  'assets/images/account.png',
+                )
+              : Image.network(
+                  _imageUrl,
+                  fit: BoxFit.fill,
+                  width: 100,
+                )),
       // backgroundImage: AssetImage('icons/default_profile_idcon.png'),
       // backgroundImage: AssetImage('assets/images/account.png'),
       // child: FadeInImage(image: Image.network(url)),
@@ -161,24 +178,28 @@ class FourthPageState extends State<FourthPage> {
                     topRight: Radius.circular(20))),
             child: Column(
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(right: 15, top: 7),
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      // radius: 20,
-                      backgroundColor: Colors.transparent,
-                      child: Icon(
-                        Icons.account_circle,
-                        size: 30,
-                        color: Colors.blue,
+                GestureDetector(
+                    onTap: () {
+                      navigateToServicePage();
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 15, top: 7),
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          // radius: 20,
+                          backgroundColor: Colors.transparent,
+                          child: Icon(
+                            Icons.account_circle,
+                            size: 30,
+                            color: Colors.blue,
+                          ),
+                        ),
+                        title: Text(
+                          AppLocalizations.of(context).translate('My Services'),
+                          style: TextStyle(color: Colors.black),
+                        ),
                       ),
-                    ),
-                    title: Text(
-                      AppLocalizations.of(context).translate('My Services'),
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                ),
+                    )),
                 Divider(
                   height: 1,
                   thickness: 1,
@@ -218,6 +239,22 @@ class FourthPageState extends State<FourthPage> {
                   //   style: TextStyle(color: Colors.black),
                   // ),
                 ),
+                Divider(
+                  height: 1,
+                  thickness: 1,
+                ),
+                RaisedButton(
+                  onPressed: () {
+                    debugPrint('become tasker');
+                  },
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15)),
+                  color: Color.fromRGBO(26, 119, 186, 1),
+                  child: Text(
+                    taskerBtnTxt,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
               ],
             ),
           ),
@@ -243,6 +280,7 @@ class FourthPageState extends State<FourthPage> {
             newLocale = Locale('pt', 'BR');
           }
           MyApp.setLocale(context, newLocale);
+          debugPrint('before setting');
           setting.setLanguageToSP(value);
         });
       },
@@ -250,21 +288,40 @@ class FourthPageState extends State<FourthPage> {
     ));
   }
 
-  navigateToEditPage(){
- Navigator.push(
-      context, 
+  navigateToEditPage() async {
+    bool result = await Navigator.push(
+      context,
       PageRouteBuilder(
         pageBuilder: (context, animation1, animation2) => EditInfo(),
-    ),
-);
+      ),
+    );
+
+    if (result) {
+      if (this.mounted) {
+        setState(() {
+          //may be data changed
+        });
+      }
+    }
   }
 
   Future<void> _signOut(BuildContext context) async {
     try {
       final BaseAuth auth = AuthProvider.of(context).auth;
       await auth.signOut();
-    } catch (e) {
+    } catch (e) 
+    {
       print(e);
     }
+  }
+
+  navigateToServicePage() {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation1, animation2) => MyServices(),
+      ),
+    );
+    // Navigator.pushNamed(context,"/servicespage");
   }
 }

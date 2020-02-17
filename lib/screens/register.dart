@@ -216,8 +216,6 @@ class RegisterState extends State<Register> {
             },
             obscureText: true,
             decoration: InputDecoration(
-                // hintText: 'Password',
-                
                 hintText: AppLocalizations.of(context).translate('Password'),
                 border: InputBorder.none,
                 fillColor: Colors.blue),
@@ -395,7 +393,8 @@ class RegisterState extends State<Register> {
       'name': _name,
       'email': _email,
       'phonenumber': _phonenumber,
-      'password': _password
+      'password': _password,
+      'istasker': false
 
     });
 

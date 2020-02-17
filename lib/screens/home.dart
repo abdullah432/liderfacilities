@@ -175,7 +175,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   updateUserData(DocumentSnapshot snapshot) async {
-
       debugPrint('before');
       userRecord = User.fromSnapshot(snapshot);
       User user = new User();
@@ -183,24 +182,25 @@ class _HomePageState extends State<HomePage> {
       user.setname(userRecord.name);
       user.setEmail(userRecord.email);
       user.setPhoneNum(userRecord.phoneNumber);
-      user.setImageUrl(userRecord.imageUrl);
-
+      user.setUserState(userRecord.isTasker);
+      if (userRecord.imageUrl != null)
+        user.setImageUrl(userRecord.imageUrl);
   }
 
-  loadCurrentUserData() async {
-    await db
-        .collection('users')
-        .document(useruid)
-        .get()
-        .then((DocumentSnapshot snapshot) {
-      debugPrint('before');
-      userRecord = User.fromSnapshot(snapshot);
-      User user = new User();
-      user.setUID(useruid);
-      user.setname(userRecord.name);
-      user.setEmail(userRecord.email);
-      user.setPhoneNum(userRecord.phoneNumber);
-      user.setImageUrl(userRecord.imageUrl);
-    });
-  }
+  // loadCurrentUserData() async {
+  //   await db
+  //       .collection('users')
+  //       .document(useruid)
+  //       .get()
+  //       .then((DocumentSnapshot snapshot) {
+  //     debugPrint('before');
+  //     userRecord = User.fromSnapshot(snapshot);
+  //     User user = new User();
+  //     user.setUID(useruid);
+  //     user.setname(userRecord.name);
+  //     user.setEmail(userRecord.email);
+  //     user.setPhoneNum(userRecord.phoneNumber);
+  //     user.setImageUrl(userRecord.imageUrl);
+  //   });
+  // }
 }

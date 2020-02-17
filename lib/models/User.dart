@@ -6,6 +6,7 @@ class User {
   int _phonenumber;
   String _imageUrl;
   var _uid;
+  bool _isTasker;
   DocumentReference reference;
 
   //singleton logic
@@ -24,7 +25,8 @@ class User {
         _name = map['name'],
         _email = map['email'],
         _phonenumber = map['phonenumber'],
-        _imageUrl = map['imageurl'];
+        _imageUrl = map['imageurl'],
+        _isTasker = map['istasker'];
 
   User.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data, reference: snapshot.reference);
@@ -49,6 +51,10 @@ class User {
     return _uid;
   }
 
+  get isTasker {
+    return _isTasker;
+  }
+
   void setname(String value) {
     this._name = value;
   }
@@ -65,7 +71,11 @@ class User {
     this._imageUrl = value;
   }
 
-    void setUID(var value) {
+  void setUID(var value) {
     this._uid = value;
+  }
+
+  void setUserState(bool value) {
+    this._isTasker = value;
   }
 }

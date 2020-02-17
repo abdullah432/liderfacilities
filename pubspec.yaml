@@ -53,6 +53,7 @@ flutter:
     - lang/pt.json
     - assets/images/logo.png
     - assets/images/account.png
+    - assets/images/noservice.png
 
   #  - images/a_dot_ham.jpeg
 

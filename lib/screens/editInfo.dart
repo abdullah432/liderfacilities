@@ -41,19 +41,18 @@ class EditInfoState extends State<EditInfo> {
         appBar: AppBar(
           title: Text(AppLocalizations.of(context).translate('EditInfo')),
           actions: <Widget>[
-            Center( child:
-                GestureDetector(
-                      onTap: () {
-                        updateRecord(context);
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Text(
-                            AppLocalizations.of(context).translate('Update'),
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold)),
-                      ),
-                    ))
+            Center(
+                child: GestureDetector(
+              onTap: () {
+                updateRecord(context);
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text(AppLocalizations.of(context).translate('Update'),
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              ),
+            ))
           ],
         ),
         body: Container(
@@ -92,11 +91,20 @@ class EditInfoState extends State<EditInfo> {
                 radius: 70,
                 child: ClipOval(
                   child: _image == null
-                          ? _imageUrl == null? Image.asset(
+                      ? _imageUrl == null
+                          ? Image.asset(
                               'assets/images/account.png',
                             )
-                          : Image.network(_imageUrl, fit: BoxFit.cover, width: 170,)
-                      : Image.file(_image, fit: BoxFit.cover, width: 170,),
+                          : Image.network(
+                              _imageUrl,
+                              fit: BoxFit.cover,
+                              width: 170,
+                            )
+                      : Image.file(
+                          _image,
+                          fit: BoxFit.cover,
+                          width: 170,
+                        ),
                 ))));
   }
 
@@ -231,13 +239,25 @@ class EditInfoState extends State<EditInfo> {
       setState(() {
         progress = true;
       });
-      //first uploadImageToStorage
-      String filename = p.basename(_image.path);
-      StorageReference fstorageRef =
-          FirebaseStorage.instance.ref().child(filename);
-      StorageUploadTask uploadTask = fstorageRef.putFile(_image);
-      StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
-      String downloadUrl = await storageTaskSnapshot.ref.getDownloadURL();
+      //if image is null then we does not need below code
+      if (_image == null) {
+        //first uploadImageToStorage
+        String filename = p.basename(_image.path);
+        StorageReference fstorageRef =
+            FirebaseStorage.instance.ref().child(filename);
+        StorageUploadTask uploadTask = fstorageRef.putFile(_image);
+        StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
+        String downloadUrl = await storageTaskSnapshot.ref.getDownloadURL();
+
+        try {
+          db
+              .collection('users')
+              .document(user.uid)
+              .updateData({'imageurl': downloadUrl});
+        } catch (e) {
+          print(e.toString());
+        }
+      }
 
       //update other info
       if (user.email != emailC.text ||
@@ -254,27 +274,19 @@ class EditInfoState extends State<EditInfo> {
         }
       }
 
-      if (_image != null) {
-        try {
-          db
-              .collection('users')
-              .document(user.uid)
-              .updateData({'imageurl': downloadUrl});
-        } catch (e) {
-          print(e.toString());
-        }
-      }
       progress = false;
       _image = null;
-      Navigator.pop(context);
+      Navigator.pop(context, true);
     }
   }
 
   Future getImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery, imageQuality: 10);
-
-    setState(() {
-      _image = image;
-    });
+    var image = await ImagePicker.pickImage(
+        source: ImageSource.gallery, imageQuality: 10);
+    if (this.mounted) {
+      setState(() {
+        _image = image;
+      });
+    }
   }
 }
