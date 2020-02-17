@@ -1,5 +1,11 @@
+import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:liderfacilites/models/User.dart';
 import 'package:liderfacilites/models/app_localization.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as p;
 
 class EditInfo extends StatefulWidget {
   @override
@@ -9,29 +15,45 @@ class EditInfo extends StatefulWidget {
 }
 
 class EditInfoState extends State<EditInfo> {
+  File _image;
   String _imageUrl;
+  User user = new User();
   //
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController nameC = TextEditingController();
   TextEditingController emailC = TextEditingController();
   TextEditingController phoneC = TextEditingController();
+  //upload imageurl progress bar
+  bool progress = false;
+
+  @override
+  void initState() {
+    nameC.text = user.name;
+    emailC.text = user.email;
+    phoneC.text = user.phoneNumber.toString();
+    _imageUrl = user.imageUrl;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title: Text(AppLocalizations.of(context).translate('EditInfo')),
           actions: <Widget>[
-            Center(
-                child: Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: GestureDetector(
+            Center( child:
+                GestureDetector(
                       onTap: () {
-                        updateRecord();
+                        updateRecord(context);
                       },
-                      child: Text(AppLocalizations.of(context).translate('Update'),
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
-                    )))
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(
+                            AppLocalizations.of(context).translate('Update'),
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold)),
+                      ),
+                    ))
           ],
         ),
         body: Container(
@@ -45,13 +67,15 @@ class EditInfoState extends State<EditInfo> {
                     Padding(
                       padding: const EdgeInsets.only(top: 5),
                       child: Text(
-                        AppLocalizations.of(context).translate('Change Profile'),
+                        AppLocalizations.of(context)
+                            .translate('Change Profile'),
                         style: TextStyle(fontSize: 16),
                       ),
                     ),
                     nameTF(),
                     emailTF(),
                     phoneTF(),
+                    uploadProgressBar(),
                   ],
                 ),
               )),
@@ -60,14 +84,20 @@ class EditInfoState extends State<EditInfo> {
 
   imageView() {
     return Center(
-        child: CircleAvatar(
-      radius: 70,
-      child: _imageUrl == null
-          ? Image.asset(
-              'assets/images/account.png',
-            )
-          : Image.network(_imageUrl, fit: BoxFit.cover),
-    ));
+        child: GestureDetector(
+            onTap: () {
+              getImage();
+            },
+            child: CircleAvatar(
+                radius: 70,
+                child: ClipOval(
+                  child: _image == null
+                          ? _imageUrl == null? Image.asset(
+                              'assets/images/account.png',
+                            )
+                          : Image.network(_imageUrl, fit: BoxFit.cover, width: 170,)
+                      : Image.file(_image, fit: BoxFit.cover, width: 170,),
+                ))));
   }
 
   nameTF() {
@@ -157,6 +187,15 @@ class EditInfoState extends State<EditInfo> {
     );
   }
 
+  uploadProgressBar() {
+    return Visibility(
+        visible: progress,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 30),
+          child: CircularProgressIndicator(),
+        ));
+  }
+
   String validateEmail(String value) {
     Pattern pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
@@ -185,7 +224,57 @@ class EditInfoState extends State<EditInfo> {
   }
 
   //update record in firestore
-  updateRecord(){
-    print('Update record');
+  updateRecord(BuildContext context) async {
+    var db = Firestore.instance;
+    if (_formKey.currentState.validate()) {
+      //start showing upload progress bar
+      setState(() {
+        progress = true;
+      });
+      //first uploadImageToStorage
+      String filename = p.basename(_image.path);
+      StorageReference fstorageRef =
+          FirebaseStorage.instance.ref().child(filename);
+      StorageUploadTask uploadTask = fstorageRef.putFile(_image);
+      StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
+      String downloadUrl = await storageTaskSnapshot.ref.getDownloadURL();
+
+      //update other info
+      if (user.email != emailC.text ||
+          user.phoneNumber != phoneC ||
+          user.name != nameC.text) {
+        try {
+          db.collection('users').document(user.uid).updateData({
+            'name': nameC.text,
+            'email': emailC.text,
+            'phonenumber': int.parse(phoneC.text)
+          });
+        } catch (e) {
+          print(e.toString());
+        }
+      }
+
+      if (_image != null) {
+        try {
+          db
+              .collection('users')
+              .document(user.uid)
+              .updateData({'imageurl': downloadUrl});
+        } catch (e) {
+          print(e.toString());
+        }
+      }
+      progress = false;
+      _image = null;
+      Navigator.pop(context);
+    }
+  }
+
+  Future getImage() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery, imageQuality: 10);
+
+    setState(() {
+      _image = image;
+    });
   }
 }

@@ -3,7 +3,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:liderfacilites/models/auth_provider.dart';
 import 'package:liderfacilites/models/authentication.dart';
 import 'package:liderfacilites/models/setting.dart';
-import 'package:liderfacilites/screens/login.dart';
 import 'package:liderfacilites/screens/rootpage.dart';
 
 import 'models/app_localization.dart';
@@ -95,52 +94,8 @@ class MyAppState extends State<MyApp> {
       },
       // locale: Locale('pt', 'BR'),
       locale: _locale,
-      home: MyHomePage(),
+      home: RootPage(),
     ));
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  @override
-  _MyHomePageState createState() {
-    return _MyHomePageState();
-  }
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  void initState() {
-    Future.delayed(const Duration(seconds: 2), () {
-      setState(() {
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) {
-          return RootPage();
-        }));
-      });
-    });
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color.fromRGBO(26, 119, 186, 1),
-      body: _buildBody(context),
-    );
-  }
-
-  Widget _buildBody(BuildContext context) {
-    return Center(
-        child: Container(
-      height: 170.0,
-      width: 170.0,
-      decoration: new BoxDecoration(
-        image: DecorationImage(
-          image: new AssetImage('assets/images/logo.png'),
-          fit: BoxFit.fill,
-        ),
-        shape: BoxShape.circle,
-      ),
-    ));
-  }
-}

@@ -1,17 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class User {
-  final String _name;
-  final String _email;
-  final int _phonenumber;
-  final String _imageUrl;
-  final DocumentReference reference;
+  String _name;
+  String _email;
+  int _phonenumber;
+  String _imageUrl;
+  var _uid;
+  DocumentReference reference;
 
+  //singleton logic
+  static final User user = User._internal();
+  User._internal();
+  factory User() {
+    return user;
+  }
+
+  //assert mean these fields are manditory, other can be null
   User.fromMap(Map<String, dynamic> map, {this.reference})
       : assert(map['name'] != null),
         assert(map['email'] != null),
         assert(map['phonenumber'] != null),
-        assert(map['imageurl'] != null),
+        // assert(map['imageurl'] != null),
         _name = map['name'],
         _email = map['email'],
         _phonenumber = map['phonenumber'],
@@ -34,5 +43,29 @@ class User {
 
   get imageUrl {
     return _imageUrl;
+  }
+
+  get uid {
+    return _uid;
+  }
+
+  void setname(String value) {
+    this._name = value;
+  }
+
+  void setEmail(String value) {
+    this._email = value;
+  }
+
+  void setPhoneNum(int value) {
+    this._phonenumber = value;
+  }
+
+  void setImageUrl(String value) {
+    this._imageUrl = value;
+  }
+
+    void setUID(var value) {
+    this._uid = value;
   }
 }

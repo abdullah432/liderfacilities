@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:liderfacilites/main.dart';
+import 'package:liderfacilites/models/User.dart';
 import 'package:liderfacilites/models/app_localization.dart';
+import 'package:liderfacilites/models/auth_provider.dart';
+import 'package:liderfacilites/models/authentication.dart';
 import 'package:liderfacilites/models/setting.dart';
 import 'package:liderfacilites/screens/editInfo.dart';
 
 class FourthPage extends StatefulWidget {
-  const FourthPage({Key key}) : super(key: key);
+  FourthPage({Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -18,11 +21,17 @@ class FourthPageState extends State<FourthPage> {
   var languages = ['English', 'Portuguese'];
   String language = 'English';
   Setting setting = new Setting();
+  //
+  String _imageUrl;
+
+  //User is singleton
+  User _userData = new User();
 
   @override
   void initState() {
     language = setting.getLanguage();
     print('lan: '+language);
+    _imageUrl = _userData.imageUrl;
     super.initState();
   }
 
@@ -73,7 +82,7 @@ class FourthPageState extends State<FourthPage> {
   logoutTXT() {
     return GestureDetector(
         onTap: () {
-          print('logout');
+          _signOut(context);
         },
         child: Padding(
           padding: const EdgeInsets.only(right: 15, top: 15),
@@ -87,12 +96,12 @@ class FourthPageState extends State<FourthPage> {
   }
 
   profileImage() {
-    String _imageUrl;
+    // String _imageUrl;
     return CircleAvatar(
       radius: 35,
       // backgroundColor: Colors.black,
-      child:_imageUrl == null ? Image.asset('assets/images/account.png',)
-                :Image.network(_imageUrl,fit: BoxFit.cover),
+      child: ClipOval(child: _imageUrl == null ? Image.asset('assets/images/account.png',)
+                :Image.network(_imageUrl,fit: BoxFit.fill, width: 100,)),
       // backgroundImage: AssetImage('icons/default_profile_idcon.png'),
       // backgroundImage: AssetImage('assets/images/account.png'),
       // child: FadeInImage(image: Image.network(url)),
@@ -102,7 +111,7 @@ class FourthPageState extends State<FourthPage> {
   userNameTXT() {
     return Padding(
       padding: const EdgeInsets.only(top: 12.0),
-      child: Text('Abdullah khan',
+      child: Text(_userData.name,
           style: TextStyle(color: Colors.white, fontSize: 18)),
     );
   }
@@ -110,7 +119,7 @@ class FourthPageState extends State<FourthPage> {
   userNumberTxt() {
     return Padding(
         padding: const EdgeInsets.only(top: 5.0),
-        child: Text('03441549512',
+        child: Text(_userData.phoneNumber.toString(),
             style: TextStyle(color: Colors.white, fontSize: 18)));
   }
 
@@ -248,5 +257,14 @@ class FourthPageState extends State<FourthPage> {
         pageBuilder: (context, animation1, animation2) => EditInfo(),
     ),
 );
+  }
+
+  Future<void> _signOut(BuildContext context) async {
+    try {
+      final BaseAuth auth = AuthProvider.of(context).auth;
+      await auth.signOut();
+    } catch (e) {
+      print(e);
+    }
   }
 }
