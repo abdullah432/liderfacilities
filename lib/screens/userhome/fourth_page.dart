@@ -39,7 +39,7 @@ class FourthPageState extends State<FourthPage> {
 
   @override
   Widget build(BuildContext context) {
-
+    debugPrint('userdata'+_userData.isTasker.toString());
     if (_userData.isTasker) {
       taskerBtnTxt = AppLocalizations.of(context).translate('Edit My Services');
     } else {
@@ -168,7 +168,7 @@ class FourthPageState extends State<FourthPage> {
         child: Center(
           child: Container(
             width: MediaQuery.of(context).size.width / 1.1,
-            height: MediaQuery.of(context).size.height / 2.6,
+            height: MediaQuery.of(context).size.height / 2.4,
             decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -243,16 +243,19 @@ class FourthPageState extends State<FourthPage> {
                   height: 1,
                   thickness: 1,
                 ),
-                RaisedButton(
-                  onPressed: () {
-                    debugPrint('become tasker');
-                  },
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15)),
-                  color: Color.fromRGBO(26, 119, 186, 1),
-                  child: Text(
-                    taskerBtnTxt,
-                    style: TextStyle(color: Colors.white),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: RaisedButton(
+                    onPressed: () {
+                      debugPrint('become tasker');
+                    },
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                    color: Color.fromRGBO(26, 119, 186, 1),
+                    child: Text(
+                      taskerBtnTxt,
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
               ],
@@ -280,7 +283,7 @@ class FourthPageState extends State<FourthPage> {
             newLocale = Locale('pt', 'BR');
           }
           MyApp.setLocale(context, newLocale);
-          debugPrint('before setting');
+          debugPrint('after setting');
           setting.setLanguageToSP(value);
         });
       },

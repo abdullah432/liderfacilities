@@ -239,8 +239,9 @@ class EditInfoState extends State<EditInfo> {
       setState(() {
         progress = true;
       });
+      debugPrint('imageurl: '+_image.toString());
       //if image is null then we does not need below code
-      if (_image == null) {
+      if (_image != null) {
         //first uploadImageToStorage
         String filename = p.basename(_image.path);
         StorageReference fstorageRef =
@@ -248,12 +249,12 @@ class EditInfoState extends State<EditInfo> {
         StorageUploadTask uploadTask = fstorageRef.putFile(_image);
         StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
         String downloadUrl = await storageTaskSnapshot.ref.getDownloadURL();
-
+        debugPrint('downloadUrl: '+downloadUrl);
         try {
           db
-              .collection('users')
-              .document(user.uid)
-              .updateData({'imageurl': downloadUrl});
+            .collection('users')
+            .document(user.uid)
+            .updateData({'imageurl': downloadUrl});
         } catch (e) {
           print(e.toString());
         }
@@ -282,7 +283,7 @@ class EditInfoState extends State<EditInfo> {
 
   Future getImage() async {
     var image = await ImagePicker.pickImage(
-        source: ImageSource.gallery, imageQuality: 10);
+        source: ImageSource.gallery, imageQuality: 5);
     if (this.mounted) {
       setState(() {
         _image = image;

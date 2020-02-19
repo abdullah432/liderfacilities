@@ -14,6 +14,7 @@ class Setting {
     final pref = await SharedPreferences.getInstance();
     pref.setString('language', value);
     this.language = value;
+    debugPrint('after setting to SP');
   }
 
   Future<String> getLanguageFromSP() async{

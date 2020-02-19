@@ -21,7 +21,7 @@ class User {
       : assert(map['name'] != null),
         assert(map['email'] != null),
         assert(map['phonenumber'] != null),
-        // assert(map['imageurl'] != null),
+        assert(map['istasker'] != null),
         _name = map['name'],
         _email = map['email'],
         _phonenumber = map['phonenumber'],

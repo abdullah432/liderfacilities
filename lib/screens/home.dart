@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:liderfacilites/models/User.dart';
 import 'package:liderfacilites/models/app_localization.dart';
-import 'package:liderfacilites/screens/splashscreen.dart';
 import 'package:liderfacilites/screens/userhome/first_page.dart';
 import 'package:liderfacilites/screens/userhome/second_page.dart';
 import 'package:liderfacilites/screens/userhome/third_page.dart';
@@ -47,7 +46,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    // loadCurrentUserData();
+    loadCurrentUserData();
     super.initState();
   }
 
@@ -55,16 +54,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     debugPrint('homepage');
     debugPrint('uid' + useruid);
-    return Scaffold(
-        body: StreamBuilder(
-      stream:
-          Firestore.instance.collection('users').document(useruid).snapshots(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData){
-          return SplashScreen();
-        }
-        updateUserData(snapshot.data);
-        return Stack(children: <Widget>[
+        // updateUserData(snapshot.data);
+        return Scaffold(body: Stack(children: <Widget>[
           bodycontent(),
           Positioned(
             left: 0,
@@ -72,9 +63,8 @@ class _HomePageState extends State<HomePage> {
             bottom: 0,
             child: bottomNaviationBar,
           )
-        ]);
-      },
-    ));
+        ]));
+
   }
 
   bodycontent() {
@@ -98,6 +88,7 @@ class _HomePageState extends State<HomePage> {
                       color: Colors
                           .white))), // sets the inactive color of the `BottomNavigationBar`
           child: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
             showUnselectedLabels: true,
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
@@ -174,7 +165,25 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  updateUserData(DocumentSnapshot snapshot) async {
+  // updateUserData(DocumentSnapshot snapshot) async {
+  //     debugPrint('before');
+  //     userRecord = User.fromSnapshot(snapshot);
+  //     User user = new User();
+  //     user.setUID(useruid);
+  //     user.setname(userRecord.name);
+  //     user.setEmail(userRecord.email);
+  //     user.setPhoneNum(userRecord.phoneNumber);
+  //     user.setUserState(userRecord.isTasker);
+  //     if (userRecord.imageUrl != null)
+  //       user.setImageUrl(userRecord.imageUrl);
+  // }
+
+  loadCurrentUserData() async {
+    await db
+        .collection('users')
+        .document(useruid)
+        .get()
+        .then((DocumentSnapshot snapshot) {
       debugPrint('before');
       userRecord = User.fromSnapshot(snapshot);
       User user = new User();
@@ -183,24 +192,9 @@ class _HomePageState extends State<HomePage> {
       user.setEmail(userRecord.email);
       user.setPhoneNum(userRecord.phoneNumber);
       user.setUserState(userRecord.isTasker);
+      debugPrint('us: '+userRecord.isTasker.toString());
       if (userRecord.imageUrl != null)
         user.setImageUrl(userRecord.imageUrl);
+    });
   }
-
-  // loadCurrentUserData() async {
-  //   await db
-  //       .collection('users')
-  //       .document(useruid)
-  //       .get()
-  //       .then((DocumentSnapshot snapshot) {
-  //     debugPrint('before');
-  //     userRecord = User.fromSnapshot(snapshot);
-  //     User user = new User();
-  //     user.setUID(useruid);
-  //     user.setname(userRecord.name);
-  //     user.setEmail(userRecord.email);
-  //     user.setPhoneNum(userRecord.phoneNumber);
-  //     user.setImageUrl(userRecord.imageUrl);
-  //   });
-  // }
 }
