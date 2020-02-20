@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:liderfacilites/models/User.dart';
 import 'package:liderfacilites/models/app_localization.dart';
+import 'package:liderfacilites/screens/addservices.dart';
 
 class MyServices extends StatefulWidget {
   @override
@@ -113,7 +114,9 @@ class MyServicesState extends State<MyServices> {
             ),
             Spacer(),
             FlatButton(
-              onPressed: () {},
+              onPressed: () {
+                navigateToAddServicePage();
+              },
               child: Text(AppLocalizations.of(context).translate('Add New'),
                   style: TextStyle(
                       color: Colors.white,
@@ -122,6 +125,15 @@ class MyServicesState extends State<MyServices> {
             )
           ],
         ),
+      ),
+    );
+  }
+
+  navigateToAddServicePage() {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation1, animation2) => AddService(),
       ),
     );
   }

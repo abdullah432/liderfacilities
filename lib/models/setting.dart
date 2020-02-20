@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Setting {
+
   String language;
     //singleton logic
   static final Setting setting = Setting._internal();

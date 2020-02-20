@@ -283,7 +283,7 @@ class EditInfoState extends State<EditInfo> {
 
   Future getImage() async {
     var image = await ImagePicker.pickImage(
-        source: ImageSource.gallery, imageQuality: 5);
+        source: ImageSource.gallery, imageQuality: 10);
     if (this.mounted) {
       setState(() {
         _image = image;

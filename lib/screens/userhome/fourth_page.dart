@@ -7,6 +7,8 @@ import 'package:liderfacilites/models/authentication.dart';
 import 'package:liderfacilites/models/setting.dart';
 import 'package:liderfacilites/screens/editInfo.dart';
 import 'package:liderfacilites/screens/servicespage.dart';
+import 'package:provider/provider.dart';
+import 'package:liderfacilites/models/localmodal.dart';
 
 class FourthPage extends StatefulWidget {
   FourthPage({Key key}) : super(key: key);
@@ -168,7 +170,7 @@ class FourthPageState extends State<FourthPage> {
         child: Center(
           child: Container(
             width: MediaQuery.of(context).size.width / 1.1,
-            height: MediaQuery.of(context).size.height / 2.4,
+            height: MediaQuery.of(context).size.height / 2.1,
             decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -252,9 +254,12 @@ class FourthPageState extends State<FourthPage> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15)),
                     color: Color.fromRGBO(26, 119, 186, 1),
-                    child: Text(
-                      taskerBtnTxt,
-                      style: TextStyle(color: Colors.white),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        taskerBtnTxt,
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
                     ),
                   ),
                 ),
@@ -282,6 +287,7 @@ class FourthPageState extends State<FourthPage> {
           } else {
             newLocale = Locale('pt', 'BR');
           }
+          // Provider.of<LocaleModel>(context, listen: false).changelocale(newLocale);
           MyApp.setLocale(context, newLocale);
           debugPrint('after setting');
           setting.setLanguageToSP(value);
