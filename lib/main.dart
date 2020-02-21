@@ -116,7 +116,7 @@ class MyAppState extends State<MyApp> {
       return HomePage(user.uid);
     }
     else {
-      return AddService();
+      return RootPage();
     }
   }
 

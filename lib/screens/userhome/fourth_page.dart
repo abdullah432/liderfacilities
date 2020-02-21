@@ -69,7 +69,7 @@ class FourthPageState extends State<FourthPage> {
         child: Center(
           child: Container(
             width: MediaQuery.of(context).size.width / 1.1,
-            height: MediaQuery.of(context).size.height / 2.6,
+            height: MediaQuery.of(context).size.height / 2.4,
             decoration: BoxDecoration(
                 color: Color.fromRGBO(26, 119, 186, 1),
                 borderRadius: BorderRadius.only(
@@ -109,7 +109,7 @@ class FourthPageState extends State<FourthPage> {
   profileImage() {
     // String _imageUrl;
     return CircleAvatar(
-      radius: 35,
+      radius: 40,
       // backgroundColor: Colors.black,
       child: ClipOval(
           child: _imageUrl == null
@@ -119,7 +119,7 @@ class FourthPageState extends State<FourthPage> {
               : Image.network(
                   _imageUrl,
                   fit: BoxFit.fill,
-                  width: 100,
+                  width: 80,
                 )),
       // backgroundImage: AssetImage('icons/default_profile_idcon.png'),
       // backgroundImage: AssetImage('assets/images/account.png'),

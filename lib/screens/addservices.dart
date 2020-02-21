@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:liderfacilites/models/app_localization.dart';
+import 'package:liderfacilites/models/firestore.dart';
 import 'package:liderfacilites/models/services.dart';
 import 'package:liderfacilites/models/setting.dart';
 
@@ -12,10 +13,17 @@ class AddService extends StatefulWidget {
 
 class AddServiceState extends State<AddService> with WidgetsBindingObserver {
   AppLocalizations lang;
+  //for form validation
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  TextEditingController hrC = new TextEditingController();
+  TextEditingController desC = new TextEditingController();
 
   var typeofservices = ['CLEANING'];
   var subTypesList = ['SELECT SERVICE FIRST'];
+
+  String _dropdowntosError;
   String selectedService;
+  String _dropdownscError;
   String selectedSubCategory;
 
   Setting _setting = new Setting();
@@ -43,108 +51,126 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
     return Scaffold(
         appBar: AppBar(
           leading: new IconButton(
-               icon: new Icon(Icons.arrow_back),
-               onPressed: () => Navigator.of(context).pop(),
-              ), 
+            icon: new Icon(Icons.arrow_back),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
           title: Text(lang.translate('Add Services')),
         ),
         body: SingleChildScrollView(
             child: Padding(
-          padding: const EdgeInsets.only(top: 15),
-          child: Center(
-              child: Container(
-            width: MediaQuery.of(context).size.width / 1.1,
-            // height: MediaQuery.of(context).size.height / 2.1,
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(20),
-                    bottomRight: Radius.circular(20),
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20))),
-            child: Column(children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(top: 20, left: 30),
-                child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      lang.translate('Type of service'),
-                      style: TextStyle(fontSize: 16),
-                    )),
-              ),
-              Padding(
-                  padding: const EdgeInsets.only(top: 15, left: 20, right: 20),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: typeofservicedropdown(),
-                  )),
-              Padding(
-                padding: const EdgeInsets.only(top: 20, left: 30),
-                child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      lang.translate('Sub category'),
-                      style: TextStyle(fontSize: 16),
-                    )),
-              ),
-              Padding(
-                  padding: const EdgeInsets.only(top: 15, left: 20, right: 20),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: subcategorydropdown(),
-                  )),
-              Padding(
-                padding: const EdgeInsets.only(top: 20, left: 30),
-                child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      lang.translate('Hourly Rate'),
-                      style: TextStyle(fontSize: 16),
-                    )),
-              ),
-              Padding(
-                  padding: const EdgeInsets.only(top: 15, left: 20, right: 20),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: hourlyRateTextBox(),
-                  )),
-              Padding(
-                padding: const EdgeInsets.only(top: 20, left: 30),
-                child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      lang.translate('Description'),
-                      style: TextStyle(fontSize: 16),
-                    )),
-              ),
-              Padding(
-                  padding: const EdgeInsets.only(top: 15, left: 20, right: 20),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: descriptionTextBox(),
-                  )),
-            Padding(
-                  padding: const EdgeInsets.only(top: 15, bottom: 20),
-                  child: saveButton()),
-            ]),
-          )),
-        )));
+                padding: const EdgeInsets.only(top: 15),
+                child: Center(
+                  child: Container(
+                      width: MediaQuery.of(context).size.width / 1.1,
+                      // height: MediaQuery.of(context).size.height / 2.1,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(20),
+                              bottomRight: Radius.circular(20),
+                              topLeft: Radius.circular(20),
+                              topRight: Radius.circular(20))),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20, left: 30),
+                            child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  lang.translate('Type of service'),
+                                  style: TextStyle(fontSize: 16),
+                                )),
+                          ),
+                          Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 15, left: 20, right: 20),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: typeofservicedropdown(),
+                              )),
+                          _dropdowntosError == null
+                              ? SizedBox.shrink()
+                              : Text(
+                                  _dropdowntosError ?? "",
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20, left: 30),
+                            child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  lang.translate('Sub category'),
+                                  style: TextStyle(fontSize: 16),
+                                )),
+                          ),
+                          Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 15, left: 20, right: 20),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: subcategorydropdown(),
+                              )),
+                          _dropdownscError == null
+                              ? SizedBox.shrink()
+                              : Text(
+                                  _dropdownscError ?? "",
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20, left: 30),
+                            child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  lang.translate('Hourly Rate'),
+                                  style: TextStyle(fontSize: 16),
+                                )),
+                          ),
+                          Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 15, left: 20, right: 20),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: hourlyRateTextBox(),
+                              )),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20, left: 30),
+                            child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  lang.translate('Description'),
+                                  style: TextStyle(fontSize: 16),
+                                )),
+                          ),
+                          Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 15, left: 20, right: 20),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: descriptionTextBox(),
+                              )),
+                          Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 20, bottom: 20),
+                              child: saveButton()),
+                        ]),
+                      )),
+                ))));
   }
 
   typeofservicedropdown() {
     return Container(
-        decoration: ShapeDecoration(
-          color: Colors.black12,
-          shape: RoundedRectangleBorder(
-            side: BorderSide(
-                width: 1.0, style: BorderStyle.solid, color: Colors.black12),
-            borderRadius: BorderRadius.all(Radius.circular(5.0)),
-          ),
+      decoration: ShapeDecoration(
+        color: Colors.black12,
+        shape: RoundedRectangleBorder(
+          side: BorderSide(
+              width: 1.0, style: BorderStyle.solid, color: Colors.black12),
+          borderRadius: BorderRadius.all(Radius.circular(12.0)),
         ),
-        child: Padding(
-          padding: const EdgeInsets.only(left: 5),
-          child: DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
+      ),
+      child: Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10),
+          child: DropdownButtonFormField<String>(
             isExpanded: true,
             items: typeofservices.map((String dropDownStringItem) {
               return DropdownMenuItem(
@@ -153,6 +179,10 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
               );
             }).toList(),
             hint: Text('Select type'),
+            decoration: InputDecoration(
+                enabledBorder:
+                    UnderlineInputBorder(borderSide: BorderSide.none)),
+            validator: (value) => value == null ? 'Field required' : null,
             onChanged: (String value) {
               setState(() {
                 selectedService = value;
@@ -161,24 +191,27 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
             },
             value: selectedService,
           )),
-        ));
+    );
   }
 
   subcategorydropdown() {
     return Container(
-        decoration: ShapeDecoration(
-          color: Colors.black12,
-          shape: RoundedRectangleBorder(
-            side: BorderSide(
-                width: 1.0, style: BorderStyle.solid, color: Colors.black12),
-            borderRadius: BorderRadius.all(Radius.circular(5.0)),
-          ),
+      decoration: ShapeDecoration(
+        color: Colors.black12,
+        // color: Color.fromARGB(224, 224, 224, 100),
+        shape: RoundedRectangleBorder(
+          side: BorderSide(
+              width: 1.0, style: BorderStyle.solid, color: Colors.black12),
+          borderRadius: BorderRadius.all(Radius.circular(12.0)),
         ),
-        child: Padding(
-          padding: const EdgeInsets.only(left: 5),
-          child: DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
+      ),
+      child: Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10),
+          child: DropdownButtonFormField<String>(
             isExpanded: true,
+            decoration: InputDecoration(
+                enabledBorder:
+                    UnderlineInputBorder(borderSide: BorderSide.none)),
             items: subTypesList.map((String dropDownStringItem) {
               return DropdownMenuItem(
                 value: dropDownStringItem,
@@ -186,6 +219,7 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
               );
             }).toList(),
             hint: Text('Select sub category'),
+            validator: (value) => value == null ? 'Field required' : null,
             onChanged: (String value) {
               setState(() {
                 selectedSubCategory = value;
@@ -193,7 +227,7 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
             },
             value: selectedSubCategory,
           )),
-        ));
+    );
   }
 
   hourlyRateTextBox() {
@@ -210,8 +244,8 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
               cursorColor: Color.fromARGB(214, 214, 214, 100),
               // textAlign: TextAlign.center,
               keyboardType: TextInputType.number,
-              // validator: validateEmail,
-              // // controller: emailC,
+              validator: validateHR,
+              controller: hrC,
               // onSaved: (value) {
               //   _email = value;
               // },
@@ -225,6 +259,14 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
         ],
       ),
     );
+  }
+
+  String validateHR(String value) {
+    if (value.isEmpty) {
+      return lang
+          .translate('Your description need to be atleast 12 characters');
+    } else
+      return null;
   }
 
   descriptionTextBox() {
@@ -242,8 +284,8 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
               // textAlign: TextAlign.center,
               keyboardType: TextInputType.multiline,
               maxLines: 2,
-              // validator: validateEmail,
-              // // controller: emailC,
+              validator: validateDescription,
+              controller: desC,
               // onSaved: (value) {
               //   _email = value;
               // },
@@ -259,27 +301,68 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
     );
   }
 
+  String validateDescription(String valule) {
+    if (valule.length < 12) {
+      return lang
+          .translate('Your description need to be atleast 12 characters');
+    } else
+      return null;
+  }
+
   saveButton() {
     return Container(
-        height: 50,
-        width: MediaQuery.of(context).size.width / 3,
-        decoration:
-            BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(25))),
-        child: RaisedButton(
-          color: Color.fromRGBO(26, 119, 186, 1),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
-          onPressed: () {
-            // validateUser();
-          },
-          child: Text(
-            'Save',
-            // AppLocalizations.of(context).translate('Login'),
-            style: TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 17, color: Colors.white),
-          ),
+      height: 45,
+      width: MediaQuery.of(context).size.width / 1.65,
+      decoration:
+          BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(25))),
+      child: RaisedButton(
+        color: Color.fromRGBO(26, 119, 186, 1),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
+        onPressed: () {
+          saveService();
+        },
+        child: Text(
+          'Save',
+          // AppLocalizations.of(context).translate('Login'),
+          style: TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 23, color: Colors.white),
         ),
-      );
+      ),
+    );
+  }
+
+  saveService() async {
+    if (_formKey.currentState.validate()) {
+      CustomFirestore firestore = new CustomFirestore();
+      bool result = await firestore.createServiceRecord(
+          selectedService, selectedSubCategory, hrC.text, desC.text);
+      if (result) {
+        Navigator.of(context).pop();
+        showSnachBar(lang.translate('Successfully Added'), 1);
+      } else {
+        showSnachBar(lang.translate('Fail to add'), 2);
+      }
+    }
+  }
+
+  showSnachBar(String msg, int choice) {
+    if (choice == 1){
+    Scaffold.of(context).showSnackBar(new SnackBar(
+      content: Text(
+        msg,
+        style: TextStyle(color: Colors.green),
+      ),
+    ));
+    } else {
+          Scaffold.of(context).showSnackBar(new SnackBar(
+      content: Text(
+        msg,
+        style: TextStyle(color: Colors.red),
+      ),
+    ));
+    }
+
   }
 
   selectSubtype() {

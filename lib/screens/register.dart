@@ -375,7 +375,7 @@ class RegisterState extends State<Register> {
                   createRecord(authData),
                   user = authData.user,
                   Navigator.pushReplacement(context,
-                      new MaterialPageRoute(builder: (context) => HomePage(user)))
+                      new MaterialPageRoute(builder: (context) => HomePage(user.uid)))
                 })
             .catchError((e) => {
               print(e.toString())});
