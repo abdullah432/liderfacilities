@@ -55,7 +55,7 @@ class EditInfoState extends State<EditInfo> {
             ))
           ],
         ),
-        body: Container(
+        body: SingleChildScrollView(child:Container(
           child: Padding(
               padding: const EdgeInsets.only(top: 20),
               child: Form(
@@ -78,7 +78,7 @@ class EditInfoState extends State<EditInfo> {
                   ],
                 ),
               )),
-        ));
+        )));
   }
 
   imageView() {
@@ -170,7 +170,7 @@ class EditInfoState extends State<EditInfo> {
 
   phoneTF() {
     return Padding(
-      padding: const EdgeInsets.only(top: 10.0),
+      padding: const EdgeInsets.only(top: 10.0, bottom: 5),
       child: Container(
         width: MediaQuery.of(context).size.width / 1.25,
         padding: EdgeInsets.only(left: 20, top: 3, bottom: 3, right: 14),

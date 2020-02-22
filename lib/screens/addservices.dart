@@ -29,6 +29,9 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
   Setting _setting = new Setting();
   Services services = new Services();
 
+  //snackbar
+  GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     initServices();
@@ -46,9 +49,17 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
   }
 
   @override
+  void dispose() {
+    hrC.dispose();
+    desC.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     lang = AppLocalizations.of(context);
     return Scaffold(
+      key: _scaffoldKey,
         appBar: AppBar(
           leading: new IconButton(
             icon: new Icon(Icons.arrow_back),
@@ -338,31 +349,33 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
       bool result = await firestore.createServiceRecord(
           selectedService, selectedSubCategory, hrC.text, desC.text);
       if (result) {
-        Navigator.of(context).pop();
+        //when user add service, this mean he is now tasker too.
+        firestore.updateToTasker();
         showSnachBar(lang.translate('Successfully Added'), 1);
       } else {
         showSnachBar(lang.translate('Fail to add'), 2);
       }
+
+      Navigator.of(context).pop();
     }
   }
 
   showSnachBar(String msg, int choice) {
-    if (choice == 1){
-    Scaffold.of(context).showSnackBar(new SnackBar(
-      content: Text(
-        msg,
-        style: TextStyle(color: Colors.green),
-      ),
-    ));
+    if (choice == 1) {
+      _scaffoldKey.currentState.showSnackBar(new SnackBar(
+        content: Text(
+          msg,
+          style: TextStyle(color: Colors.green),
+        ),
+      ));
     } else {
-          Scaffold.of(context).showSnackBar(new SnackBar(
-      content: Text(
-        msg,
-        style: TextStyle(color: Colors.red),
-      ),
-    ));
+      _scaffoldKey.currentState.showSnackBar(new SnackBar(
+        content: Text(
+          msg,
+          style: TextStyle(color: Colors.red),
+        ),
+      ));
     }
-
   }
 
   selectSubtype() {

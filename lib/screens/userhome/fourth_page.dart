@@ -10,6 +10,8 @@ import 'package:liderfacilites/screens/servicespage.dart';
 import 'package:provider/provider.dart';
 import 'package:liderfacilites/models/localmodal.dart';
 
+import '../addservices.dart';
+
 class FourthPage extends StatefulWidget {
   FourthPage({Key key}) : super(key: key);
 
@@ -31,21 +33,27 @@ class FourthPageState extends State<FourthPage> {
   User _userData = new User();
   //this value will be assign to tasker button
   String taskerBtnTxt;
+  bool taskerTxtVisibility = true;
+  //Global applocalization variable;
+  AppLocalizations lang;
 
   @override
   void initState() {
     language = setting.getLanguage();
-    _imageUrl = _userData.imageUrl;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('userdata'+_userData.isTasker.toString());
+    _imageUrl = _userData.imageUrl;
+    lang = AppLocalizations.of(context);
+    debugPrint('isTasker: '+_userData.isTasker.toString());
     if (_userData.isTasker) {
-      taskerBtnTxt = AppLocalizations.of(context).translate('Edit My Services');
+      // taskerBtnTxt = AppLocalizations.of(context).translate('Edit My Services');
+      taskerTxtVisibility = false;
     } else {
-      taskerBtnTxt = AppLocalizations.of(context).translate('Become a tasker');
+      // taskerBtnTxt = AppLocalizations.of(context).translate('Become a tasker');
+      taskerTxtVisibility = true;
     }
 
     return Scaffold(
@@ -119,7 +127,7 @@ class FourthPageState extends State<FourthPage> {
               : Image.network(
                   _imageUrl,
                   fit: BoxFit.fill,
-                  width: 80,
+                  width: 77,
                 )),
       // backgroundImage: AssetImage('icons/default_profile_idcon.png'),
       // backgroundImage: AssetImage('assets/images/account.png'),
@@ -166,11 +174,11 @@ class FourthPageState extends State<FourthPage> {
   //bottom part implementation
   bottomPart() {
     return Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 20, bottom: 70),
         child: Center(
           child: Container(
             width: MediaQuery.of(context).size.width / 1.1,
-            height: MediaQuery.of(context).size.height / 2.1,
+            height: MediaQuery.of(context).size.height / 2.4,
             decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -245,11 +253,13 @@ class FourthPageState extends State<FourthPage> {
                   height: 1,
                   thickness: 1,
                 ),
+                Visibility(visible: taskerTxtVisibility, child:
                 Padding(
                   padding: const EdgeInsets.only(top: 10),
                   child: RaisedButton(
                     onPressed: () {
-                      debugPrint('become tasker');
+                      // debugPrint('become tasker');
+                      navigateToAddServicePage();
                     },
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15)),
@@ -257,12 +267,12 @@ class FourthPageState extends State<FourthPage> {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        taskerBtnTxt,
+                        lang.translate('Become a tasker'),
                         style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
                     ),
                   ),
-                ),
+                )),
               ],
             ),
           ),
@@ -297,6 +307,15 @@ class FourthPageState extends State<FourthPage> {
     ));
   }
 
+    navigateToAddServicePage() {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation1, animation2) => AddService(),
+      ),
+    );
+  }
+  
   navigateToEditPage() async {
     bool result = await Navigator.push(
       context,
@@ -305,13 +324,16 @@ class FourthPageState extends State<FourthPage> {
       ),
     );
 
-    if (result) {
-      if (this.mounted) {
-        setState(() {
-          //may be data changed
-        });
-      }
-    }
+    // if (result) {
+    //   if (this.mounted) {
+    //     setState(() {
+    //       //may be data changed
+    //       debugPrint('before img: '+_userData.imageUrl);
+    //       _imageUrl = _userData.imageUrl;
+    //       debugPrint('after img: '+_userData.imageUrl);
+    //     });
+    //   }
+    // }
   }
 
   Future<void> _signOut(BuildContext context) async {

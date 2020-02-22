@@ -28,4 +28,10 @@ class CustomFirestore {
     }
     return true;
   }
+
+  updateToTasker(){
+    db.collection('users').document(_user.uid).updateData(({
+      'istasker': true
+    }));
+  }
 }

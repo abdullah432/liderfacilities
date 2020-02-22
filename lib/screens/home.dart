@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:liderfacilites/models/User.dart';
 import 'package:liderfacilites/models/app_localization.dart';
+import 'package:liderfacilites/screens/splashscreen.dart';
 import 'package:liderfacilites/screens/userhome/first_page.dart';
 import 'package:liderfacilites/screens/userhome/second_page.dart';
 import 'package:liderfacilites/screens/userhome/third_page.dart';
@@ -15,7 +16,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   final _navigatorKey = GlobalKey<NavigatorState>();
 
   static const TextStyle optionStyle =
@@ -51,59 +51,77 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    loadCurrentUserData();
+    // loadCurrentUserData();
     super.initState();
   }
 
-@override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: 
-      WillPopScope(
-      onWillPop: () async {
-        if (_navigatorKey.currentState.canPop()) {
-          _navigatorKey.currentState.pop();
-          return false;
-        }
-        return true;
-      }, child: Navigator(
-        key: _navigatorKey,
-        initialRoute: '/',
-        onGenerateRoute: (RouteSettings settings) {
-          WidgetBuilder builder;
-          // Manage your route names here
-          switch (settings.name) {
-            case '/':
-              builder = (BuildContext context) => FirstPage();
-              break;
-            case '/page2':
-              builder = (BuildContext context) => SecondPage();
-              break;
-            case '/page3':
-              builder = (BuildContext context) => ThirdPage();
-              break;
-            case '/page4':
-              builder = (BuildContext context) => FourthPage();
-              break;
-            default:
-              throw Exception('Invalid route: ${settings.name}');
-          }
-          // You can also return a PageRouteBuilder and
-          // define custom transitions between pages
+        body:
+            //   WillPopScope(
+            //   onWillPop: () async {
+            //     if (_navigatorKey.currentState.canPop()) {
+            //       _navigatorKey.currentState.pop();
+            //       return false;
+            //     }
+            //     return true;
+            //   },
+            //   child: Navigator(
+            //     key: _navigatorKey,
+            //     initialRoute: '/',
+            //     onGenerateRoute: (RouteSettings settings) {
+            //       WidgetBuilder builder;
+            //       // Manage your route names here
+            //       switch (settings.name) {
+            //         case '/':
+            //           builder = (BuildContext context) => FirstPage();
+            //           break;
+            //         case '/page2':
+            //           builder = (BuildContext context) => SecondPage();
+            //           break;
+            //         case '/page3':
+            //           builder = (BuildContext context) => ThirdPage();
+            //           break;
+            //         case '/page4':
+            //           builder = (BuildContext context) => FourthPage();
+            //           break;
+            //         default:
+            //           throw Exception('Invalid route: ${settings.name}');
+            //       }
+            //       // You can also return a PageRouteBuilder and
+            //       // define custom transitions between pages
 
-          return MaterialPageRoute(
-            builder: builder,
-            settings: settings,
-          );
-        },
-      ),
-    ), bottomNavigationBar: bottomNaviationBar,);
-  // Stack(
-  //       children: <Widget>[
-  //         bodycontent(),
-  //         Positioned(bottom: 0,left: 0,right: 0,child: bottomNaviationBar,),
-  //       ],
-  //     ),);
+            //       return MaterialPageRoute(
+            //         builder: builder,
+            //         settings: settings,
+            //       );
+            //     },
+            //   ),
+            // ), bottomNavigationBar: bottomNaviationBar,);
+
+            StreamBuilder(
+                stream: Firestore.instance
+                    .collection('users')
+                    .document(useruid)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) return SplashScreen();
+
+                  // final record = User.fromSnapshot(snapshot.data);
+                  updateUserData(snapshot.data);
+                  return Stack(
+                    children: <Widget>[
+                      bodycontent(),
+                      Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: bottomNaviationBar,
+                      ),
+                    ],
+                  );
+                }));
   }
 
   bodycontent() {
@@ -193,12 +211,9 @@ class _HomePageState extends State<HomePage> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      if (index == 1)
-        _navigatorKey.currentState.pushNamed('/page2');
-      if (index == 2)
-        _navigatorKey.currentState.pushNamed('/page3');
-    if (index == 3)
-        _navigatorKey.currentState.pushNamed('/page4');
+      // if (index == 1) _navigatorKey.currentState.pushNamed('/page2');
+      // if (index == 2) _navigatorKey.currentState.pushNamed('/page3');
+      // if (index == 3) _navigatorKey.currentState.pushNamed('/page4');
     });
   }
 
@@ -210,7 +225,24 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  // updateUserData(DocumentSnapshot snapshot) async {
+  updateUserData(DocumentSnapshot snapshot) async {
+    debugPrint('before');
+    userRecord = User.fromSnapshot(snapshot);
+    User user = new User();
+    user.setUID(useruid);
+    user.setname(userRecord.name);
+    user.setEmail(userRecord.email);
+    user.setPhoneNum(userRecord.phoneNumber);
+    user.setUserState(userRecord.isTasker);
+    if (userRecord.imageUrl != null) user.setImageUrl(userRecord.imageUrl);
+  }
+
+  // loadCurrentUserData() async {
+  //   await db
+  //       .collection('users')
+  //       .document(useruid)
+  //       .get()
+  //       .then((DocumentSnapshot snapshot) {
   //     debugPrint('before');
   //     userRecord = User.fromSnapshot(snapshot);
   //     User user = new User();
@@ -219,26 +251,8 @@ class _HomePageState extends State<HomePage> {
   //     user.setEmail(userRecord.email);
   //     user.setPhoneNum(userRecord.phoneNumber);
   //     user.setUserState(userRecord.isTasker);
-  //     if (userRecord.imageUrl != null)
-  //       user.setImageUrl(userRecord.imageUrl);
+  //     debugPrint('us: ' + userRecord.isTasker.toString());
+  //     if (userRecord.imageUrl != null) user.setImageUrl(userRecord.imageUrl);
+  //   });
   // }
-
-  loadCurrentUserData() async {
-    await db
-        .collection('users')
-        .document(useruid)
-        .get()
-        .then((DocumentSnapshot snapshot) {
-      debugPrint('before');
-      userRecord = User.fromSnapshot(snapshot);
-      User user = new User();
-      user.setUID(useruid);
-      user.setname(userRecord.name);
-      user.setEmail(userRecord.email);
-      user.setPhoneNum(userRecord.phoneNumber);
-      user.setUserState(userRecord.isTasker);
-      debugPrint('us: ' + userRecord.isTasker.toString());
-      if (userRecord.imageUrl != null) user.setImageUrl(userRecord.imageUrl);
-    });
-  }
 }

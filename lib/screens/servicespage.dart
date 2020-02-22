@@ -21,7 +21,8 @@ class MyServicesState extends State<MyServices> {
     if (!user.isTasker) {
       return noServiceBody(context);
     } else {
-      //return service body
+      //todo
+      return Center(child: Text('services'),);
     }
   }
 
@@ -65,7 +66,8 @@ class MyServicesState extends State<MyServices> {
           padding: const EdgeInsets.only(top: 30),
           child: RaisedButton(
             onPressed: () {
-              debugPrint('become tasker');
+              // debugPrint('become tasker');
+              navigateToAddServicePage();
             },
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -117,11 +119,14 @@ class MyServicesState extends State<MyServices> {
               onPressed: () {
                 navigateToAddServicePage();
               },
-              child: Text(AppLocalizations.of(context).translate('Add New'),
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold)),
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text(AppLocalizations.of(context).translate('Add New'),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold)),
+              ),
             )
           ],
         ),
