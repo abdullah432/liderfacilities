@@ -251,10 +251,14 @@ class EditInfoState extends State<EditInfo> {
         String downloadUrl = await storageTaskSnapshot.ref.getDownloadURL();
         debugPrint('downloadUrl: '+downloadUrl);
         try {
+          
           db
             .collection('users')
             .document(user.uid)
             .updateData({'imageurl': downloadUrl});
+          //need to change imageurl in multiple location
+          if (user.isTasker)
+            db.collection('users').document(user.uid).updateData({'imgurl': downloadUrl});
         } catch (e) {
           print(e.toString());
         }

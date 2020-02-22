@@ -307,13 +307,21 @@ class FourthPageState extends State<FourthPage> {
     ));
   }
 
-    navigateToAddServicePage() {
-    Navigator.push(
+  navigateToAddServicePage() async{
+    bool result = await Navigator.push(
       context,
       PageRouteBuilder(
         pageBuilder: (context, animation1, animation2) => AddService(),
       ),
     );
+
+    if (result){
+      if (this.mounted){
+      setState(() {
+        print('setstate');
+      });
+      }
+    }
   }
   
   navigateToEditPage() async {

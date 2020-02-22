@@ -110,7 +110,8 @@ class _HomePageState extends State<HomePage> {
 
                   // final record = User.fromSnapshot(snapshot.data);
                   updateUserData(snapshot.data);
-                  return Stack(
+                  return IndexedStack(
+                    index: _selectedIndex,
                     children: <Widget>[
                       bodycontent(),
                       Positioned(

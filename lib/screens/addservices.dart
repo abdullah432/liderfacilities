@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:liderfacilites/models/User.dart';
 import 'package:liderfacilites/models/app_localization.dart';
 import 'package:liderfacilites/models/firestore.dart';
 import 'package:liderfacilites/models/services.dart';
@@ -59,7 +60,7 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     lang = AppLocalizations.of(context);
     return Scaffold(
-      key: _scaffoldKey,
+        key: _scaffoldKey,
         appBar: AppBar(
           leading: new IconButton(
             icon: new Icon(Icons.arrow_back),
@@ -348,6 +349,9 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
       CustomFirestore firestore = new CustomFirestore();
       bool result = await firestore.createServiceRecord(
           selectedService, selectedSubCategory, hrC.text, desC.text);
+      User user = new User();
+      user.setUserState(true);
+      Navigator.pop(context, true);
       if (result) {
         //when user add service, this mean he is now tasker too.
         firestore.updateToTasker();
@@ -356,7 +360,8 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
         showSnachBar(lang.translate('Fail to add'), 2);
       }
 
-      Navigator.of(context).pop();
+      // Navigator.of(context).pop(true);
+
     }
   }
 
