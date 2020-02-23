@@ -298,7 +298,7 @@ class FourthPageState extends State<FourthPage> {
             newLocale = Locale('pt', 'BR');
           }
           // Provider.of<LocaleModel>(context, listen: false).changelocale(newLocale);
-          MyApp.setLocale(context, newLocale);
+          // MyApp.setLocale(context, newLocale);
           debugPrint('after setting');
           setting.setLanguageToSP(value);
         });

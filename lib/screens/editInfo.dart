@@ -23,8 +23,14 @@ class EditInfoState extends State<EditInfo> {
   TextEditingController nameC = TextEditingController();
   TextEditingController emailC = TextEditingController();
   TextEditingController phoneC = TextEditingController();
+  TextEditingController regC = TextEditingController();
   //upload imageurl progress bar
   bool progress = false;
+  //checkboxes
+  bool cnpj = false;
+  bool cpf = false;
+  //
+  AppLocalizations lang;
 
   @override
   void initState() {
@@ -36,7 +42,17 @@ class EditInfoState extends State<EditInfo> {
   }
 
   @override
+  void dispose() {
+    nameC.dispose();
+    emailC.dispose();
+    phoneC.dispose();
+    regC.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    lang = AppLocalizations.of(context);
     return Scaffold(
         appBar: AppBar(
           title: Text(AppLocalizations.of(context).translate('EditInfo')),
@@ -55,7 +71,8 @@ class EditInfoState extends State<EditInfo> {
             ))
           ],
         ),
-        body: SingleChildScrollView(child:Container(
+        body: SingleChildScrollView(
+            child: Container(
           child: Padding(
               padding: const EdgeInsets.only(top: 20),
               child: Form(
@@ -74,6 +91,30 @@ class EditInfoState extends State<EditInfo> {
                     nameTF(),
                     emailTF(),
                     phoneTF(),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          top: 10, bottom: 10, left: 22, right: 22),
+                      child: Divider(
+                        thickness: 1,
+                      ),
+                    ),
+                    regTF(),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          top: 10, bottom: 10, left: 22, right: 22),
+                      child: Divider(
+                        thickness: 1,
+                      ),
+                    ),
+                    checkboxes(),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          top: 10, bottom: 10, left: 22, right: 22),
+                      child: Divider(
+                        thickness: 1,
+                      ),
+                    ),
+                    locationbox(),
                     uploadProgressBar(),
                   ],
                 ),
@@ -195,6 +236,163 @@ class EditInfoState extends State<EditInfo> {
     );
   }
 
+  regTF() {
+    return Padding(
+        padding: const EdgeInsets.only(top: 5.0, bottom: 5),
+        child: Container(
+          width: MediaQuery.of(context).size.width / 1.25,
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(bottom:15.0, left: 10),
+                child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      'Reg',
+                      style: TextStyle(fontSize: 18),
+                    )),
+              ),
+              Container(
+                padding:
+                    EdgeInsets.only(left: 20, top: 3, bottom: 3, right: 14),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    color: Colors.white,
+                    boxShadow: [BoxShadow(color: Colors.black, blurRadius: 1)]),
+                child: TextFormField(
+                  // textAlign: TextAlign.center,
+                  keyboardType: TextInputType.phone,
+                  validator: validateMobile,
+                  controller: regC,
+                  // onSaved: (value) {
+                  //   _phonenumber = int.parse(value);
+                  // },
+                  decoration: InputDecoration(
+                      hintText: 'Enter reg',
+                      border: InputBorder.none,
+                      fillColor: Colors.blue),
+                ),
+              ),
+            ],
+          ),
+        ));
+  }
+
+  checkboxes() {
+    return Padding(
+        padding: const EdgeInsets.only(top: 10.0, bottom: 5),
+        child: Container(
+            width: MediaQuery.of(context).size.width / 1.25,
+            height: 30,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  "Cnpj",
+                  style: TextStyle(fontSize: 18),
+                ),
+                Checkbox(
+                  value: cnpj,
+                  onChanged: (bool value) {
+                    setState(() {
+                      cnpj = value;
+                      cpf = !value;
+                    });
+                  },
+                ),
+                VerticalDivider(color: Colors.black, width: 30),
+                Text(
+                  "Cpf",
+                  style: TextStyle(fontSize: 18),
+                ),
+                Checkbox(
+                  value: cpf,
+                  onChanged: (bool value) {
+                    setState(() {
+                      cpf = value;
+                      cnpj = !value;
+                    });
+                  },
+                ),
+              ],
+            )));
+  }
+
+  locationbox() {
+    return Padding(
+        padding: const EdgeInsets.only(top: 5.0, bottom: 5),
+        child: Container(
+            width: MediaQuery.of(context).size.width / 1.25,
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        lang.translate('Location'),
+                        style: TextStyle(fontSize: 18),
+                      )),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: Row(children: <Widget>[
+                    Icon(
+                      Icons.add_location,
+                      color: Colors.black38,
+                      size: 15,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: Text(
+                        'Not selected yet',
+                        style: TextStyle(fontSize: 10, color: Colors.black38),
+                      ),
+                    )
+                  ]),
+                ),
+                Container(
+                  height: 100,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(color: Colors.black, blurRadius: 1)
+                      ]),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Expanded(
+                        flex: 1,
+                        child: FlatButton(
+                          onPressed: () {},
+                          child: Text(
+                            lang.translate('Use current Location'),
+                            style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.normal,
+                                fontSize: 13),
+                          ),
+                        )),
+                    Expanded(
+                        flex: 1,
+                        child: FlatButton(
+                          onPressed: () {},
+                          child: Text(
+                            lang.translate('Change Location'),
+                            style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.normal,
+                                fontSize: 13),
+                          ),
+                        )),
+                  ],
+                ),
+              ],
+            )));
+  }
+
   uploadProgressBar() {
     return Visibility(
         visible: progress,
@@ -239,7 +437,7 @@ class EditInfoState extends State<EditInfo> {
       setState(() {
         progress = true;
       });
-      debugPrint('imageurl: '+_image.toString());
+      debugPrint('imageurl: ' + _image.toString());
       //if image is null then we does not need below code
       if (_image != null) {
         //first uploadImageToStorage
@@ -249,16 +447,18 @@ class EditInfoState extends State<EditInfo> {
         StorageUploadTask uploadTask = fstorageRef.putFile(_image);
         StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
         String downloadUrl = await storageTaskSnapshot.ref.getDownloadURL();
-        debugPrint('downloadUrl: '+downloadUrl);
+        debugPrint('downloadUrl: ' + downloadUrl);
         try {
-          
           db
-            .collection('users')
-            .document(user.uid)
-            .updateData({'imageurl': downloadUrl});
+              .collection('users')
+              .document(user.uid)
+              .updateData({'imageurl': downloadUrl});
           //need to change imageurl in multiple location
           if (user.isTasker)
-            db.collection('users').document(user.uid).updateData({'imgurl': downloadUrl});
+            db
+                .collection('users')
+                .document(user.uid)
+                .updateData({'imgurl': downloadUrl});
         } catch (e) {
           print(e.toString());
         }

@@ -90,7 +90,7 @@ class MyServicesState extends State<MyServices> {
                         : Image.network(
                             _imageUrl,
                             fit: BoxFit.fill,
-                            width: 60,
+                            width: 57,
                           )),
               ),
               title: Text(record.name),
