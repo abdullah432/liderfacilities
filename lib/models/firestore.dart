@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:liderfacilites/models/User.dart';
 
 class CustomFirestore {
@@ -35,5 +34,16 @@ class CustomFirestore {
     }));
   }
 
+  Future<List<DocumentSnapshot>> getAllTasker() async{
+    DocumentReference docRef = db.collection('users').document(_user.uid);
+        QuerySnapshot querySnapshot = await Firestore.instance
+            .collection("services")
+            .where('reference', isEqualTo: docRef)
+            .getDocuments();
+        var list = querySnapshot.documents;
+        return list;
+        // return querySnapshot.documents;
+        // return list;
+  }
   
 }

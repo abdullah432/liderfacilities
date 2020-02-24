@@ -8,6 +8,8 @@ class Service {
   String _subservice;
   var _uid;
   String _hourlyrate;
+  String _address;
+  GeoPoint _geoPoint;
   DocumentReference reference;
 
   //singleton logic
@@ -29,7 +31,9 @@ class Service {
         _typeofservice = map['type'],
         _subservice = map['subtype'],
         _imgUrl = map['imgurl'],
-        _hourlyrate = map['hourlyrate'];
+        _hourlyrate = map['hourlyrate'],
+        _address = map['address'],
+        _geoPoint = map['geopoint'];
 
   Service.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data, reference: snapshot.reference);
@@ -62,6 +66,14 @@ class Service {
     return _hourlyrate;
   }
 
+  get address {
+    return _address;
+  }
+
+  get geopoint {
+    return _geoPoint;
+  }
+
   void setname(String value) {
     this._name = value;
   }
@@ -84,5 +96,13 @@ class Service {
 
   void setSubType(String value) {
     this._subservice = value;
+  }
+
+  void setAddress(String value) {
+    this._address = value;
+  }
+
+  void setGeopoint(GeoPoint value) {
+    this._geoPoint = value;
   }
 }

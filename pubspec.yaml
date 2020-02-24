@@ -14,7 +14,7 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.2.2 <3.0.0"
 
 dependencies:
   flutter:
@@ -59,6 +59,7 @@ flutter:
     - assets/images/account.png
     - assets/images/noservice.png
     - assets/images/location.png
+    - assets/images/mylocation.png
 
   #  - images/a_dot_ham.jpeg
 

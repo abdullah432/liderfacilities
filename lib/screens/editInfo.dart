@@ -6,6 +6,7 @@ import 'package:geocoder/geocoder.dart';
 import 'package:liderfacilites/models/User.dart';
 import 'package:liderfacilites/models/app_localization.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:liderfacilites/models/firestore.dart';
 import 'package:location/location.dart';
 import 'package:path/path.dart' as p;
 
@@ -46,18 +47,18 @@ class EditInfoState extends State<EditInfo> {
     emailC.text = user.email;
     phoneC.text = user.phoneNumber.toString();
     _imageUrl = user.imageUrl;
-    if (user.address != null){
+    if (user.address != null) {
       _userAddress = user.address;
     }
-    if (user.reg != null){
+    if (user.reg != null) {
       regC.text = user.reg;
     }
-    if (user.socialsecurity != null){
+    if (user.socialsecurity != null) {
       if (user.socialsecurity == 'Cnpj')
         cnpj = true;
-      else if (user.socialsecurity == 'Cpf')
-        cpf = true;
+      else if (user.socialsecurity == 'Cpf') cpf = true;
     }
+
     super.initState();
   }
 
@@ -452,14 +453,10 @@ class EditInfoState extends State<EditInfo> {
         String downloadUrl = await storageTaskSnapshot.ref.getDownloadURL();
         debugPrint('downloadUrl: ' + downloadUrl);
         try {
-          db
-              .document(user.uid)
-              .updateData({'imageurl': downloadUrl});
+          db.document(user.uid).updateData({'imageurl': downloadUrl});
           //need to change imageurl in multiple location
           if (user.isTasker)
-            db
-                .document(user.uid)
-                .updateData({'imgurl': downloadUrl});
+            db.document(user.uid).updateData({'imgurl': downloadUrl});
         } catch (e) {
           print(e.toString());
         }
@@ -512,11 +509,32 @@ class EditInfoState extends State<EditInfo> {
         try {
           db.document(user.uid).updateData({
             'address': _userAddress,
-            'geopoint': GeoPoint(_locationData.latitude, _locationData.longitude)
+            'geopoint':
+                GeoPoint(_locationData.latitude, _locationData.longitude)
           });
         } catch (e) {
           print('user location:' + e.toString());
         }
+      }
+
+      //if user is tasker too. Then update location and geopoint values on all services
+      if (user.isTasker) {
+        var db = Firestore.instance;
+        // DocumentReference docRef = db.collection('users').document(user.uid);
+        // QuerySnapshot querySnapshot = await Firestore.instance
+        //     .collection("services")
+        //     .where('reference', isEqualTo: docRef)
+        //     .getDocuments();
+        CustomFirestore _customfirestore = new CustomFirestore();
+        var list = await _customfirestore.getAllTasker();
+        list.forEach((e) => {
+          db.collection("services").document(e.documentID).updateData({
+            'address': _userAddress,
+            'geopoint':
+                GeoPoint(_locationData.latitude, _locationData.longitude)
+          })
+        }
+        );
       }
 
       progress = false;
@@ -551,12 +569,6 @@ class EditInfoState extends State<EditInfo> {
         return;
       }
     }
-
-    // _locationData = await location.getLocation();
-    // double latitude = _locationData.latitude;
-    // double longitude = _locationData.longitude;
-    // print('latitude: '+latitude.toString());
-    // print('longitude: '+longitude.toString());
 
     _locationData = await location.getLocation();
 
