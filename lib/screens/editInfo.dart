@@ -2,9 +2,11 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:liderfacilites/models/User.dart';
 import 'package:liderfacilites/models/app_localization.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:location/location.dart';
 import 'package:path/path.dart' as p;
 
 class EditInfo extends StatefulWidget {
@@ -31,6 +33,12 @@ class EditInfoState extends State<EditInfo> {
   bool cpf = false;
   //
   AppLocalizations lang;
+  //user location
+  Location location = new Location();
+  bool _serviceEnabled;
+  PermissionStatus _permissionGranted;
+  LocationData _locationData;
+  String _userAddress = 'Not selected';
 
   @override
   void initState() {
@@ -38,6 +46,18 @@ class EditInfoState extends State<EditInfo> {
     emailC.text = user.email;
     phoneC.text = user.phoneNumber.toString();
     _imageUrl = user.imageUrl;
+    if (user.address != null){
+      _userAddress = user.address;
+    }
+    if (user.reg != null){
+      regC.text = user.reg;
+    }
+    if (user.socialsecurity != null){
+      if (user.socialsecurity == 'Cnpj')
+        cnpj = true;
+      else if (user.socialsecurity == 'Cpf')
+        cpf = true;
+    }
     super.initState();
   }
 
@@ -244,7 +264,7 @@ class EditInfoState extends State<EditInfo> {
           child: Column(
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.only(bottom:15.0, left: 10),
+                padding: const EdgeInsets.only(bottom: 15.0, left: 10),
                 child: Align(
                     alignment: Alignment.topLeft,
                     child: Text(
@@ -262,7 +282,6 @@ class EditInfoState extends State<EditInfo> {
                 child: TextFormField(
                   // textAlign: TextAlign.center,
                   keyboardType: TextInputType.phone,
-                  validator: validateMobile,
                   controller: regC,
                   // onSaved: (value) {
                   //   _phonenumber = int.parse(value);
@@ -342,53 +361,37 @@ class EditInfoState extends State<EditInfo> {
                       color: Colors.black38,
                       size: 15,
                     ),
-                    Padding(
+                    Expanded(
+                        child: Padding(
                       padding: const EdgeInsets.only(right: 8),
                       child: Text(
-                        'Not selected yet',
-                        style: TextStyle(fontSize: 10, color: Colors.black38),
+                        _userAddress,
+                        style: TextStyle(fontSize: 9, color: Colors.black38),
                       ),
-                    )
+                    ))
                   ]),
                 ),
-                Container(
-                  height: 100,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(color: Colors.black, blurRadius: 1)
-                      ]),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: Image.asset('assets/images/location.png',
+                      width: MediaQuery.of(context).size.width / 1.25,
+                      height: MediaQuery.of(context).size.width / 3.5,
+                      fit: BoxFit.cover),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Expanded(
-                        flex: 1,
-                        child: FlatButton(
-                          onPressed: () {},
-                          child: Text(
-                            lang.translate('Use current Location'),
-                            style: TextStyle(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.normal,
-                                fontSize: 13),
-                          ),
-                        )),
-                    Expanded(
-                        flex: 1,
-                        child: FlatButton(
-                          onPressed: () {},
-                          child: Text(
-                            lang.translate('Change Location'),
-                            style: TextStyle(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.normal,
-                                fontSize: 13),
-                          ),
-                        )),
-                  ],
-                ),
+                Align(
+                    alignment: Alignment.topLeft,
+                    child: FlatButton(
+                      onPressed: () {
+                        _getLocation();
+                      },
+                      child: Text(
+                        lang.translate('Use current Location'),
+                        style: TextStyle(
+                            color: Colors.blue,
+                            fontWeight: FontWeight.normal,
+                            fontSize: 13),
+                      ),
+                    ))
               ],
             )));
   }
@@ -431,7 +434,7 @@ class EditInfoState extends State<EditInfo> {
 
   //update record in firestore
   updateRecord(BuildContext context) async {
-    var db = Firestore.instance;
+    var db = Firestore.instance.collection('users');
     if (_formKey.currentState.validate()) {
       //start showing upload progress bar
       setState(() {
@@ -450,13 +453,11 @@ class EditInfoState extends State<EditInfo> {
         debugPrint('downloadUrl: ' + downloadUrl);
         try {
           db
-              .collection('users')
               .document(user.uid)
               .updateData({'imageurl': downloadUrl});
           //need to change imageurl in multiple location
           if (user.isTasker)
             db
-                .collection('users')
                 .document(user.uid)
                 .updateData({'imgurl': downloadUrl});
         } catch (e) {
@@ -469,13 +470,52 @@ class EditInfoState extends State<EditInfo> {
           user.phoneNumber != phoneC ||
           user.name != nameC.text) {
         try {
-          db.collection('users').document(user.uid).updateData({
+          db.document(user.uid).updateData({
             'name': nameC.text,
             'email': emailC.text,
             'phonenumber': int.parse(phoneC.text)
           });
         } catch (e) {
           print(e.toString());
+        }
+      }
+
+      //social_security part
+      String social_security;
+      if (cnpj) {
+        social_security = 'Cnpj';
+      } else if (cpf) {
+        social_security = 'Cpf';
+      }
+
+      if (social_security != null) {
+        try {
+          db.document(user.uid).updateData({
+            'social_security': social_security,
+          });
+        } catch (e) {
+          print(e.toString());
+        }
+      }
+      //reg part
+      if (regC.text.isNotEmpty) {
+        try {
+          db.document(user.uid).updateData({
+            'reg': regC.text,
+          });
+        } catch (e) {
+          print(e.toString());
+        }
+      }
+      //location part
+      if (_userAddress != 'Not selected' && _userAddress != null) {
+        try {
+          db.document(user.uid).updateData({
+            'address': _userAddress,
+            'geopoint': GeoPoint(_locationData.latitude, _locationData.longitude)
+          });
+        } catch (e) {
+          print('user location:' + e.toString());
         }
       }
 
@@ -493,5 +533,44 @@ class EditInfoState extends State<EditInfo> {
         _image = image;
       });
     }
+  }
+
+  _getLocation() async {
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.DENIED) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.GRANTED) {
+        return;
+      }
+    }
+
+    // _locationData = await location.getLocation();
+    // double latitude = _locationData.latitude;
+    // double longitude = _locationData.longitude;
+    // print('latitude: '+latitude.toString());
+    // print('longitude: '+longitude.toString());
+
+    _locationData = await location.getLocation();
+
+    final coordinates =
+        new Coordinates(_locationData.latitude, _locationData.longitude);
+    var addresses =
+        await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    var first = addresses.first;
+    setState(() {
+      _userAddress = first.addressLine;
+    });
+
+    print(
+        ' ${first.locality}, ${first.adminArea},${first.subLocality}, ${first.subAdminArea},${first.addressLine}');
+    return first;
   }
 }

@@ -7,6 +7,10 @@ class User {
   String _imageUrl;
   var _uid;
   bool _isTasker;
+  GeoPoint _geoPoint;
+  String _reg;
+  String _social_security;
+  String _address;
   DocumentReference reference;
 
   //singleton logic
@@ -26,7 +30,11 @@ class User {
         _email = map['email'],
         _phonenumber = map['phonenumber'],
         _imageUrl = map['imageurl'],
-        _isTasker = map['istasker'];
+        _isTasker = map['istasker'],
+        _social_security = map['social_security'],
+        _reg = map['reg'],
+        _address = map['address'],
+        _geoPoint = map['geopoint'];
 
   User.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data, reference: snapshot.reference);
@@ -55,6 +63,22 @@ class User {
     return _isTasker;
   }
 
+  get socialsecurity {
+    return _social_security;
+  }
+
+  get reg {
+    return _reg;
+  }
+
+  get address {
+    return _address;
+  }
+
+  get geopoint {
+    return _geoPoint;
+  }
+
   void setname(String value) {
     this._name = value;
   }
@@ -77,5 +101,21 @@ class User {
 
   void setUserState(bool value) {
     this._isTasker = value;
+  }
+
+  void setSocialSecurity(String value) {
+    _social_security = value;
+  }
+
+  void setReg(String value) {
+    _reg = value;
+  }
+
+  void setAddress(String value) {
+    _address = value;
+  }
+
+  void setGeoPoint(GeoPoint value) {
+    _geoPoint = value;
   }
 }

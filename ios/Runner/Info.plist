@@ -4,6 +4,10 @@
 <dict>
 <key>io.flutter.embedded_views_preview</key>
 <true/>
+<key>NSLocationAlwaysUsageDescription</key>
+<string>Needed to access location</string>
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>Needed to access location</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app requires access to the photo library.</string>
 	<key>NSMicrophoneUsageDescription</key>

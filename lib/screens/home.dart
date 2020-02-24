@@ -237,6 +237,10 @@ class _HomePageState extends State<HomePage> {
     user.setPhoneNum(userRecord.phoneNumber);
     user.setUserState(userRecord.isTasker);
     if (userRecord.imageUrl != null) user.setImageUrl(userRecord.imageUrl);
+    if (userRecord.socialsecurity != null) user.setSocialSecurity(userRecord.socialsecurity);
+    if (userRecord.reg != null) user.setReg(userRecord.reg);
+    if (userRecord.address != null) user.setAddress(userRecord.address);
+    if (userRecord.geopoint != null) user.setGeoPoint(userRecord.geopoint);
   }
 
 //   // loadCurrentUserData() async {
