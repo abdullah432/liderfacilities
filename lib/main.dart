@@ -3,15 +3,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:liderfacilites/models/User.dart';
 import 'package:liderfacilites/models/auth_provider.dart';
 import 'package:liderfacilites/models/authentication.dart';
+import 'package:liderfacilites/models/icons.dart';
 import 'package:liderfacilites/models/setting.dart';
-import 'package:liderfacilites/screens/addservices.dart';
-import 'package:liderfacilites/screens/editInfo.dart';
 import 'package:liderfacilites/screens/home.dart';
 import 'package:liderfacilites/screens/login.dart';
-import 'package:liderfacilites/screens/rootpage.dart';
-import 'package:liderfacilites/screens/userhome/fourth_page.dart';
-import 'package:provider/provider.dart';
-import 'package:liderfacilites/models/localmodal.dart';
 import 'models/app_localization.dart';
 
 void main() => runApp(MyApp());
@@ -29,6 +24,7 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
+  CustomIcon icon = new CustomIcon();
   Setting setting = new Setting();
   Locale _locale;
   bool callFromEditPage = false;
@@ -42,6 +38,7 @@ class MyAppState extends State<MyApp> {
 
   @override
   void initState() {
+    icon.loadAllIcons();
     setLanguage();
     super.initState();
   }

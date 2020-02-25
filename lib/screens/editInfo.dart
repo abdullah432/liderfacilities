@@ -3,11 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:liderfacilites/models/User.dart';
 import 'package:liderfacilites/models/app_localization.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:liderfacilites/models/firestore.dart';
-import 'package:location/location.dart';
 import 'package:path/path.dart' as p;
 
 class EditInfo extends StatefulWidget {
@@ -35,10 +35,8 @@ class EditInfoState extends State<EditInfo> {
   //
   AppLocalizations lang;
   //user location
-  Location location = new Location();
-  bool _serviceEnabled;
-  PermissionStatus _permissionGranted;
-  LocationData _locationData;
+  Geolocator geolocator = Geolocator();
+  Position userLocation;
   String _userAddress = 'Not selected';
 
   @override
@@ -383,7 +381,11 @@ class EditInfoState extends State<EditInfo> {
                     alignment: Alignment.topLeft,
                     child: FlatButton(
                       onPressed: () {
-                        _getLocation();
+                        _getLocation().then((value) {
+                          setState(() {
+                            userLocation = value;
+                          });
+                        });
                       },
                       child: Text(
                         lang.translate('Use current Location'),
@@ -509,8 +511,7 @@ class EditInfoState extends State<EditInfo> {
         try {
           db.document(user.uid).updateData({
             'address': _userAddress,
-            'geopoint':
-                GeoPoint(_locationData.latitude, _locationData.longitude)
+            'geopoint': GeoPoint(userLocation.latitude, userLocation.longitude)
           });
         } catch (e) {
           print('user location:' + e.toString());
@@ -528,13 +529,12 @@ class EditInfoState extends State<EditInfo> {
         CustomFirestore _customfirestore = new CustomFirestore();
         var list = await _customfirestore.getAllTasker();
         list.forEach((e) => {
-          db.collection("services").document(e.documentID).updateData({
-            'address': _userAddress,
-            'geopoint':
-                GeoPoint(_locationData.latitude, _locationData.longitude)
-          })
-        }
-        );
+              db.collection("services").document(e.documentID).updateData({
+                'address': _userAddress,
+                'geopoint':
+                    GeoPoint(userLocation.latitude, userLocation.longitude)
+              })
+            });
       }
 
       progress = false;
@@ -553,27 +553,16 @@ class EditInfoState extends State<EditInfo> {
     }
   }
 
-  _getLocation() async {
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
-        return;
-      }
+  Future<Position> _getLocation() async {
+    try {
+      userLocation = await geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.best);
+    } catch (e) {
+      userLocation = null;
     }
-
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.DENIED) {
-      _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.GRANTED) {
-        return;
-      }
-    }
-
-    _locationData = await location.getLocation();
 
     final coordinates =
-        new Coordinates(_locationData.latitude, _locationData.longitude);
+        new Coordinates(userLocation.latitude, userLocation.longitude);
     var addresses =
         await Geocoder.local.findAddressesFromCoordinates(coordinates);
     var first = addresses.first;
@@ -581,8 +570,39 @@ class EditInfoState extends State<EditInfo> {
       _userAddress = first.addressLine;
     });
 
-    print(
-        ' ${first.locality}, ${first.adminArea},${first.subLocality}, ${first.subAdminArea},${first.addressLine}');
-    return first;
+    return userLocation;
   }
+
+  // _getLocation() async {
+  //   _serviceEnabled = await location.serviceEnabled();
+  //   if (!_serviceEnabled) {
+  //     _serviceEnabled = await location.requestService();
+  //     if (!_serviceEnabled) {
+  //       return;
+  //     }
+  //   }
+
+  //   _permissionGranted = await location.hasPermission();
+  //   if (_permissionGranted == PermissionStatus.DENIED) {
+  //     _permissionGranted = await location.requestPermission();
+  //     if (_permissionGranted != PermissionStatus.GRANTED) {
+  //       return;
+  //     }
+  //   }
+
+  //   _locationData = await location.getLocation();
+
+  //   final coordinates =
+  //       new Coordinates(_locationData.latitude, _locationData.longitude);
+  //   var addresses =
+  //       await Geocoder.local.findAddressesFromCoordinates(coordinates);
+  //   var first = addresses.first;
+  //   setState(() {
+  //     _userAddress = first.addressLine;
+  //   });
+
+  //   print(
+  //       ' ${first.locality}, ${first.adminArea},${first.subLocality}, ${first.subAdminArea},${first.addressLine}');
+  //   return first;
+  // }
 }
