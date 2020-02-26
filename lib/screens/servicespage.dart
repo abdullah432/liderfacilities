@@ -45,7 +45,11 @@ class MyServicesState extends State<MyServices> {
           if (snapshot.data.documents.length == 0)
             return noServiceBody(context);
           else
-            return _buildList(context, snapshot.data.documents);
+            return SingleChildScrollView(child: _buildList(context, snapshot.data.documents));
+        }
+        
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator(),);
         }
       },
     );

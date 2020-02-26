@@ -26,6 +26,7 @@ class FirstPageState extends State<FirstPage> {
 
   // List<DocumentSnapshot> listOfTaskers;
   var tasker;
+  var taskerId;
   bool showUserProfile = false;
 
   CustomFirestore _customFirestore = new CustomFirestore();
@@ -36,7 +37,8 @@ class FirstPageState extends State<FirstPage> {
   Geolocator geolocator = Geolocator();
   Position userLocation;
   static double zoomValue = 13;
-  GeoPoint _geoPoint = new GeoPoint(30.048749, 60.3197225);
+  // GeoPoint _geoPoint = new GeoPoint(0, 0);
+  GeoPoint _geoPoint = new GeoPoint(30.3753, 69.3451);
   BitmapDescriptor mylocationIcon;
   //Tasker progile image url
   String _imageUrl;
@@ -88,9 +90,11 @@ class FirstPageState extends State<FirstPage> {
             showUserProfile = false;
           });
         });
+        if(this.mounted){
     setState(() {
       markers[mId] = marker;
     });
+        }
 
     debugPrint('called');
   }
@@ -139,6 +143,7 @@ class FirstPageState extends State<FirstPage> {
                       docs.documents[i].data, docs.documents[i].documentID)
                 }
             }
+
         });
   }
 
@@ -153,16 +158,21 @@ class FirstPageState extends State<FirstPage> {
         icon: getMarkerIcon(request['type']),
         onTap: () {
           tasker = request;
+          taskerId = markerId.value;
           _imageUrl = tasker['imgurl'];
+          if(this.mounted){
           setState(() {
             showUserProfile = true;
+            print('id: '+markerId.value.toString());
           });
+          }
         });
-
+if(this.mounted){
     setState(() {
       markers[markerId] = marker;
       print(markerId);
     });
+}
   }
 
   @override
@@ -177,8 +187,8 @@ class FirstPageState extends State<FirstPage> {
           mapType: MapType.normal,
           markers: Set<Marker>.of(markers.values),
           initialCameraPosition: CameraPosition(
-            target: LatLng(_geoPoint.latitude, _geoPoint.longitude),
-            zoom: 5,
+            target: LatLng(_geoPoint.latitude ?? 30.3753, _geoPoint.longitude ?? 69.3451),
+            zoom: 6,
           ),
           onMapCreated: (GoogleMapController controller) {
             _controller.complete(controller);
@@ -247,8 +257,8 @@ class FirstPageState extends State<FirstPage> {
                           onTap: () {
                             //todo tasker chat page
                             print('save');
-                            print('ref: '+tasker);
-                            // _customFirestore.addServiceToFavourit(tasker);
+                            // print('ref: '+taskerId);
+                            _customFirestore.addServiceToFavourit(taskerId);
                           },
                           child: Icon(
                             Icons.favorite,
@@ -355,7 +365,7 @@ class FirstPageState extends State<FirstPage> {
               Container(
                 width: MediaQuery.of(context).size.width / 1.1,
                 padding:
-                    EdgeInsets.only(left: 20, top: 3, bottom: 3, right: 14),
+                    EdgeInsets.only(left: 20, right: 14),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
                     color: Colors.white,

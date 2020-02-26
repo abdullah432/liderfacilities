@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:liderfacilites/models/Service.dart';
 import 'package:liderfacilites/models/User.dart';
 
 class CustomFirestore {
@@ -34,10 +36,9 @@ class CustomFirestore {
   }
 
   //add reference of service when user like a service
-  addServiceToFavourit(id) {
+  addServiceToFavourit(ref) {
     db.collection('users').document(_user.uid).updateData(({
-          'favourite':
-              FieldValue.arrayUnion([db.collection('services').document(id)])
+          'favourite': FieldValue.arrayUnion([ref])
         }));
   }
 
@@ -69,5 +70,21 @@ class CustomFirestore {
     if (userRecord.geopoint != null) _user.setGeoPoint(userRecord.geopoint);
 
     return userRecord;
+  }
+
+  Future<List<DocumentSnapshot>> loadFavServices() async {
+    // var snapshot = await db.collection('services').document(id).get();
+    // Service service = Service.fromSnapshot(snapshot);
+    // return service;
+    List<String> favouriteList = _user.favoriteList;
+    List<DocumentSnapshot> documentSnapshot = new List();
+    for (int i = 0; i < favouriteList.length; i++) {
+      var snapshot =
+          await db.collection('services').document(favouriteList[i]).get();
+  
+      documentSnapshot.add(snapshot);
+    }
+    debugPrint('length of ds: '+documentSnapshot.length.toString());
+    return documentSnapshot;
   }
 }

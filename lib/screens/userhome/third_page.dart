@@ -1,5 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:liderfacilites/models/Service.dart';
+import 'package:liderfacilites/models/User.dart';
 import 'package:liderfacilites/models/app_localization.dart';
+import 'package:liderfacilites/models/firestore.dart';
 
 class ThirdPage extends StatefulWidget {
   const ThirdPage({Key key}) : super(key: key);
@@ -12,14 +16,82 @@ class ThirdPage extends StatefulWidget {
 
 class ThirdPageState extends State<ThirdPage> {
   AppLocalizations lang;
+  List<String> favouriteList;
+  bool favEmpty = true;
+  User _user = new User();
+  List<Service> _favouriteServices = new List();
+  CustomFirestore _customFirestore = new CustomFirestore();
+  String _imageUrl;
+
+  @override
+  void initState() {
+    favouriteList = _user.favoriteList;
+    if (favouriteList.isEmpty) {
+      favEmpty = true;
+      debugPrint('data true');
+    } else {
+      favEmpty = false;
+      //    debugPrint('data false');
+      // loadFavServices();
+    }
+    super.initState();
+  }
+
+  // loadFavServices() async {
+  //   for (int i = 0; i < favouriteList.length; i++) {
+  //     debugPrint('serviceid: ' + favouriteList[i].toString());
+  //     Service service =
+  //         await _customFirestore.loadFavServices(favouriteList[i]);
+  //     debugPrint('before');
+  //     _favouriteServices.add(service);
+  //   }
+  //   debugPrint('lenghtofser: ' + _favouriteServices.length.toString());
+  //   // debugPrint('services: '+_favouriteServices.toString());
+  //   if (this.mounted){
+  //     setState(() {
+  //       loading = false;
+  //     });
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     lang = AppLocalizations.of(context);
     return Scaffold(
-      body: Container(child: Column(
+        body: Container(
+      child: Column(
         children: <Widget>[
           uperPart(),
           searchTF(),
+          favEmpty == true
+              ? Center(
+                  child: Text('No Favourite Service'),
+                )
+              : FutureBuilder(
+                  future: _customFirestore.loadFavServices(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData)
+                      return Center(
+                        child: Text('No Favourite Service'),
+                      );
+                    if (snapshot.hasData) {
+                      // debugPrint('data length: '+snapshot.data.documents.toList().length.toString());
+                      if (snapshot.data.length == 0)
+                        return Center(
+                          child: Text('No Favourite Service'),
+                        );
+                      else
+                        return SingleChildScrollView(child: _buildList(context, snapshot.data));
+                    }
+
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  },
+                ),
+          // StreamBuilder(stream: Firestore.instance.collection(path).g,)
         ],
       ),
     ));
@@ -56,8 +128,7 @@ class ThirdPageState extends State<ThirdPage> {
             children: <Widget>[
               Container(
                 width: MediaQuery.of(context).size.width / 1.1,
-                padding:
-                    EdgeInsets.only(left: 20, top: 3, bottom: 3, right: 14),
+                padding: EdgeInsets.only(left: 20, right: 14),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
                     color: Colors.white,
@@ -80,6 +151,75 @@ class ThirdPageState extends State<ThirdPage> {
                 ]),
               )
             ],
+          ),
+        ));
+  }
+
+  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
+    debugPrint('buildList');
+    return Column(
+      children: <Widget>[
+        ListView(
+          shrinkWrap: true,
+          children:
+              snapshot.map((data) => _buildListItem(context, data)).toList(),
+        )
+      ],
+    );
+  }
+
+  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
+    final record = Service.fromSnapshot(data);
+    _imageUrl = record.imageurl;
+
+    return Padding(
+        // key: ValueKey(record.name),
+        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 10, bottom: 10),
+            child: ListTile(
+              leading: CircleAvatar(
+                radius: 35,
+                // backgroundColor: Colors.black,
+                child: ClipOval(
+                    child: _imageUrl == null
+                        ? Image.asset(
+                            'assets/images/account.png',
+                          )
+                        : Image.network(
+                            _imageUrl,
+                            fit: BoxFit.fill,
+                            width: 57,
+                          )),
+              ),
+              title: Text(record.name),
+              subtitle: Text(
+                record.description,
+                maxLines: 6,
+                overflow: TextOverflow.ellipsis,
+              ),
+              trailing: Container(
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.black12, width: 2)),
+                child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        //todo tasker chat page
+                      },
+                      child: Icon(
+                        Icons.message,
+                        color: Colors.blue,
+                        size: 18,
+                      ),
+                    )),
+              ),
+            ),
           ),
         ));
   }

@@ -228,7 +228,7 @@ class _HomePageState extends State<HomePage> {
 //   }
 
   updateUserData(DocumentSnapshot snapshot) async {
-    debugPrint('before');
+    // debugPrint('before');s
     userRecord = User.fromSnapshot(snapshot);
     User user = new User();
     user.setUID(useruid);
@@ -241,6 +241,7 @@ class _HomePageState extends State<HomePage> {
     if (userRecord.reg != null) user.setReg(userRecord.reg);
     if (userRecord.address != null) user.setAddress(userRecord.address);
     if (userRecord.geopoint != null) user.setGeoPoint(userRecord.geopoint);
+    if (userRecord.favoriteList != null) user.setFavouriteList(userRecord.favoriteList);
   }
 
 //   // loadCurrentUserData() async {
@@ -363,7 +364,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('selected index: ' + _selectedIndex.toString());
+    // debugPrint('selected index: ' + _selectedIndex.toString());
     return Scaffold(
         bottomNavigationBar: _bottomNavigationBar(_selectedIndex),
         body:
@@ -371,7 +372,6 @@ class _HomePageState extends State<HomePage> {
             //   child: pages[_selectedIndex],
             //   bucket: bucket,
             // ),
-
             StreamBuilder(
                 stream: Firestore.instance
                     .collection('users')
