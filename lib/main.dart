@@ -130,7 +130,7 @@ class RootPage extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.active){
           final bool isLoggedIn = snapshot.hasData;
           // String data = snapshot.data;
-          // debugPrint('data: '+data.toString());
+          debugPrint('auth change');
           return isLoggedIn ? HomePage(snapshot.data) : Login();
         }
         return _buildWaitingScreen(context);

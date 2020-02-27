@@ -23,9 +23,8 @@ class MyServicesState extends State<MyServices> {
   @override
   Widget build(BuildContext context) {
     docRef = db.collection('users').document(user.uid);
-    if (user.uid != null)
-      debugPrint('useruid: '+user.uid);
-    debugPrint('reference: '+docRef.path);
+    if (user.uid != null) debugPrint('useruid: ' + user.uid);
+    debugPrint('reference: ' + docRef.path);
     return Scaffold(
         body: SingleChildScrollView(
       child: _buildBody(context),
@@ -37,7 +36,10 @@ class MyServicesState extends State<MyServices> {
   Widget _buildBody(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       // stream: Firestore.instance.collection('services').snapshots(),
-      stream: Firestore.instance.collection('services').where('reference', isEqualTo: docRef).snapshots(),
+      stream: Firestore.instance
+          .collection('services')
+          .where('reference', isEqualTo: docRef)
+          .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) return noServiceBody(context);
         if (snapshot.hasData) {
@@ -45,11 +47,14 @@ class MyServicesState extends State<MyServices> {
           if (snapshot.data.documents.length == 0)
             return noServiceBody(context);
           else
-            return SingleChildScrollView(child: _buildList(context, snapshot.data.documents));
+            return SingleChildScrollView(
+                child: _buildList(context, snapshot.data.documents));
         }
-        
+
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator(),);
+          return Center(
+            child: CircularProgressIndicator(),
+          );
         }
       },
     );
@@ -84,7 +89,7 @@ class MyServicesState extends State<MyServices> {
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: ListTile(
               leading: CircleAvatar(
-                radius: 35,
+                radius: 30,
                 // backgroundColor: Colors.black,
                 child: ClipOval(
                     child: _imageUrl == null
@@ -93,8 +98,9 @@ class MyServicesState extends State<MyServices> {
                           )
                         : Image.network(
                             _imageUrl,
-                            fit: BoxFit.fill,
-                            width: 57,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: double.infinity,
                           )),
               ),
               title: Text(record.name),
@@ -106,19 +112,19 @@ class MyServicesState extends State<MyServices> {
               trailing: Container(
                 decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(color: Colors.black12, width: 2)),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      //todo tasker chat page
-                    },
+                    border: Border.all(color: Colors.blue, width: 2)),
+                child:  GestureDetector(
+                      onTap: () {
+                        //todo tasker chat page
+                      },
+                      child: Padding(
+                    padding: const EdgeInsets.all(6.0),
                     child: Icon(
-                    Icons.message,
-                    color: Colors.blue,
-                    size: 18,
-                  ),
-                )),
+                        Icons.message,
+                        color: Colors.blue,
+                        size: 18,
+                      ),
+                    )),
               ),
             ),
           ),
@@ -200,18 +206,23 @@ class MyServicesState extends State<MyServices> {
         uperPart(),
         Card(
             child: ListTile(
+              onTap: () {print('dlick');},
           leading: CircleAvatar(
-            radius: 40,
+            radius: 30,
             // backgroundColor: Colors.black,
             child: ClipOval(
                 child: _imageUrl == null
                     ? Image.asset(
                         'assets/images/account.png',
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: double.infinity,
                       )
                     : Image.network(
                         _imageUrl,
-                        fit: BoxFit.fill,
-                        width: 77,
+                        width: double.infinity,
+                        height: double.infinity,
+                        fit: BoxFit.cover,
                       )),
           ),
           title: Text('Title'),
@@ -219,12 +230,12 @@ class MyServicesState extends State<MyServices> {
           trailing: Container(
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.black12, width: 2)),
+                border: Border.all(color: Colors.black38, width: 2)),
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(3.0),
               child: Icon(
                 Icons.message,
-                color: Colors.blue,
+                color: Colors.black38,
                 size: 18,
               ),
             ),
@@ -266,8 +277,7 @@ class MyServicesState extends State<MyServices> {
             Spacer(),
             FlatButton(
               onPressed: () {
-                if (!user.isTasker)
-                  navigateToAddServicePage();
+                if (!user.isTasker) navigateToAddServicePage();
               },
               child: Padding(
                 padding: const EdgeInsets.all(10.0),

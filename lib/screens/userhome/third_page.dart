@@ -70,10 +70,10 @@ class ThirdPageState extends State<ThirdPage> {
               : FutureBuilder(
                   future: _customFirestore.loadFavServices(),
                   builder: (context, snapshot) {
-                    if (!snapshot.hasData)
-                      return Center(
-                        child: Text('No Favourite Service'),
-                      );
+                    // if (!snapshot.hasData)
+                    //   return Center(
+                    //     child: Text('No Favourite Service'),
+                    //   );
                     if (snapshot.hasData) {
                       // debugPrint('data length: '+snapshot.data.documents.toList().length.toString());
                       if (snapshot.data.length == 0)
@@ -81,7 +81,10 @@ class ThirdPageState extends State<ThirdPage> {
                           child: Text('No Favourite Service'),
                         );
                       else
-                        return SingleChildScrollView(child: _buildList(context, snapshot.data));
+                        return Transform.translate(
+                            offset: Offset(0, -25),
+                            child: SingleChildScrollView(
+                                child: _buildList(context, snapshot.data)));
                     }
 
                     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -156,7 +159,6 @@ class ThirdPageState extends State<ThirdPage> {
   }
 
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
-    debugPrint('buildList');
     return Column(
       children: <Widget>[
         ListView(
@@ -180,20 +182,24 @@ class ThirdPageState extends State<ThirdPage> {
             borderRadius: BorderRadius.circular(12.0),
           ),
           child: Padding(
-            padding: const EdgeInsets.only(top: 10, bottom: 10),
+            padding: const EdgeInsets.only( bottom: 10),
             child: ListTile(
               leading: CircleAvatar(
-                radius: 35,
+                radius: 30,
                 // backgroundColor: Colors.black,
                 child: ClipOval(
                     child: _imageUrl == null
                         ? Image.asset(
                             'assets/images/account.png',
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: double.infinity,
                           )
                         : Image.network(
                             _imageUrl,
-                            fit: BoxFit.fill,
-                            width: 57,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: double.infinity,
                           )),
               ),
               title: Text(record.name),
@@ -205,7 +211,7 @@ class ThirdPageState extends State<ThirdPage> {
               trailing: Container(
                 decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(color: Colors.black12, width: 2)),
+                    border: Border.all(color: Colors.blue, width: 2)),
                 child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: GestureDetector(

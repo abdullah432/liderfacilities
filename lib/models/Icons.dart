@@ -27,7 +27,7 @@ class CustomIcon {
     });
   }
 
-  void loadAllIcons() {
+  void loadAllIcons() async{
     //mylocation
     BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
             'assets/images/mylocation.png')

@@ -148,24 +148,44 @@ class EditInfoState extends State<EditInfo> {
               getImage();
             },
             child: CircleAvatar(
-                radius: 70,
+                radius: 80,
+                // backgroundColor: Colors.black,
                 child: ClipOval(
                   child: _image == null
-                      ? _imageUrl == null
-                          ? Image.asset(
-                              'assets/images/account.png',
-                            )
-                          : Image.network(
-                              _imageUrl,
-                              fit: BoxFit.cover,
-                              width: 170,
-                            )
+                      ? FadeInImage.assetNetwork(
+                          height: double.infinity,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                          fadeInCurve: Curves.bounceIn,
+                          placeholder: 'assets/images/account.png',
+                          image: _imageUrl,
+                        )
                       : Image.file(
                           _image,
                           fit: BoxFit.cover,
-                          width: 170,
+                          width: double.infinity,
+                          height: double.infinity,
                         ),
                 ))));
+    // CircleAvatar(
+    //     radius: 70,
+    //     child: ClipOval(
+    //       child: _image == null
+    //           ? _imageUrl == null
+    //               ? Image.asset(
+    //                   'assets/images/account.png',
+    //                 )
+    //               : Image.network(
+    //                   _imageUrl,
+    //                   fit: BoxFit.cover,
+    //                   width: 170,
+    //                 )
+    //           : Image.file(
+    //               _image,
+    //               fit: BoxFit.cover,
+    //               width: 170,
+    //             ),
+    //     )),
   }
 
   nameTF() {

@@ -45,6 +45,8 @@ class FirstPageState extends State<FirstPage> {
   //setting to get mylocationicon
   Setting setting = new Setting();
   CustomIcon icon = new CustomIcon();
+  //clicked service is fav or not
+  bool fav = false;
   //
   var lang;
 
@@ -90,11 +92,11 @@ class FirstPageState extends State<FirstPage> {
             showUserProfile = false;
           });
         });
-        if(this.mounted){
-    setState(() {
-      markers[mId] = marker;
-    });
-        }
+    if (this.mounted) {
+      setState(() {
+        markers[mId] = marker;
+      });
+    }
 
     debugPrint('called');
   }
@@ -143,7 +145,6 @@ class FirstPageState extends State<FirstPage> {
                       docs.documents[i].data, docs.documents[i].documentID)
                 }
             }
-
         });
   }
 
@@ -160,19 +161,29 @@ class FirstPageState extends State<FirstPage> {
           tasker = request;
           taskerId = markerId.value;
           _imageUrl = tasker['imgurl'];
-          if(this.mounted){
-          setState(() {
-            showUserProfile = true;
-            print('id: '+markerId.value.toString());
-          });
+
+          List<String> listoffav = _user.favoriteList;
+          fav = false;
+          for (int i = 0; i < listoffav.length; i++) {
+            if (listoffav[i] == taskerId) {
+              fav = true;
+              break;
+            }
+          }
+
+          if (this.mounted) {
+            setState(() {
+              showUserProfile = true;
+              print('id: ' + markerId.value.toString());
+            });
           }
         });
-if(this.mounted){
-    setState(() {
-      markers[markerId] = marker;
-      print(markerId);
-    });
-}
+    if (this.mounted) {
+      setState(() {
+        markers[markerId] = marker;
+        print(markerId);
+      });
+    }
   }
 
   @override
@@ -187,7 +198,8 @@ if(this.mounted){
           mapType: MapType.normal,
           markers: Set<Marker>.of(markers.values),
           initialCameraPosition: CameraPosition(
-            target: LatLng(_geoPoint.latitude ?? 30.3753, _geoPoint.longitude ?? 69.3451),
+            target: LatLng(
+                _geoPoint.latitude ?? 30.3753, _geoPoint.longitude ?? 69.3451),
             zoom: 6,
           ),
           onMapCreated: (GoogleMapController controller) {
@@ -223,7 +235,7 @@ if(this.mounted){
               child: Card(
                   child: ListTile(
                 leading: CircleAvatar(
-                  radius: 35,
+                  radius: 30,
                   // backgroundColor: Colors.black,
                   child: ClipOval(
                       child: _imageUrl == null
@@ -232,8 +244,9 @@ if(this.mounted){
                             )
                           : Image.network(
                               _imageUrl,
-                              fit: BoxFit.fill,
-                              width: 57,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              height: double.infinity,
                             )),
                 ),
                 title: tasker == null
@@ -244,49 +257,61 @@ if(this.mounted){
                     : Text(tasker['description']),
 
                 // subtitle: tasker['description'] ?? 'description',
-                trailing:  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                    Container(
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.black12, width: 2)),
-                  child:Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: GestureDetector(
-                          onTap: () {
-                            //todo tasker chat page
-                            print('save');
-                            // print('ref: '+taskerId);
-                            _customFirestore.addServiceToFavourit(taskerId);
-                          },
-                          child: Icon(
-                            Icons.favorite,
-                            color: Colors.blue,
-                            size: 15,
-                          ),
-                        ))),
-                    Padding(
-                      padding: const EdgeInsets.only(left:8.0),
-                      child: Container(
-                  decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.black12, width: 2)),
-                  child:Padding(
+                trailing:
+                    Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
+                  Container(
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: fav == true ? Colors.green : Colors.black12, width: 2)),
+                      child: Padding(
                           padding: const EdgeInsets.all(5.0),
                           child: GestureDetector(
                             onTap: () {
                               //todo tasker chat page
-                              print('navigate to chage page');
+                              print('save');
+                              // print('ref: '+taskerId);
+                              if (!fav){
+                                _customFirestore.addServiceToFavourit(taskerId);
+                                setState(() {
+                                  fav = true;
+                                });
+                                
+                              }
+                              else{
+                                _customFirestore.removeServiceFromFavourite(taskerId);
+                                setState(() {
+                                  fav = false;
+                                });
+                              }
                             },
                             child: Icon(
-                              Icons.message,
-                              color: Colors.blue,
+                              Icons.favorite,
+                              color: fav == true ? Colors.green : Colors.black12,
                               size: 15,
                             ),
                           ))),
-                    ),
-                  ]),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Container(
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border:
+                                Border.all(color: Colors.black12, width: 2)),
+                        child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                //todo tasker chat page
+                                print('navigate to chage page');
+                              },
+                              child: Icon(
+                                Icons.message,
+                                color: Colors.black38,
+                                size: 15,
+                              ),
+                            ))),
+                  ),
+                ]),
               )),
             )),
       ],
@@ -364,8 +389,7 @@ if(this.mounted){
             children: <Widget>[
               Container(
                 width: MediaQuery.of(context).size.width / 1.1,
-                padding:
-                    EdgeInsets.only(left: 20, right: 14),
+                padding: EdgeInsets.only(left: 20, right: 14),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
                     color: Colors.white,

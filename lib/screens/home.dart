@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> {
 //   //
   final db = Firestore.instance;
   //user record
-  User userRecord;
+  User _userRecord;
 
 //   final List<Widget> pages = [
 //     FirstPage(
@@ -229,19 +229,21 @@ class _HomePageState extends State<HomePage> {
 
   updateUserData(DocumentSnapshot snapshot) async {
     // debugPrint('before');s
-    userRecord = User.fromSnapshot(snapshot);
+    _userRecord = User.fromSnapshot(snapshot);
     User user = new User();
     user.setUID(useruid);
-    user.setname(userRecord.name);
-    user.setEmail(userRecord.email);
-    user.setPhoneNum(userRecord.phoneNumber);
-    user.setUserState(userRecord.isTasker);
-    if (userRecord.imageUrl != null) user.setImageUrl(userRecord.imageUrl);
-    if (userRecord.socialsecurity != null) user.setSocialSecurity(userRecord.socialsecurity);
-    if (userRecord.reg != null) user.setReg(userRecord.reg);
-    if (userRecord.address != null) user.setAddress(userRecord.address);
-    if (userRecord.geopoint != null) user.setGeoPoint(userRecord.geopoint);
-    if (userRecord.favoriteList != null) user.setFavouriteList(userRecord.favoriteList);
+    user.setname(_userRecord.name);
+    user.setEmail(_userRecord.email);
+    user.setPhoneNum(_userRecord.phoneNumber);
+    user.setUserState(_userRecord.isTasker);
+    if (_userRecord.imageUrl != null) user.setImageUrl(_userRecord.imageUrl);
+    if (_userRecord.socialsecurity != null)
+      user.setSocialSecurity(_userRecord.socialsecurity);
+    if (_userRecord.reg != null) user.setReg(_userRecord.reg);
+    if (_userRecord.address != null) user.setAddress(_userRecord.address);
+    if (_userRecord.geopoint != null) user.setGeoPoint(_userRecord.geopoint);
+    if (_userRecord.favoriteList != null)
+      user.setFavouriteList(_userRecord.favoriteList);
   }
 
 //   // loadCurrentUserData() async {
@@ -398,11 +400,35 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-      // if (index == 1) _navigatorKey.currentState.pushNamed('/page2');
-      // if (index == 2) _navigatorKey.currentState.pushNamed('/page3');
-      // if (index == 3) _navigatorKey.currentState.pushNamed('/page4');
-    });
+    if (index == 4) {
+      if (_userRecord.isTasker) {
+      } else {
+        showBecomeTaskerAlert();
+      }
+    } else {
+      setState(() {
+        _selectedIndex = index;
+        // if (index == 1) _navigatorKey.currentState.pushNamed('/page2');
+        // if (index == 2) _navigatorKey.currentState.pushNamed('/page3');
+        // if (index == 3) _navigatorKey.currentState.pushNamed('/page4');
+      });
+    }
+  }
+
+  showBecomeTaskerAlert() {
+    showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+              title: Text('You are not a Tasker'),
+              content: Text('Go to Account and become a tasker'),
+              actions: <Widget>[
+                FlatButton(
+                  onPressed: () {
+                    //nothing
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            ));
   }
 }

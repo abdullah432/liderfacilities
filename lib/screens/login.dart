@@ -332,6 +332,7 @@ class LoginState extends State<Login> {
         if (user.uid != null) {
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) {
+                debugPrint('before navigate: '+user.uid.toString());
             return HomePage(user.uid);
           }));
         } else {

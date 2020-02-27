@@ -6,6 +6,7 @@ import 'package:liderfacilites/models/auth_provider.dart';
 import 'package:liderfacilites/models/authentication.dart';
 import 'package:liderfacilites/models/setting.dart';
 import 'package:liderfacilites/screens/editInfo.dart';
+import 'package:liderfacilites/screens/login.dart';
 import 'package:liderfacilites/screens/servicespage.dart';
 import 'package:provider/provider.dart';
 import 'package:liderfacilites/models/localmodal.dart';
@@ -47,7 +48,7 @@ class FourthPageState extends State<FourthPage> {
   Widget build(BuildContext context) {
     _imageUrl = _userData.imageUrl;
     lang = AppLocalizations.of(context);
-    debugPrint('isTasker: '+_userData.isTasker.toString());
+    debugPrint('isTasker: ' + _userData.isTasker.toString());
     if (_userData.isTasker) {
       // taskerBtnTxt = AppLocalizations.of(context).translate('Edit My Services');
       taskerTxtVisibility = false;
@@ -101,6 +102,7 @@ class FourthPageState extends State<FourthPage> {
   logoutTXT() {
     return GestureDetector(
         onTap: () {
+          debugPrint('logout');
           _signOut(context);
         },
         child: Padding(
@@ -120,18 +122,24 @@ class FourthPageState extends State<FourthPage> {
       radius: 40,
       // backgroundColor: Colors.black,
       child: ClipOval(
-          child: _imageUrl == null
-              ? Image.asset(
-                  'assets/images/account.png',
-                )
-              : Image.network(
-                  _imageUrl,
-                  fit: BoxFit.fill,
-                  width: 77,
-                )),
-      // backgroundImage: AssetImage('icons/default_profile_idcon.png'),
-      // backgroundImage: AssetImage('assets/images/account.png'),
-      // child: FadeInImage(image: Image.network(url)),
+          child: FadeInImage.assetNetwork(
+        height: double.infinity,
+        width: double.infinity,
+        fit: BoxFit.cover,
+        fadeInCurve: Curves.bounceIn,
+        placeholder: 'assets/images/account.png',
+        image: _imageUrl,
+      )),
+      // ClipOval(
+      //     child: _imageUrl == null
+      //         ? Image.asset(
+      //             'assets/images/account.png',
+      //           )
+      //         :  Image.network(
+      //             _imageUrl,
+      //             fit: BoxFit.fill,
+      //             width: 77,
+      //           )),
     );
   }
 
@@ -253,26 +261,27 @@ class FourthPageState extends State<FourthPage> {
                   height: 1,
                   thickness: 1,
                 ),
-                Visibility(visible: taskerTxtVisibility, child:
-                Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: RaisedButton(
-                    onPressed: () {
-                      // debugPrint('become tasker');
-                      navigateToAddServicePage();
-                    },
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15)),
-                    color: Color.fromRGBO(26, 119, 186, 1),
+                Visibility(
+                    visible: taskerTxtVisibility,
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        lang.translate('Become a tasker'),
-                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      padding: const EdgeInsets.only(top: 10),
+                      child: RaisedButton(
+                        onPressed: () {
+                          // debugPrint('become tasker');
+                          navigateToAddServicePage();
+                        },
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15)),
+                        color: Color.fromRGBO(26, 119, 186, 1),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            lang.translate('Become a tasker'),
+                            style: TextStyle(color: Colors.white, fontSize: 20),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                )),
+                    )),
               ],
             ),
           ),
@@ -307,7 +316,7 @@ class FourthPageState extends State<FourthPage> {
     ));
   }
 
-  navigateToAddServicePage() async{
+  navigateToAddServicePage() async {
     bool result = await Navigator.push(
       context,
       PageRouteBuilder(
@@ -315,15 +324,15 @@ class FourthPageState extends State<FourthPage> {
       ),
     );
 
-    if (result){
-      if (this.mounted){
-      setState(() {
-        print('setstate');
-      });
+    if (result) {
+      if (this.mounted) {
+        setState(() {
+          print('setstate');
+        });
       }
     }
   }
-  
+
   navigateToEditPage() async {
     bool result = await Navigator.push(
       context,
@@ -348,8 +357,14 @@ class FourthPageState extends State<FourthPage> {
     try {
       final BaseAuth auth = AuthProvider.of(context).auth;
       await auth.signOut();
-    } catch (e) 
-    {
+
+      //due to some issue, i will navigate to login page manually
+      Navigator.pushReplacement(context, MaterialPageRoute(
+        builder: (context) {
+          return Login();
+        },
+      ));
+    } catch (e) {
       print(e);
     }
   }

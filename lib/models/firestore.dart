@@ -42,6 +42,13 @@ class CustomFirestore {
         }));
   }
 
+    //add reference of service when user like a service
+  removeServiceFromFavourite(ref) {
+    db.collection('users').document(_user.uid).updateData(({
+          'favourite': FieldValue.arrayRemove([ref])
+        }));
+  }
+
   Future<List<DocumentSnapshot>> getAllTasker() async {
     DocumentReference docRef = db.collection('users').document(_user.uid);
     QuerySnapshot querySnapshot = await Firestore.instance
