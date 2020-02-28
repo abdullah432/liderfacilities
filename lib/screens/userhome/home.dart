@@ -286,7 +286,7 @@ class _HomePageState extends State<HomePage> {
 
   int _selectedIndex = 0;
 
-  Widget _bottomNavigationBar(int _selectedIndex) {
+  Widget _bottomNavigationBar() {
     return ClipRRect(
         borderRadius: BorderRadius.only(
             topRight: Radius.circular(25), topLeft: Radius.circular(25)),
@@ -368,7 +368,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     // debugPrint('selected index: ' + _selectedIndex.toString());
     return Scaffold(
-        bottomNavigationBar: _bottomNavigationBar(_selectedIndex),
+        bottomNavigationBar: _bottomNavigationBar(),
         body:
             // PageStorage(
             //   child: pages[_selectedIndex],

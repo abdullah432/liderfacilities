@@ -208,7 +208,7 @@ class MyServicesState extends State<MyServices> {
             child: ListTile(
               onTap: () {print('dlick');},
           leading: CircleAvatar(
-            radius: 30,
+            radius: 28,
             // backgroundColor: Colors.black,
             child: ClipOval(
                 child: _imageUrl == null

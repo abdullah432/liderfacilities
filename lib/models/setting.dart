@@ -45,18 +45,27 @@ class Setting {
     return myLocationIcon;
   }
 
-  // void loadLocation() async{
-  //   _permissionGranted = await _location.hasPermission();
-  //   if (_permissionGranted == PermissionStatus.GRANTED) {
-  //     _locationData = await _location.getLocation();
-  //     _geoPoint = new GeoPoint(_locationData.latitude, _locationData.longitude);
-  //   }
-  //   else{
-  //     _geoPoint = null;
-  //   }
-  // }
+  void getLocationFromSP() async{
+    final pref = await SharedPreferences.getInstance();
+    double lat = pref.getDouble('latitude') ?? 30.3753;
+    double long = pref.getDouble('logitude') ?? 69.3451;
+    _geoPoint = GeoPoint(lat,long);
+  }
 
-  // get defaultlocation {
-  //   return _geoPoint;
-  // }
+  void setLocationToSP(GeoPoint geoPoint) async{
+    final pref = await SharedPreferences.getInstance();
+    double lat = geoPoint.latitude;
+    double long = geoPoint.longitude;
+    pref.setDouble('latitude', lat);
+    pref.setDouble('logitude', long);
+    _geoPoint = geoPoint;
+  }
+
+  setLocation(GeoPoint geoPoint) {
+    _geoPoint = geoPoint;
+  }
+
+  get location {
+    return _geoPoint;
+  }
 }

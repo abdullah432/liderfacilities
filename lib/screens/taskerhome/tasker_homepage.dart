@@ -9,18 +9,17 @@ import 'package:liderfacilites/models/app_localization.dart';
 import 'package:liderfacilites/models/firestore.dart';
 import 'package:liderfacilites/models/icons.dart';
 import 'package:liderfacilites/models/setting.dart';
-import 'package:liderfacilites/screens/chatroom/chat.dart';
 
-class FirstPage extends StatefulWidget {
-  const FirstPage({Key key}) : super(key: key);
+class TaskerHome extends StatefulWidget {
+  const TaskerHome({Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return FirstPageState();
+    return TaskerHomeState();
   }
 }
 
-class FirstPageState extends State<FirstPage> {
+class TaskerHomeState extends State<TaskerHome> {
   Completer<GoogleMapController> _controller = Completer();
 
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
@@ -37,7 +36,7 @@ class FirstPageState extends State<FirstPage> {
   //current location
   Geolocator geolocator = Geolocator();
   Position userLocation;
-  static double zoomValue = 13;
+  static double zoomValue = 17;
   // GeoPoint _geoPoint = new GeoPoint(0, 0);
   GeoPoint _geoPoint = new GeoPoint(30.3753, 69.3451);
   BitmapDescriptor mylocationIcon;
@@ -63,10 +62,6 @@ class FirstPageState extends State<FirstPage> {
   @override
   void initState() {
     _geoPoint = setting.location;
-    debugPrint('geopoints: ' +
-        _geoPoint.latitude.toString() +
-        "  " +
-        _geoPoint.longitude.toString());
     _getLocation().then((position) {
       userLocation = position;
       _geoPoint = new GeoPoint(userLocation.latitude, userLocation.longitude);
@@ -81,7 +76,7 @@ class FirstPageState extends State<FirstPage> {
 
       _goToNewLocation(_newLocation);
     });
-    populateTaskers();
+    // populateTaskers();
     super.initState();
   }
 
@@ -109,7 +104,7 @@ class FirstPageState extends State<FirstPage> {
     var currentLocation;
     try {
       currentLocation = await geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.best);
+          desiredAccuracy: LocationAccuracy.high);
     } catch (e) {
       currentLocation = null;
     }
@@ -243,10 +238,7 @@ class FirstPageState extends State<FirstPage> {
                   Container(
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(
-                              color:
-                                  fav == true ? Colors.green : Colors.black12,
-                              width: 2)),
+                          border: Border.all(color: fav == true ? Colors.green : Colors.black12, width: 2)),
                       child: Padding(
                           padding: const EdgeInsets.all(5.0),
                           child: GestureDetector(
@@ -254,14 +246,15 @@ class FirstPageState extends State<FirstPage> {
                               //todo tasker chat page
                               print('save');
                               // print('ref: '+taskerId);
-                              if (!fav) {
+                              if (!fav){
                                 _customFirestore.addServiceToFavourit(taskerId);
                                 setState(() {
                                   fav = true;
                                 });
-                              } else {
-                                _customFirestore
-                                    .removeServiceFromFavourite(taskerId);
+                                
+                              }
+                              else{
+                                _customFirestore.removeServiceFromFavourite(taskerId);
                                 setState(() {
                                   fav = false;
                                 });
@@ -269,8 +262,7 @@ class FirstPageState extends State<FirstPage> {
                             },
                             child: Icon(
                               Icons.favorite,
-                              color:
-                                  fav == true ? Colors.green : Colors.black12,
+                              color: fav == true ? Colors.green : Colors.black12,
                               size: 15,
                             ),
                           ))),
@@ -287,14 +279,6 @@ class FirstPageState extends State<FirstPage> {
                               onTap: () {
                                 //todo tasker chat page
                                 print('navigate to chage page');
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Chat(
-                                              peerId: taskerId,
-                                              peerAvatar: tasker['imgurl'],
-                                              peername: tasker['taskername'],
-                                            )));
                               },
                               child: Icon(
                                 Icons.message,
@@ -355,7 +339,7 @@ class FirstPageState extends State<FirstPage> {
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height / 5.5,
       decoration: BoxDecoration(
-          color: Color.fromRGBO(26, 119, 186, 1),
+          color: Color.fromRGBO(255, 107, 107, 1),
           borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(20),
               bottomRight: Radius.circular(20))),
