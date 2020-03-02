@@ -8,6 +8,7 @@ import 'package:liderfacilites/models/User.dart';
 import 'package:liderfacilites/models/app_localization.dart';
 import 'package:liderfacilites/models/firestore.dart';
 import 'package:liderfacilites/models/icons.dart';
+import 'package:liderfacilites/models/services.dart';
 import 'package:liderfacilites/models/setting.dart';
 import 'package:liderfacilites/screens/chatroom/chat.dart';
 
@@ -29,6 +30,10 @@ class FirstPageState extends State<FirstPage> {
   var tasker;
   var taskerId;
   bool showUserProfile = false;
+
+  // //icon is final so can't changed
+  // //selected type
+  // String selectedType = '';
 
   CustomFirestore _customFirestore = new CustomFirestore();
   User _user = new User();
@@ -86,7 +91,7 @@ class FirstPageState extends State<FirstPage> {
   }
 
   setMyLocationMarker() {
-    final Marker marker = Marker(
+    Marker marker = Marker(
         markerId: mId,
         position: LatLng(_geoPoint.latitude, _geoPoint.longitude),
         infoWindow: InfoWindow(title: 'Your Location'),
@@ -153,7 +158,14 @@ class FirstPageState extends State<FirstPage> {
           }
 
           if (this.mounted) {
+            //icon is final so can't changed
+            // //set selected type, icon will be change to selected. When click on outside, box will diapear and icon will be normal
+            // selectedType = request['type'];
+            // markers[taskerId].icon = getMarkerIcon(request['type']);
             setState(() {
+              //remove cursor blink of search textfield
+              FocusScope.of(context).requestFocus(new FocusNode());
+
               showUserProfile = true;
               print('id: ' + markerId.value.toString());
             });
@@ -188,6 +200,9 @@ class FirstPageState extends State<FirstPage> {
           },
           onTap: (geopoint) {
             setState(() {
+              //remove cursor blink of search textfield
+              FocusScope.of(context).requestFocus(new FocusNode());
+
               showUserProfile = false;
               print('Lat: ' +
                   geopoint.latitude.toString() +
@@ -200,112 +215,33 @@ class FirstPageState extends State<FirstPage> {
           left: 0,
           right: 0,
           top: 0,
-          child: Column(
-            children: <Widget>[
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height / 3.5,
+            decoration: BoxDecoration(
+                color: Colors.white70,
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(20))),
+            child: Column(children: <Widget>[
               uperPart(),
               searchTF(),
-            ],
+              Expanded(child: typeScrollView())
+            ],)
+            // Stack(
+            //   children: <Widget>[
+            //    Positioned(
+            //         bottom: 0, left: 0, right: 0, child: typeScrollView()),
+            //     Positioned(top: 0, left: 0, right: 0, child: uperPart()),
+            //     Align(
+            //       alignment: Alignment.center,
+            //       child: searchTF(),
+            //     )
+            //   ],
+            // ),
           ),
         ),
-        Visibility(
-            visible: showUserProfile,
-            child: Positioned(
-              bottom: 5.0,
-              left: 5.0,
-              right: 5.0,
-              child: Card(
-                  child: ListTile(
-                leading: CircleAvatar(
-                  radius: 30,
-                  // backgroundColor: Colors.black,
-                  child: ClipOval(
-                      child: _imageUrl == null
-                          ? Image.asset(
-                              'assets/images/account.png',
-                            )
-                          : Image.network(
-                              _imageUrl,
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                              height: double.infinity,
-                            )),
-                ),
-                title: tasker == null
-                    ? Text('taskername')
-                    : Text(tasker['taskername']),
-                subtitle: tasker == null
-                    ? Text('description')
-                    : Text(tasker['description']),
-
-                // subtitle: tasker['description'] ?? 'description',
-                trailing:
-                    Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
-                  Container(
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                              color:
-                                  fav == true ? Colors.green : Colors.black12,
-                              width: 2)),
-                      child: Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: GestureDetector(
-                            onTap: () {
-                              //todo tasker chat page
-                              print('save');
-                              // print('ref: '+taskerId);
-                              if (!fav) {
-                                _customFirestore.addServiceToFavourit(taskerId);
-                                setState(() {
-                                  fav = true;
-                                });
-                              } else {
-                                _customFirestore
-                                    .removeServiceFromFavourite(taskerId);
-                                setState(() {
-                                  fav = false;
-                                });
-                              }
-                            },
-                            child: Icon(
-                              Icons.favorite,
-                              color:
-                                  fav == true ? Colors.green : Colors.black12,
-                              size: 15,
-                            ),
-                          ))),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Container(
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border:
-                                Border.all(color: Colors.black12, width: 2)),
-                        child: Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: GestureDetector(
-                              onTap: () {
-                                //todo tasker chat page
-                                print('navigate to chage page');
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Chat(
-                                              peerId: taskerId,
-                                              peerAvatar: tasker['imgurl'],
-                                              peername: tasker['taskername'],
-                                            )));
-                              },
-                              child: Icon(
-                                Icons.message,
-                                color: Colors.black38,
-                                size: 15,
-                              ),
-                            ))),
-                  ),
-                ]),
-              )),
-            )),
+        bottomServiceView(),
       ],
     )
 
@@ -323,12 +259,59 @@ class FirstPageState extends State<FirstPage> {
   }
 
   getMarkerIcon(type) {
-    debugPrint('type: ' + type.toString());
+    print('icon called');
     if (type == 'DE LIMPEZA' || type == 'CLEANING')
       return icon.cleaning;
     else if (type == 'REPARAR' || type == 'REPAIR')
       return icon.repair;
-    else if (type == 'REPARAR' || type == 'HEALTH') return icon.repair;
+    // else if (type == 'REPARAR' || type == 'HEALTH')
+    //   return icon.repair;
+    else if (type == 'AIR CONDITIONING' || type == 'DE AR-CONDICIONADO')
+      return icon.ac;
+    else if (type == 'DRIVER' || type == 'MOTORISTA')
+      return icon.car;
+    else if (type == 'ELECTRICAL' || type == 'ELÉTRICOS')
+      return icon.electrical;
+    else if (type == 'MUSIC' || type == 'MUSICA')
+      return icon.music;
+    else if (type == 'HYDRAULIC' || type == 'HIDRÁULICOS')
+      return icon.hydraulic;
+    else if (type == 'REFORM' || type == 'DE REFORMA')
+      return icon.reform;
+    else if (type == 'FURNITURE ASSEMBLY' || type == 'MONTAGEM DE MÓVEIS')
+      return icon.furnitureAssembly;
+    else if (type == 'TECHNICAL ASSISTANCE' || type == 'ASSISTÊNCIA TÉCNICA')
+      return icon.technicalassistance;
+    else if (type == 'MASSAGES AND THERAPIES' || type == 'MASSAGENS E TERAPIAS')
+      return icon.massage;
+    else if (type == 'PARTY ANIMATION' || type == 'ANIMACÃO DE FESTAS')
+      return icon.kidparty;
+    else if (type == 'BIKEBOY' || type == 'BIKEBOY')
+      return icon.biker;
+    else if (type == 'LOCKSMITH' || type == 'CHAVEIRO')
+      return icon.locksmith;
+    else if (type == 'ELDERLY CAREGIVER' || type == 'CUIDADOR IDOSO')
+      return icon.eldercare;
+    else if (type == 'PHOTOGRAPHER' || type == 'FOTOGRAFO')
+      return icon.photographer;
+    else if (type == 'GARDENER' || type == 'JARDINEIRO')
+      return icon.gardner;
+    else if (type == 'CAR WASH' || type == 'LAVAGEM DE CARRO')
+      return icon.carwash;
+    else if (type == 'PETS' || type == 'PETS')
+      return icon.pets;
+    else if (type == 'MANICURE' || type == 'MANICURE')
+      return icon.manicure;
+    else if (type == 'FOOD' || type == 'ALIMENTAÇÃO')
+      return icon.food;
+    else if (type == 'AUTOMOBILES' || type == 'AUTOMOVEIS')
+      return icon.automobiles;
+    else if (type == 'MAINTENANCE' || type == 'MANUTENÇÃO')
+      return icon.maintanace;
+    else if (type == 'PERSONAL TRAINER' || type == 'PERSONAL TRAINER')
+      return icon.personaltrainer;
+    else
+      return BitmapDescriptor.defaultMarker;
     // switch (type) {
     //   case 'CLEANING':
     //     return icon.cleaning;
@@ -353,7 +336,7 @@ class FirstPageState extends State<FirstPage> {
   uperPart() {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height / 5.5,
+      height: MediaQuery.of(context).size.height / 6.4,
       decoration: BoxDecoration(
           color: Color.fromRGBO(26, 119, 186, 1),
           borderRadius: BorderRadius.only(
@@ -374,37 +357,207 @@ class FirstPageState extends State<FirstPage> {
   }
 
   searchTF() {
-    return Transform.translate(
-        offset: Offset(0, -25),
-        child: Container(
+    return
+        Transform.translate(
+            offset: Offset(0, -25),
+            child:
+        Container(
+      child: Column(
+        children: <Widget>[
+          Container(
+            width: MediaQuery.of(context).size.width / 1.1,
+            height: 44,
+            padding: EdgeInsets.only(left: 20, right: 14),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                color: Colors.white,
+                boxShadow: [BoxShadow(color: Colors.black, blurRadius: 1)]),
+            child: Row(children: <Widget>[
+              Icon(
+                Icons.search,
+                color: Colors.black38,
+                size: 18,
+              ),
+              SizedBox(
+                width: 5,
+              ),
+              Flexible(
+                  child: TextFormField(
+                style: TextStyle(fontSize: 16),
+                // textAlign: TextAlign.center,
+                keyboardType: TextInputType.text,
+                decoration: InputDecoration(
+                    // hintText: 'Email',
+                    hintText: lang.translate('Search'),
+                    border: InputBorder.none,
+                    fillColor: Colors.blue),
+              )),
+            ]),
+          )
+        ],
+      ),
+      )
+    );
+  }
+
+  typeScrollView() {
+    // return ListView.builder(
+    //   scrollDirection: Axis.horizontal,
+    //   itemCount: 4,
+    //   itemBuilder: (context, index) {
+    //             FlatButton(
+    //           onPressed: () => {},
+    //           padding: EdgeInsets.all(10.0),
+    //           child: Column( // Replace with a Row for horizontal icon + text
+    //             children: <Widget>[
+    //               Icon(Icons.add),
+    //               Text("Add")
+    //             ],
+    //           )
+    //       )
+    // });
+    return
+        // Transform.translate(
+        //     offset: Offset(0, -25),
+        //   //   child:
+        //   // SizedBox(
+        //   //   height: 85,
+        //     child:
+            ListView(
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                children: _getListData()
+                // )
+            // )
+            );
+  }
+
+  _getListData() {
+    List<Widget> widgets = [];
+    final listOfServices = setting.getLanguage() == 'English'
+        ? Services.typeofservicesInENG
+        : Services.typeofservicesInBR;
+
+    final listOfIcons = Services.listOfIcons;
+    print('services' + listOfServices.length.toString());
+    print('icons' + listOfIcons.length.toString());
+    for (int i = 0; i < listOfServices.length; i++) {
+      widgets.add(FlatButton(
+          onPressed: () => {},
+          padding: EdgeInsets.all(10.0),
           child: Column(
+            // Replace with a Row for horizontal icon + text
             children: <Widget>[
-              Container(
-                width: MediaQuery.of(context).size.width / 1.1,
-                padding: EdgeInsets.only(left: 20, right: 14),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
-                    color: Colors.white,
-                    boxShadow: [BoxShadow(color: Colors.black, blurRadius: 1)]),
-                child: Row(children: <Widget>[
-                  Icon(
-                    Icons.search,
-                    color: Colors.black38,
-                  ),
-                  Flexible(
-                      child: TextFormField(
-                    // textAlign: TextAlign.center,
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(
-                        // hintText: 'Email',
-                        hintText: lang.translate('Search'),
-                        border: InputBorder.none,
-                        fillColor: Colors.blue),
-                  )),
-                ]),
-              )
+              Expanded(child: Image(width: 50, height: 50, image: AssetImage(listOfIcons[i]))),
+              Expanded(
+                  child: Text(listOfServices[i],
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.normal,
+                      )))
             ],
-          ),
+          )));
+    }
+    return widgets;
+  }
+
+  bottomServiceView() {
+    return Visibility(
+        visible: showUserProfile,
+        child: Positioned(
+          bottom: 5.0,
+          left: 5.0,
+          right: 5.0,
+          child: Card(
+              child: ListTile(
+            leading: CircleAvatar(
+              radius: 30,
+              // backgroundColor: Colors.black,
+              child: ClipOval(
+                  child: _imageUrl == null
+                      ? Image.asset(
+                          'assets/images/account.png',
+                        )
+                      : Image.network(
+                          _imageUrl,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          height: double.infinity,
+                        )),
+            ),
+            title: tasker == null
+                ? Text('taskername')
+                : Text(tasker['taskername']),
+            subtitle: tasker == null
+                ? Text('description')
+                : Text(tasker['description']),
+
+            // subtitle: tasker['description'] ?? 'description',
+            trailing: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
+              Container(
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                          color: fav == true ? Colors.green : Colors.black12,
+                          width: 2)),
+                  child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          //todo tasker chat page
+                          print('save');
+                          // print('ref: '+taskerId);
+                          if (!fav) {
+                            _customFirestore.addServiceToFavourit(taskerId);
+                            setState(() {
+                              fav = true;
+                            });
+                          } else {
+                            _customFirestore
+                                .removeServiceFromFavourite(taskerId);
+                            setState(() {
+                              fav = false;
+                            });
+                          }
+                        },
+                        child: Icon(
+                          Icons.favorite,
+                          color: fav == true ? Colors.green : Colors.black12,
+                          size: 15,
+                        ),
+                      ))),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Container(
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.black12, width: 2)),
+                    child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            //we need user id not service id
+                            DocumentReference docRef = tasker['reference'];
+                            //todo tasker chat page
+                            print('navigate to chage page');
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Chat(
+                                          peerId: docRef.documentID,
+                                          peerAvatar: tasker['imgurl'],
+                                          peername: tasker['taskername'],
+                                        )));
+                          },
+                          child: Icon(
+                            Icons.message,
+                            color: Colors.black38,
+                            size: 15,
+                          ),
+                        ))),
+              ),
+            ]),
+          )),
         ));
   }
 }

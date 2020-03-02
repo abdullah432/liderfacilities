@@ -380,7 +380,7 @@ class _HomePageState extends State<HomePage> {
                     .document(useruid)
                     .snapshots(),
                 builder: (context, snapshot) {
-                  if (!snapshot.hasData) return SplashScreen();
+                  if (!snapshot.hasData) return Center(child: CircularProgressIndicator(),);
 
                   // final record = User.fromSnapshot(snapshot.data);
                   updateUserData(snapshot.data);

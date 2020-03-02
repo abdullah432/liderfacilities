@@ -49,12 +49,16 @@ class ChatScreen extends StatefulWidget {
       : super(key: key);
 
   @override
-  State createState() =>
-      new ChatScreenState(peerId: peerId, peerAvatar: peerAvatar, peername: peername);
+  State createState() => new ChatScreenState(
+      peerId: peerId, peerAvatar: peerAvatar, peername: peername);
 }
 
 class ChatScreenState extends State<ChatScreen> {
-  ChatScreenState({Key key, @required this.peerId, @required this.peerAvatar, @required this.peername});
+  ChatScreenState(
+      {Key key,
+      @required this.peerId,
+      @required this.peerAvatar,
+      @required this.peername});
 
   User _user = new User();
 
@@ -280,6 +284,7 @@ class ChatScreenState extends State<ChatScreen> {
       );
     } else {
       // Left (peer message)
+      print('doucment type: ' + document['type'].toString());
       return Container(
         child: Column(
           children: <Widget>[
@@ -373,12 +378,13 @@ class ChatScreenState extends State<ChatScreen> {
                             margin: EdgeInsets.only(left: 10.0),
                           )
                         : Container(
-                            child: new Image.asset(
-                              'images/${document['content']}.gif',
-                              width: 100.0,
-                              height: 100.0,
-                              fit: BoxFit.cover,
-                            ),
+                            child: Text('Not loaded'),
+                            // new Image.asset(
+                            //   'images/${document['content']}.gif',
+                            //   width: 100.0,
+                            //   height: 100.0,
+                            //   fit: BoxFit.cover,
+                            // ),
                             margin: EdgeInsets.only(
                                 bottom: isLastMessageRight(index) ? 20.0 : 10.0,
                                 right: 10.0),
@@ -522,7 +528,12 @@ class ChatScreenState extends State<ChatScreen> {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 10, top: 17),
-              child: Text(peername, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17,)),
+              child: Text(peername,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 17,
+                  )),
             ),
           ],
         ),

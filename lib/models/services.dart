@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
+
 class Services {
-  var typeofservicesInENG = [
+  static final typeofservicesInENG = [
     'CLEANING',
     'AIR CONDITIONING',
     'DRIVER',
@@ -26,15 +28,15 @@ class Services {
     'MAINTENANCE',
     'PERSONAL TRAINER'
   ];
-  var typeofservicesInBR = [
+  static final typeofservicesInBR = [
     'DE LIMPEZA',
     'DE AR-CONDICIONADO',
     'MOTORISTA',
     'ELÉTRICOS',
     'MUSICA',
     'HIDRÁULICOS',
-    'DE REFORMA ',
-    'MONTAGEM DE MÓVEIS ',
+    'DE REFORMA',
+    'MONTAGEM DE MÓVEIS',
     'FRETES',
     'ASSISTÊNCIA TÉCNICA',
     'VIDRACEIRO',
@@ -460,4 +462,33 @@ class Services {
   factory Services() {
     return services;
   }
+
+  static final listOfIcons = [
+    "assets/icons/cleaning.png",
+    "assets/icons/ac.png",
+    "assets/icons/automobile.png",
+    "assets/icons/biker.png",
+    "assets/icons/car.png",
+    "assets/icons/carwash.png",
+    "assets/icons/eldercare.png",
+    "assets/icons/electrical.png",
+    "assets/icons/fa.png",
+    "assets/icons/food.png",
+    "assets/icons/gardner.png",
+    "assets/icons/hydraulic.png",
+    "assets/icons/kidparty.png",
+    "assets/icons/locksmith.png",
+    "assets/icons/maintanance.png",
+    "assets/icons/manicure.png",
+    "assets/icons/massage.png",
+    "assets/icons/music.png",
+    "assets/icons/personaltrainer.png",
+    "assets/icons/pets.png",
+    "assets/icons/photographer.png",
+    "assets/icons/reform.png",
+    "assets/icons/technicalassistance.png",
+     "assets/icons/health.png",
+    "assets/icons/repair.png"
+    ];
+
 }

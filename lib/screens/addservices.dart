@@ -41,10 +41,10 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
 
   initServices() {
     if (_setting.getLanguage() == 'English') {
-      typeofservices = services.typeofservicesInENG;
+      typeofservices = Services.typeofservicesInENG;
       debugPrint('englishinit');
     } else {
-      typeofservices = services.typeofservicesInBR;
+      typeofservices = Services.typeofservicesInBR;
       debugPrint('brinit');
     }
   }
