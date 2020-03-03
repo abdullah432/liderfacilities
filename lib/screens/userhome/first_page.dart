@@ -32,8 +32,8 @@ class FirstPageState extends State<FirstPage> {
   bool showUserProfile = false;
 
   // //icon is final so can't changed
-  // //selected type
-  // String selectedType = '';
+  //selected type
+  String selectedType = '';
 
   CustomFirestore _customFirestore = new CustomFirestore();
   User _user = new User();
@@ -55,6 +55,9 @@ class FirstPageState extends State<FirstPage> {
   bool fav = false;
   //
   var lang;
+  //listOfIcons is list of services type icons
+  final listOfIcons = Services.listOfIcons;
+  final listOfSelectedIcons = Services.listOfSelectedIcons;
 
   // GeoPoint _geoPoint;
 
@@ -212,22 +215,16 @@ class FirstPageState extends State<FirstPage> {
           },
         ),
         Positioned(
-          left: 0,
-          right: 0,
-          top: 0,
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height / 3.5,
-            decoration: BoxDecoration(
-                color: Colors.white70,
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(20),
-                    bottomRight: Radius.circular(20))),
-            child: Column(children: <Widget>[
-              uperPart(),
-              searchTF(),
-              Expanded(child: typeScrollView())
-            ],)
+            left: 0,
+            right: 0,
+            top: 0,
+            child: Column(
+              children: <Widget>[
+                uperPart(),
+                // searchTF(),
+                typeScrollView()
+              ],
+            )
             // Stack(
             //   children: <Widget>[
             //    Positioned(
@@ -239,8 +236,7 @@ class FirstPageState extends State<FirstPage> {
             //     )
             //   ],
             // ),
-          ),
-        ),
+            ),
         bottomServiceView(),
       ],
     )
@@ -336,12 +332,13 @@ class FirstPageState extends State<FirstPage> {
   uperPart() {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height / 6.4,
-      decoration: BoxDecoration(
-          color: Color.fromRGBO(26, 119, 186, 1),
-          borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(20),
-              bottomRight: Radius.circular(20))),
+      height: MediaQuery.of(context).size.height / 7,
+      color: Color.fromRGBO(26, 119, 186, 1),
+      // decoration: BoxDecoration(
+      //     color: Color.fromRGBO(26, 119, 186, 1),
+      //     borderRadius: BorderRadius.only(
+      //         bottomLeft: Radius.circular(20),
+      //         bottomRight: Radius.circular(20))),
       child: Padding(
           padding: const EdgeInsets.only(top: 40, left: 10),
           child: Align(
@@ -357,47 +354,44 @@ class FirstPageState extends State<FirstPage> {
   }
 
   searchTF() {
-    return
-        Transform.translate(
-            offset: Offset(0, -25),
-            child:
-        Container(
-      child: Column(
-        children: <Widget>[
-          Container(
-            width: MediaQuery.of(context).size.width / 1.1,
-            height: 44,
-            padding: EdgeInsets.only(left: 20, right: 14),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
-                color: Colors.white,
-                boxShadow: [BoxShadow(color: Colors.black, blurRadius: 1)]),
-            child: Row(children: <Widget>[
-              Icon(
-                Icons.search,
-                color: Colors.black38,
-                size: 18,
-              ),
-              SizedBox(
-                width: 5,
-              ),
-              Flexible(
-                  child: TextFormField(
-                style: TextStyle(fontSize: 16),
-                // textAlign: TextAlign.center,
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                    // hintText: 'Email',
-                    hintText: lang.translate('Search'),
-                    border: InputBorder.none,
-                    fillColor: Colors.blue),
-              )),
-            ]),
-          )
-        ],
-      ),
-      )
-    );
+    return Transform.translate(
+        offset: Offset(0, -25),
+        child: Container(
+          child: Column(
+            children: <Widget>[
+              Container(
+                width: MediaQuery.of(context).size.width / 1.1,
+                height: 44,
+                padding: EdgeInsets.only(left: 20, right: 14),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    color: Colors.white,
+                    boxShadow: [BoxShadow(color: Colors.black, blurRadius: 1)]),
+                child: Row(children: <Widget>[
+                  Icon(
+                    Icons.search,
+                    color: Colors.black38,
+                    size: 18,
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Flexible(
+                      child: TextFormField(
+                    style: TextStyle(fontSize: 16),
+                    // textAlign: TextAlign.center,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                        // hintText: 'Email',
+                        hintText: lang.translate('Search'),
+                        border: InputBorder.none,
+                        fillColor: Colors.blue),
+                  )),
+                ]),
+              )
+            ],
+          ),
+        ));
   }
 
   typeScrollView() {
@@ -419,17 +413,17 @@ class FirstPageState extends State<FirstPage> {
     return
         // Transform.translate(
         //     offset: Offset(0, -25),
-        //   //   child:
-        //   // SizedBox(
-        //   //   height: 85,
-        //     child:
-            ListView(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                children: _getListData()
-                // )
-            // )
-            );
+        //   child:
+        Container(
+            color: Color.fromARGB(255, 235, 235, 235),
+            child: SizedBox(
+                height: 75,
+                child: ListView(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    children: _getListData()
+                    // )
+                    )));
   }
 
   _getListData() {
@@ -438,27 +432,104 @@ class FirstPageState extends State<FirstPage> {
         ? Services.typeofservicesInENG
         : Services.typeofservicesInBR;
 
-    final listOfIcons = Services.listOfIcons;
-    print('services' + listOfServices.length.toString());
-    print('icons' + listOfIcons.length.toString());
+    // print('services' + listOfServices.length.toString());
+    // print('icons' + listOfIcons.length.toString());
     for (int i = 0; i < listOfServices.length; i++) {
       widgets.add(FlatButton(
-          onPressed: () => {},
-          padding: EdgeInsets.all(10.0),
+          onPressed: () => {
+                setState(() {
+                  selectedType = listOfServices[i];
+                }),
+              },
+          padding: EdgeInsets.only(top: 10.0),
           child: Column(
             // Replace with a Row for horizontal icon + text
             children: <Widget>[
-              Expanded(child: Image(width: 50, height: 50, image: AssetImage(listOfIcons[i]))),
+              Image(
+                  width: 40,
+                  height: 40,
+                  image: getServiceTypeIcon(listOfServices[i])),
+              SizedBox(
+                height: 4,
+              ),
               Expanded(
                   child: Text(listOfServices[i],
                       style: TextStyle(
-                        fontSize: 12,
+                        fontSize: 10,
                         fontWeight: FontWeight.normal,
                       )))
             ],
           )));
     }
     return widgets;
+  }
+
+  getServiceTypeIcon(type) {
+    debugPrint('selected: '+selectedType.toString());
+    // debugPrint('pass type: '+type.toString());
+    if (type == 'DE LIMPEZA' || type == 'CLEANING' && selectedType != type)
+      return Services.unselectedcleaning;
+    else if ((type == 'DE LIMPEZA' ||
+        type == 'CLEANING') && selectedType == type) {
+      print('selectcleaning called');
+      return Services.selectedcleaning;
+    } else if ((type == 'DRIVER' ||
+        type == 'MOTORISTA') && selectedType != type) {
+      print('unselected driver called');
+      return Services.unselectedcar;
+    } else if ((type == 'DRIVER' ||
+        type == 'MOTORISTA') && selectedType == type) {
+      print('selected driver called');
+      return Services.selectedcar;
+    }
+    // else if (type == 'ELECTRICAL' || type == 'ELÉTRICOS')
+    //   return listOfIcons[index];
+    // else if (type == 'REPARAR' || type == 'REPAIR' && selectedType == '')
+    //   return listOfIcons[index];
+    // // else if (type == 'REPARAR' || type == 'HEALTH')
+    // //   return icon.repair;
+    // else if (type == 'AIR CONDITIONING' || type == 'DE AR-CONDICIONADO')
+    //   return listOfIcons[index];
+    // else if (type == 'MUSIC' || type == 'MUSICA')
+    //   return listOfIcons[index];
+    // else if (type == 'HYDRAULIC' || type == 'HIDRÁULICOS')
+    //   return listOfIcons[index];
+    // else if (type == 'REFORM' || type == 'DE REFORMA')
+    //   return listOfIcons[index];
+    // else if (type == 'FURNITURE ASSEMBLY' || type == 'MONTAGEM DE MÓVEIS')
+    //   return listOfIcons[index];
+    // else if (type == 'TECHNICAL ASSISTANCE' || type == 'ASSISTÊNCIA TÉCNICA')
+    //   return listOfIcons[index];
+    // else if (type == 'MASSAGES AND THERAPIES' || type == 'MASSAGENS E TERAPIAS')
+    //   return listOfIcons[index];
+    // else if (type == 'PARTY ANIMATION' || type == 'ANIMACÃO DE FESTAS')
+    //   return listOfIcons[index];
+    // else if (type == 'BIKEBOY' || type == 'BIKEBOY')
+    //   return listOfIcons[index];
+    // else if (type == 'LOCKSMITH' || type == 'CHAVEIRO')
+    //   return listOfIcons[index];
+    // else if (type == 'ELDERLY CAREGIVER' || type == 'CUIDADOR IDOSO')
+    //   return listOfIcons[index];
+    // else if (type == 'PHOTOGRAPHER' || type == 'FOTOGRAFO')
+    //   return listOfIcons[index];
+    // else if (type == 'GARDENER' || type == 'JARDINEIRO')
+    //   return listOfIcons[index];
+    // else if (type == 'CAR WASH' || type == 'LAVAGEM DE CARRO')
+    //   return listOfIcons[index];
+    // else if (type == 'PETS' || type == 'PETS')
+    //   return listOfIcons[index];
+    // else if (type == 'MANICURE' || type == 'MANICURE')
+    //   return listOfIcons[index];
+    // else if (type == 'FOOD' || type == 'ALIMENTAÇÃO')
+    //   return listOfIcons[index];
+    // else if (type == 'AUTOMOBILES' || type == 'AUTOMOVEIS')
+    //   return listOfIcons[index];
+    // else if (type == 'MAINTENANCE' || type == 'MANUTENÇÃO')
+    //   return listOfIcons[index];
+    // else if (type == 'PERSONAL TRAINER' || type == 'PERSONAL TRAINER')
+    //   return listOfIcons[index];
+    else
+      return Services.unselectedelectrical;
   }
 
   bottomServiceView() {

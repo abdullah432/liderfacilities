@@ -36,28 +36,28 @@ class CustomIcon {
   BitmapDescriptor reformIcon;
   BitmapDescriptor taIcon;
   //selected icon
-  BitmapDescriptor acsIcon;
-  BitmapDescriptor automobilesIcon;
-  BitmapDescriptor bikersIcon;
-  BitmapDescriptor carsIcon;
-  BitmapDescriptor carwashsIcon;
-  BitmapDescriptor eldercaresIcon;
-  BitmapDescriptor electricalsIcon;
-  BitmapDescriptor fasIcon;
-  BitmapDescriptor foodsIcon;
-  BitmapDescriptor gardnersIcon;
-  BitmapDescriptor maintanacesIcon;
-  BitmapDescriptor hydraulicsIcon;
-  BitmapDescriptor kidpartysIcon;
-  BitmapDescriptor locksmithsIcon;
-  BitmapDescriptor manicuresIcon;
-  BitmapDescriptor massagesIcon;
-  BitmapDescriptor musicsIcon;
-  BitmapDescriptor personaltrainersIcon;
-  BitmapDescriptor petsIcon;
-  BitmapDescriptor photographersIcon;
-  BitmapDescriptor reformsIcon;
-  BitmapDescriptor tasIcon;
+  // BitmapDescriptor acsIcon;
+  // BitmapDescriptor automobilesIcon;
+  // BitmapDescriptor bikersIcon;
+  // BitmapDescriptor carsIcon;
+  // BitmapDescriptor carwashsIcon;
+  // BitmapDescriptor eldercaresIcon;
+  // BitmapDescriptor electricalsIcon;
+  // BitmapDescriptor fasIcon;
+  // BitmapDescriptor foodsIcon;
+  // BitmapDescriptor gardnersIcon;
+  // BitmapDescriptor maintanacesIcon;
+  // BitmapDescriptor hydraulicsIcon;
+  // BitmapDescriptor kidpartysIcon;
+  // BitmapDescriptor locksmithsIcon;
+  // BitmapDescriptor manicuresIcon;
+  // BitmapDescriptor massagesIcon;
+  // BitmapDescriptor musicsIcon;
+  // BitmapDescriptor personaltrainersIcon;
+  // BitmapDescriptor petsIcon;
+  // BitmapDescriptor photographersIcon;
+  // BitmapDescriptor reformsIcon;
+  // BitmapDescriptor tasIcon;
 
   CustomIcon._internal();
   factory CustomIcon() {
@@ -262,162 +262,162 @@ class CustomIcon {
       taIcon = d;
     });
 
-    //selected
+    // //selected
 
-    //ac
-    BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
-            'assets/icons/selectedtypes/ac.png')
-        .then((d) {
-      acsIcon = d;
-    });
+    // //ac
+    // BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
+    //         'assets/icons/selectedtypes/ac.png')
+    //     .then((d) {
+    //   acsIcon = d;
+    // });
 
-    //automobiles
-    BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
-            'assets/icons/selectedtypes/automobile.png')
-        .then((d) {
-      automobilesIcon = d;
-    });
+    // //automobiles
+    // BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
+    //         'assets/icons/selectedtypes/automobile.png')
+    //     .then((d) {
+    //   automobilesIcon = d;
+    // });
 
-    //biker
-    BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
-            'assets/icons/selectedtypes/biker.png')
-        .then((d) {
-      bikersIcon = d;
-    });
+    // //biker
+    // BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
+    //         'assets/icons/selectedtypes/biker.png')
+    //     .then((d) {
+    //   bikersIcon = d;
+    // });
 
 
-    //car
-    BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
-            'assets/icons/selectedtypes/car.png')
-        .then((d) {
-      carsIcon = d;
-    });
+    // //car
+    // BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
+    //         'assets/icons/selectedtypes/car.png')
+    //     .then((d) {
+    //   carsIcon = d;
+    // });
 
-    //carwash
-    BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
-            'assets/icons/selectedtypes/carwash.png')
-        .then((d) {
-      carwashsIcon = d;
-    });
+    // //carwash
+    // BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
+    //         'assets/icons/selectedtypes/carwash.png')
+    //     .then((d) {
+    //   carwashsIcon = d;
+    // });
 
-    //eldercare
-    BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
-            'assets/icons/selectedtypes/eldercare.png')
-        .then((d) {
-      eldercaresIcon = d;
-    });
+    // //eldercare
+    // BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
+    //         'assets/icons/selectedtypes/eldercare.png')
+    //     .then((d) {
+    //   eldercaresIcon = d;
+    // });
 
-    //electrical
-    BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
-            'assets/icons/selectedtypes/electrical.png')
-        .then((d) {
-      electricalsIcon = d;
-    });
+    // //electrical
+    // BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
+    //         'assets/icons/selectedtypes/electrical.png')
+    //     .then((d) {
+    //   electricalsIcon = d;
+    // });
 
-    //furniture assembly
-    BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
-            'assets/icons/selectedtypes/fa.png')
-        .then((d) {
-      fasIcon = d;
-    });
+    // //furniture assembly
+    // BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
+    //         'assets/icons/selectedtypes/fa.png')
+    //     .then((d) {
+    //   fasIcon = d;
+    // });
 
-    //food
-    BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
-            'assets/icons/selectedtypes/food.png')
-        .then((d) {
-      foodsIcon = d;
-    });
+    // //food
+    // BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
+    //         'assets/icons/selectedtypes/food.png')
+    //     .then((d) {
+    //   foodsIcon = d;
+    // });
 
-    //gardner
-    BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
-            'assets/icons/selectedtypes/gardner.png')
-        .then((d) {
-      gardnersIcon = d;
-    });
+    // //gardner
+    // BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
+    //         'assets/icons/selectedtypes/gardner.png')
+    //     .then((d) {
+    //   gardnersIcon = d;
+    // });
 
-    //hydraulic
-    BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
-            'assets/icons/selectedtypes/hydraulic.png')
-        .then((d) {
-      hydraulicsIcon = d;
-    });
+    // //hydraulic
+    // BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
+    //         'assets/icons/selectedtypes/hydraulic.png')
+    //     .then((d) {
+    //   hydraulicsIcon = d;
+    // });
 
-    //kidparty
-    BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
-            'assets/icons/selectedtypes/kidparty.png')
-        .then((d) {
-      kidpartysIcon = d;
-    });
+    // //kidparty
+    // BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
+    //         'assets/icons/selectedtypes/kidparty.png')
+    //     .then((d) {
+    //   kidpartysIcon = d;
+    // });
 
-    //locksmith
-    BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
-            'assets/icons/selectedtypes/locksmith.png')
-        .then((d) {
-      locksmithsIcon = d;
-    });
+    // //locksmith
+    // BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
+    //         'assets/icons/selectedtypes/locksmith.png')
+    //     .then((d) {
+    //   locksmithsIcon = d;
+    // });
 
-    //locksmith
-    BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
-            'assets/icons/selectedtypes/maintanance.png')
-        .then((d) {
-      maintanacesIcon = d;
-    });
+    // //locksmith
+    // BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
+    //         'assets/icons/selectedtypes/maintanance.png')
+    //     .then((d) {
+    //   maintanacesIcon = d;
+    // });
 
-    //manicure
-    BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
-            'assets/icons/selectedtypes/manicure.png')
-        .then((d) {
-      manicuresIcon = d;
-    });
+    // //manicure
+    // BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
+    //         'assets/icons/selectedtypes/manicure.png')
+    //     .then((d) {
+    //   manicuresIcon = d;
+    // });
 
-    //massage
-    BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
-            'assets/icons/selectedtypes/massage.png')
-        .then((d) {
-      massagesIcon = d;
-    });
+    // //massage
+    // BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
+    //         'assets/icons/selectedtypes/massage.png')
+    //     .then((d) {
+    //   massagesIcon = d;
+    // });
 
-    //music
-    BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
-            'assets/icons/selectedtypes/music.png')
-        .then((d) {
-      musicsIcon = d;
-    });
+    // //music
+    // BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
+    //         'assets/icons/selectedtypes/music.png')
+    //     .then((d) {
+    //   musicsIcon = d;
+    // });
 
-    //personaltrainer
-    BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
-            'assets/icons/selectedtypes/personaltrainer.png')
-        .then((d) {
-      personaltrainersIcon = d;
-    });
+    // //personaltrainer
+    // BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
+    //         'assets/icons/selectedtypes/personaltrainer.png')
+    //     .then((d) {
+    //   personaltrainersIcon = d;
+    // });
 
-    //pets
-    BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
-            'assets/icons/selectedtypes/pets.png')
-        .then((d) {
-      petsIcon = d;
-    });
+    // //pets
+    // BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
+    //         'assets/icons/selectedtypes/pets.png')
+    //     .then((d) {
+    //   petsIcon = d;
+    // });
 
-    //photographer
-    BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
-            'assets/icons/selectedtypes/photographer.png')
-        .then((d) {
-      photographersIcon = d;
-    });
+    // //photographer
+    // BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
+    //         'assets/icons/selectedtypes/photographer.png')
+    //     .then((d) {
+    //   photographersIcon = d;
+    // });
 
-    //reform
-    BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
-            'assets/icons/selectedtypes/reform.png')
-        .then((d) {
-      reformsIcon = d;
-    });
+    // //reform
+    // BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
+    //         'assets/icons/selectedtypes/reform.png')
+    //     .then((d) {
+    //   reformsIcon = d;
+    // });
 
-    //technicalassistance
-    BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
-            'assets/icons/selectedtypes/technicalassistance.png')
-        .then((d) {
-      tasIcon = d;
-    });
+    // //technicalassistance
+    // BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(12, 12)),
+    //         'assets/icons/selectedtypes/technicalassistance.png')
+    //     .then((d) {
+    //   tasIcon = d;
+    // });
   }
 
   get getmyLocationIcon {
@@ -529,92 +529,92 @@ class CustomIcon {
   }
 
   //get selected icon
-  get acselected {
-    return acsIcon;
-  }
+  // get acselected {
+  //   return acsIcon;
+  // }
 
-  get automobileselected {
-    return automobilesIcon;
-  }
+  // get automobileselected {
+  //   return automobilesIcon;
+  // }
 
-  get bikerselected {
-    return bikersIcon;
-  }
+  // get bikerselected {
+  //   return bikersIcon;
+  // }
 
-  get carselected {
-    return carsIcon;
-  }
+  // get carselected {
+  //   return carsIcon;
+  // }
 
-  get carwashselected {
-    return carwashsIcon;
-  }
+  // get carwashselected {
+  //   return carwashsIcon;
+  // }
 
-  get eldercareselected {
-    return eldercaresIcon;
-  }
+  // get eldercareselected {
+  //   return eldercaresIcon;
+  // }
 
-  get electricalselected {
-    return electricalsIcon;
-  }
+  // get electricalselected {
+  //   return electricalsIcon;
+  // }
 
-  get furnitureAssemblyselected {
-    return fasIcon;
-  }
+  // get furnitureAssemblyselected {
+  //   return fasIcon;
+  // }
 
-  get foodselected {
-    return foodsIcon;
-  }
+  // get foodselected {
+  //   return foodsIcon;
+  // }
 
-  get gardnerselected {
-    return gardnersIcon;
-  }
+  // get gardnerselected {
+  //   return gardnersIcon;
+  // }
 
-  get hydraulicselected {
-    return hydraulicsIcon;
-  }
+  // get hydraulicselected {
+  //   return hydraulicsIcon;
+  // }
 
-  get kidpartyselected {
-    return kidpartysIcon;
-  }
+  // get kidpartyselected {
+  //   return kidpartysIcon;
+  // }
 
-  get locksmithselected {
-    return locksmithsIcon;
-  }
+  // get locksmithselected {
+  //   return locksmithsIcon;
+  // }
 
-  get maintanaceselected {
-    return maintanacesIcon;
-  }
+  // get maintanaceselected {
+  //   return maintanacesIcon;
+  // }
 
-  get manicureselected {
-    return manicuresIcon;
-  }
+  // get manicureselected {
+  //   return manicuresIcon;
+  // }
 
-  get massageselected {
-    return massagesIcon;
-  }
+  // get massageselected {
+  //   return massagesIcon;
+  // }
 
-  get musicselected {
-    return musicsIcon;
-  }
+  // get musicselected {
+  //   return musicsIcon;
+  // }
 
-  get personaltrainerselected {
-    return personaltrainersIcon;
-  }
+  // get personaltrainerselected {
+  //   return personaltrainersIcon;
+  // }
 
-  get petselected {
-    return petsIcon;
-  }
+  // get petselected {
+  //   return petsIcon;
+  // }
 
-  get photographerselected {
-    return photographersIcon;
-  }
+  // get photographerselected {
+  //   return photographersIcon;
+  // }
 
-  get reformselected {
-    return reformsIcon;
-  }
+  // get reformselected {
+  //   return reformsIcon;
+  // }
 
-  get technicalassistanceselected {
-    return tasIcon;
-  }
+  // get technicalassistanceselected {
+  //   return tasIcon;
+  // }
 
 }

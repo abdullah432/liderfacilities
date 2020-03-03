@@ -62,57 +62,59 @@ flutter:
     - assets/images/noservice.png
     - assets/images/location.png
     - assets/images/mylocation.png
-    - assets/icons/buisness.png
-    - assets/icons/cleaning.png
     - assets/icons/health.png
     - assets/icons/repair.png
-    - assets/icons/weeding.png
-    - assets/icons/ac.png
-    - assets/icons/automobile.png
-    - assets/icons/biker.png
+    - assets/icons/cleaning.png
     - assets/icons/car.png
-    - assets/icons/carwash.png
-    - assets/icons/eldercare.png
     - assets/icons/electrical.png
-    - assets/icons/fa.png
-    - assets/icons/food.png
-    - assets/icons/gardner.png
-    - assets/icons/hydraulic.png
-    - assets/icons/kidparty.png
-    - assets/icons/locksmith.png
-    - assets/icons/maintanance.png
-    - assets/icons/manicure.png
-    - assets/icons/massage.png
     - assets/icons/music.png
-    - assets/icons/personaltrainer.png
-    - assets/icons/pets.png
+    - assets/icons/hydraulic.png
+    - assets/icons/biker.png
+    - assets/icons/locksmith.png
+    - assets/icons/eldercare.png
     - assets/icons/photographer.png
-    - assets/icons/reform.png
+    - assets/icons/gardner.png
+    - assets/icons/carwash.png
+    - assets/icons/pets.png
+    - assets/icons/manicure.png
+    - assets/icons/food.png
+    - assets/icons/automobile.png
+    - assets/icons/maintanance.png
+    - assets/icons/ac.png
+    - assets/icons/fa.png
     - assets/icons/technicalassistance.png
+    - assets/icons/massage.png
+    - assets/icons/personaltrainer.png
+    - assets/icons/kidparty.png
+    - assets/icons/glass.png
+    - assets/icons/reform.png
+    - assets/icons/freight.png
 
-    - assets/icons/selectedtypes/ac.png
-    - assets/icons/selectedtypes/automobile.png
-    - assets/icons/selectedtypes/biker.png
-    - assets/icons/selectedtypes/car.png
-    - assets/icons/selectedtypes/carwash.png
-    - assets/icons/selectedtypes/eldercare.png
-    - assets/icons/selectedtypes/electrical.png
-    - assets/icons/selectedtypes/fa.png
-    - assets/icons/selectedtypes/food.png
-    - assets/icons/selectedtypes/gardner.png
-    - assets/icons/selectedtypes/hydraulic.png
-    - assets/icons/selectedtypes/kidparty.png
-    - assets/icons/selectedtypes/locksmith.png
-    - assets/icons/selectedtypes/maintanance.png
-    - assets/icons/selectedtypes/manicure.png
-    - assets/icons/selectedtypes/massage.png
-    - assets/icons/selectedtypes/music.png
-    - assets/icons/selectedtypes/personaltrainer.png
-    - assets/icons/selectedtypes/pets.png
-    - assets/icons/selectedtypes/photographer.png
-    - assets/icons/selectedtypes/reform.png
-    - assets/icons/selectedtypes/technicalassistance.png
-    - assets/icons/selectedtypes/repair.png
+    - assets/icons/selectedtypes/cleanings.png
+    - assets/icons/selectedtypes/cars.png
+    - assets/icons/selectedtypes/electricals.png
+    - assets/icons/selectedtypes/musics.png
+    - assets/icons/selectedtypes/hydraulics.png
+    - assets/icons/selectedtypes/bikers.png
+    - assets/icons/selectedtypes/locksmiths.png
+    - assets/icons/selectedtypes/eldercares.png
+    - assets/icons/selectedtypes/photographers.png
+    - assets/icons/selectedtypes/gardners.png
+    - assets/icons/selectedtypes/carwashs.png
+    - assets/icons/selectedtypes/petss.png
+    - assets/icons/selectedtypes/manicures.png
+    - assets/icons/selectedtypes/foods.png
+    - assets/icons/selectedtypes/automobiles.png
+    - assets/icons/selectedtypes/maintanances.png
+    - assets/icons/selectedtypes/acs.png
+    - assets/icons/selectedtypes/fas.png
+    - assets/icons/selectedtypes/technicalassistances.png
+    - assets/icons/selectedtypes/massages.png
+    - assets/icons/selectedtypes/personaltrainers.png
+    - assets/icons/selectedtypes/kidpartys.png
+    - assets/icons/selectedtypes/glasss.png
+    - assets/icons/selectedtypes/reforms.png
+    - assets/icons/selectedtypes/freights.png
 
   #  - images/a_dot_ham.jpeg
 

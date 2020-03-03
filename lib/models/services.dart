@@ -8,13 +8,9 @@ class Services {
     'ELECTRICAL',
     'MUSIC',
     'HYDRAULIC',
-    'REFORM',
     'FURNITURE ASSEMBLY',
-    'FREIGHT',
     'TECHNICAL ASSISTANCE',
-    'GLASS',
     'MASSAGES AND THERAPIES',
-    'PARTY ANIMATION',
     'BIKEBOY',
     'LOCKSMITH',
     'ELDERLY CAREGIVER',
@@ -27,6 +23,10 @@ class Services {
     'AUTOMOBILES',
     'MAINTENANCE',
     'PERSONAL TRAINER'
+    'PARTY ANIMATION',
+    'GLASS',
+    'REFORM',
+    'FREIGHT',
   ];
   static final typeofservicesInBR = [
     'DE LIMPEZA',
@@ -463,32 +463,78 @@ class Services {
     return services;
   }
 
+  static AssetImage unselectedcleaning =  AssetImage("assets/icons/cleaning.png");
+  static AssetImage selectedcleaning = AssetImage("assets/icons/selectedtypes/cleanings.png");  
+  static AssetImage unselectedcar = AssetImage("assets/icons/car.png");
+  static AssetImage selectedcar = AssetImage("assets/icons/selectedtypes/cars.png");
+  static AssetImage unselectedelectrical = AssetImage("assets/icons/electrical.png");
+  static AssetImage selectedelectrical = AssetImage("assets/icons/selectedtypes/electricals.png");
+  static AssetImage unselectedmusic = AssetImage("assets/icons/music.png");
+  static AssetImage selectedmusic = AssetImage("assets/icons/selectedtypes/musics.png");
+  static AssetImage unselectedhydraulic = AssetImage("assets/icons/hydraulic.png");
+  static AssetImage selectedelhydraulic = AssetImage("assets/icons/selectedtypes/hydraulics.png");
+  static AssetImage unselectedbiker =  AssetImage("assets/icons/biker.png");
+  static AssetImage selectedbiker = AssetImage("assets/icons/selectedtypes/bikers.png");  
+  static AssetImage unselectedlocksmith = AssetImage("assets/icons/locksmith.png");
+  static AssetImage selectedlocksmith = AssetImage("assets/icons/selectedtypes/locksmiths.png");
+  static AssetImage unselectedeldercare = AssetImage("assets/icons/eldercare.png");
+  static AssetImage selectedeldercare = AssetImage("assets/icons/selectedtypes/eldercare.png");
+  static AssetImage unselectedphotographer = AssetImage("assets/icons/photographer.png");
+  static AssetImage selectedphotographer= AssetImage("assets/icons/selectedtypes/photographers.png");
+  static AssetImage unselectedgardner = AssetImage("assets/icons/gardner.png");
+  static AssetImage selectedelgardner = AssetImage("assets/icons/selectedtypes/gardners.png");
+  static AssetImage unselectedcarwash = AssetImage("assets/icons/carwash.png");
+  static AssetImage selectedcarwash = AssetImage("assets/icons/selectedtypes/carwashs.png");
+  static AssetImage unselectpets = AssetImage("assets/icons/pets.png");
+  static AssetImage selectedpets = AssetImage("assets/icons/selectedtypes/petss.png");
+  // static AssetImage unselectedphotographer = AssetImage("assets/icons/photographer.png");
+  // static AssetImage selectedphotographer= AssetImage("assets/icons/selectedtypes/photographers.png");
+  // static AssetImage unselectedgardner = AssetImage("assets/icons/gardner.png");
+  // static AssetImage selectedelgardner = AssetImage("assets/icons/selectedtypes/gardners.png");
+
+
   static final listOfIcons = [
-    "assets/icons/cleaning.png",
-    "assets/icons/ac.png",
-    "assets/icons/automobile.png",
-    "assets/icons/biker.png",
-    "assets/icons/car.png",
-    "assets/icons/carwash.png",
-    "assets/icons/eldercare.png",
-    "assets/icons/electrical.png",
-    "assets/icons/fa.png",
-    "assets/icons/food.png",
-    "assets/icons/gardner.png",
-    "assets/icons/hydraulic.png",
-    "assets/icons/kidparty.png",
-    "assets/icons/locksmith.png",
-    "assets/icons/maintanance.png",
-    "assets/icons/manicure.png",
-    "assets/icons/massage.png",
-    "assets/icons/music.png",
-    "assets/icons/personaltrainer.png",
     "assets/icons/pets.png",
-    "assets/icons/photographer.png",
-    "assets/icons/reform.png",
+   "assets/icons/manicure.png",
+    "assets/icons/food.png",
+    "assets/icons/automobile.png",
+    "assets/icons/maintanance.png",
+    "assets/icons/ac.png",
+    "assets/icons/fa.png",
     "assets/icons/technicalassistance.png",
-     "assets/icons/health.png",
-    "assets/icons/repair.png"
+    "assets/icons/massage.png",
+    "assets/icons/personaltrainer.png",
+    "assets/icons/kidparty.png",
+   " assets/icons/glass.png",
+    "assets/icons/reform.png",
+    "assets/icons/freight.png"
     ];
 
+    static final listOfSelectedIcons = [
+    "assets/icons/selectedtypes/cleanings.png",
+    "assets/icons/selectedtypes/cars.png",
+    "assets/icons/selectedtypes/electricals.png",
+    "assets/icons/selectedtypes/musics.png",
+    "assets/icons/selectedtypes/hydraulics.png",
+    "assets/icons/selectedtypes/bikers.png",
+    "assets/icons/selectedtypes/locksmiths.png",
+    "assets/icons/selectedtypes/eldercares.png",
+   "assets/icons/selectedtypes/photographers.png",
+    "assets/icons/selectedtypes/gardners.png",
+    "assets/icons/selectedtypes/carwashs.png",
+    "assets/icons/selectedtypes/petss.png",
+   "assets/icons/selectedtypes/manicures.png",
+    "assets/icons/selectedtypes/foods.png",
+    "assets/icons/selectedtypes/automobiles.png",
+    "assets/icons/selectedtypes/maintanances.png",
+    "assets/icons/selectedtypes/acs.png",
+    "assets/icons/selectedtypes/fas.png",
+    "assets/icons/selectedtypes/technicalassistances.png",
+    "assets/icons/selectedtypes/massages.png",
+    "assets/icons/selectedtypes/personaltrainers.png",
+    "assets/icons/selectedtypes/kidpartys.png",
+   " assets/icons/selectedtypes/glasss.png",
+    "assets/icons/selectedtypes/reforms.png",
+    "assets/icons/selectedtypes/freights.png"
+    ];
 }
