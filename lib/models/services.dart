@@ -56,14 +56,14 @@ class Services {
     'PERSONAL TRAINER'
   ];
 
-  var subtypeofcleaningInBR = [
+  static final subtypeofcleaningInBR = [
     "LIMPEZA DE CAIXA D'ÁGUA",
     "DIARISTAS E FAXINEIRAS",
     "FAXINA",
     "PASSAR ROUPAS",
     "LAVAGEM DE ROUPAS"
   ];
-  var subtypeofcleaningInENG = [
+  static final subtypeofcleaningInENG = [
     "WATER BOX CLEANING",
     "DIARISTS AND FAXINEIRAS",
     "FAXINA",
@@ -71,7 +71,7 @@ class Services {
     "LAUNDRY WASHING"
   ];
 
-  var subtypeofAirCONDITIONINGInBR = [
+  static final subtypeofAirCONDITIONINGInBR = [
     "LIMPEZA DE AR-CONDICIONADO",
     "INSTALAÇÃO DE AR-CONDICIONADO",
     "DESINSTALAÇÃO DE AR-CONDICIONADO",
@@ -79,7 +79,7 @@ class Services {
     "MANUTENÇÃO DE AR-CONDICIONADO",
     "PRÉ-INSTALAÇÃO DE AR-CONDICIONADO"
   ];
-  var subtypeofAirCONDITIONINGInENG = [
+  static final subtypeofAirCONDITIONINGInENG = [
     "AIR CONDITIONING CLEANING",
     "INSTALLATION OF AIR-CONDITIONING",
     "AIR CONDITIONING UNINSTALLATION",
@@ -88,21 +88,21 @@ class Services {
     "PRE-INSTALLATION OF AIR CONDITIONING"
   ];
 
-  var subtypeofDriverInENG = [
+  static final subtypeofDriverInENG = [
     "24H SERVICE",
     "ANIMAL TRANSPORT",
     "WITHOUT OWN CAR",
     "WITH OWN CAR"
   ];
 
-  var subtypeofDriverInBR = [
+  static final subtypeofDriverInBR = [
     "ATEDIMENTO 24H",
     "TRANSPORTE DE ANIMAIS",
     "SEM CARRO PROPRIO",
     "COM CARRO PROPRIO"
   ];
 
-  var subtypeofElectricalInBR = [
+  static final subtypeofElectricalInBR = [
     "INSTALAÇÃO DE CHUVEIRO ELÉTRICO",
     "INSTALAÇÃO DE VENTILADOR DE TETO",
     "INSTALAÇÃO DE TOMADA E INTERRUPTOR",
@@ -117,7 +117,7 @@ class Services {
     "ATENDIMENTO 24HORAS",
   ];
 
-  var subtypeofElectricalInENG = [
+  static final subtypeofElectricalInENG = [
     "INSTALLATION OF ELECTRIC SHOWER",
     "CEILING FAN INSTALLATION",
     "SOCKET AND SWITCH INSTALLATION",
@@ -132,7 +132,7 @@ class Services {
     "24HORAS SERVICE"
   ];
 
-  var subtypeofMusicInENG = [
+  static final subtypeofMusicInENG = [
     "KEYBOARD",
     "PIANO",
     "CORNER",
@@ -142,7 +142,7 @@ class Services {
     "GUITAR"
   ];
 
-  var subtypeofMusicInBR = [
+  static final subtypeofMusicInBR = [
     "TECLADO",
     "PIANO",
     "CANTO",
@@ -152,7 +152,7 @@ class Services {
     "VIOLÃO"
   ];
 
-  var subtypeofHYDRAULICInENG = [
+  static final subtypeofHYDRAULICInENG = [
     "INSTALLATION OF GAS HEATER",
     "GAS HEATER REPAIR",
     "LEAK REPAIR",
@@ -166,7 +166,7 @@ class Services {
     "LEAKS"
   ];
 
-  var subtypeofHYDRAULICInBR = [
+  static final subtypeofHYDRAULICInBR = [
     "INSTALAÇÃO DE AQUECEDOR A GÁS",
     "CONSERTO DE AQUECEDOR A GÁS",
     "CONSERTO DE VAZAMENTO",
@@ -180,7 +180,7 @@ class Services {
     "VAZAMENTOS"
   ];
 
-  var subtypeofREFORMInENG = [
+  static final subtypeofREFORMInENG = [
     "EXTERNAL PAINTING",
     "HONEY MASONRY SERVICE",
     "PAINTING OF DOORS AND WINDOWS",
@@ -199,7 +199,7 @@ class Services {
     "WALLPAPER INSTALLATION"
   ];
 
-  var subtypeofREFORMInBR = [
+  static final subtypeofREFORMInBR = [
     "PINTURA EXTERNA ",
     "SERVIÇO PEDREIRO HORA",
     "PINTURA DE PORTAS E JANELAS",
@@ -218,34 +218,34 @@ class Services {
     "INSTALAÇÃO DE PAPEL DE PAREDE"
   ];
 
-  var subtypeofFURNITUREASSEMBLYInENG = [
+  static final subtypeofFURNITUREASSEMBLYInENG = [
     "TV SUPPORT INSTALLATION",
     "FURNITURE ASSEMBLY"
   ];
 
-  var subtypeofFURNITUREASSEMBLYInBR = [
+  static final subtypeofFURNITUREASSEMBLYInBR = [
     "INSTALAÇÃO DE SUPORTE DE TV",
     "MONTADOR DE MÓVEIS "
   ];
 
-  var subtypeofFREIGHTInENG = ["TV SUPPORT INSTALLATION", "FURNITURE ASSEMBLY"];
+  static final subtypeofFREIGHTInENG = ["TV SUPPORT INSTALLATION", "FURNITURE ASSEMBLY"];
 
-  var subtypeofFREIGHTInBR = [
+  static final subtypeofFREIGHTInBR = [
     "WI-FI NETWORK INSTALLATION",
     "COMPUTER FORMATTING"
   ];
 
-  var subtypeofTECHNICALASSISTANCEInENG = [
+  static final subtypeofTECHNICALASSISTANCEInENG = [
     "TV SUPPORT INSTALLATION",
     "FURNITURE ASSEMBLY"
   ];
 
-  var subtypeofTECHNICALASSISTANCEInBR = [
+  static final subtypeofTECHNICALASSISTANCEInBR = [
     "INSTALAÇÃO DE REDE WI-FI",
     "FORMATAÇÃO DE COMPUTADORES"
   ];
 
-  var subtypeofGLASSInENG = [
+  static final subtypeofGLASSInENG = [
     "GLASS PRINTING",
     "GLASS PAINTINGS",
     "MIRROR PRINTING",
@@ -257,7 +257,7 @@ class Services {
     "TEMPERED GLASSES"
   ];
 
-  var subtypeofGLASSInBR = [
+  static final subtypeofGLASSInBR = [
     "IMPRESSÃO VIDROS",
     "PINTURAS EM VIDROS",
     "IMPRESSÃO EM ESPELHOS",
@@ -269,7 +269,7 @@ class Services {
     "VIDOROS TEMPERADOS"
   ];
 
-  var subtypeofMASSAGESandTHERAPIESInENG = [
+  static final subtypeofMASSAGESandTHERAPIESInENG = [
     "CHIROPRAXY",
     "QUICK MASSAGE",
     "REFLEXOLOGY",
@@ -279,7 +279,7 @@ class Services {
     "SPORT MASSAGE"
   ];
 
-  var subtypeofMASSAGESandTHERAPIESInBR = [
+  static final subtypeofMASSAGESandTHERAPIESInBR = [
     "QUIROPRAXIA",
     "QUICK MASSAGE",
     "REFLEXOLOGIA",
@@ -289,19 +289,19 @@ class Services {
     "MASSAGEM DESPORTIVA"
   ];
 
-  var subtypeofPARTYANIMATIONInENG = [
+  static final subtypeofPARTYANIMATIONInENG = [
     "CHILDREN RECREATION",
     "CLOWNS",
     "FACE PAINT"
   ];
 
-  var subtypeofPARTYANIMATIONInBR = [
+  static final subtypeofPARTYANIMATIONInBR = [
     "RECREAÇÃO INFANTIL",
     "PALHAÇOS",
     "PINTURA FACIAL"
   ];
 
-  var subtypeofLOCKSMITHInENG = [
+  static final subtypeofLOCKSMITHInENG = [
     "LOCK INSTALLATION",
     "EXCHANGE OF SECRET",
     "AUTOMOBILE KEY",
@@ -310,7 +310,7 @@ class Services {
     "CODED KEY"
   ];
 
-  var subtypeofLOCKSMITHInBR = [
+  static final subtypeofLOCKSMITHInBR = [
     "INSTALAÇÃO DE FECHADURA",
     "TROCA DE SEGREDO",
     "CHAVE DE AUTOMÓVEL",
@@ -319,19 +319,19 @@ class Services {
     "CHAVE CODIFICADA"
   ];
 
-  var subtypeofBIKEBOYInENG = ["SPARE RACING"];
+  static final subtypeofBIKEBOYInENG = ["SPARE RACING"];
 
-  var subtypeofBIKEBOYInBR = ["CORRIDA AVULSA"];
+  static final subtypeofBIKEBOYInBR = ["CORRIDA AVULSA"];
 
-  var subtypeofELDERLYCAREGIVERInENG = ["NIGHT", "DAY", "NURSING ASSISTANT"];
+  static final subtypeofELDERLYCAREGIVERInENG = ["NIGHT", "DAY", "NURSING ASSISTANT"];
 
-  var subtypeofELDERLYCAREGIVERInBR = [
+  static final subtypeofELDERLYCAREGIVERInBR = [
     "NOTURNO",
     "DIURNO",
     "AUXILIAR DE ENFERMAGEM"
   ];
 
-  var subtypeofPHOTOGRAPHERInENG = [
+  static final subtypeofPHOTOGRAPHERInENG = [
     "FILMING",
     "GRADUATION",
     "BIRTHDAY PARTIES",
@@ -340,7 +340,7 @@ class Services {
     "DEBUTANT PARTIES"
   ];
 
-  var subtypeofPHOTOGRAPHERInBR = [
+  static final subtypeofPHOTOGRAPHERInBR = [
     "FILMAGEM",
     "FORMATURA",
     "FESTAS DE ANIVERSÁRIO",
@@ -349,19 +349,19 @@ class Services {
     "FESTAS DE DEBUTANTES"
   ];
 
-  var subtypeofGARDENERInENG = [
+  static final subtypeofGARDENERInENG = [
     "GARDEN MAINTENANCE",
     "TREES REMOVAL",
     "PRUNING TREE"
   ];
 
-  var subtypeofGARDENERInBR = [
+  static final subtypeofGARDENERInBR = [
     "MANUTENÇÃO JARDINS",
     "REMOÇÃO ÁRVORES",
     "PODA DE ÁRVORE"
   ];
 
-  var subtypeofCARWASHInENG = [
+  static final subtypeofCARWASHInENG = [
     "NORMAL WASHING",
     "COMPLETE WASHING",
     "DRY CLEAN",
@@ -371,7 +371,7 @@ class Services {
     "POLISHING"
   ];
 
-  var subtypeofCARWASHInBR = [
+  static final subtypeofCARWASHInBR = [
     "LAVAGEM NORMAL",
     "LAVAGEM COMPLETA",
     "LAVAGEM A SECO",
@@ -381,21 +381,21 @@ class Services {
     "POLIMENTO"
   ];
 
-  var subtypeofPETSInENG = [
+  static final subtypeofPETSInENG = [
     "TAXI DOG",
     "CAT SITTER",
     "DOG WALKER",
     "VETERINARIO A DOMICILIO"
   ];
 
-  var subtypeofPETSInBR = [
+  static final subtypeofPETSInBR = [
     "TAXI DOG",
     "CAT SITTER",
     "DOG WALKER",
     "VETERINARIO A DOMECILIO "
   ];
 
-  var subtypeofMANICUREInENG = [
+  static final subtypeofMANICUREInENG = [
     "PEDICURE",
     "DECORATED NAILS",
     "GEL NAILS",
@@ -404,7 +404,7 @@ class Services {
     "CUTICULAGEM"
   ];
 
-  var subtypeofMANICUREInBR = [
+  static final subtypeofMANICUREInBR = [
     "PEDICURE",
     "UNHAS DECORADAS",
     "UNHAS DE GEL",
@@ -413,15 +413,15 @@ class Services {
     "CUTICULAGEM"
   ];
 
-  var subtypeofFOODInENG = ["BUFFET", "CAKES", "BARBECUE"];
+  static final subtypeofFOODInENG = ["BUFFET", "CAKES", "BARBECUE"];
 
-  var subtypeofFOODInBR = ["BUFFET", "BOLOS", "CHURRASQUEIRO"];
+  static final subtypeofFOODInBR = ["BUFFET", "BOLOS", "CHURRASQUEIRO"];
 
-  var subtypeofAUTOMOBILESInENG = ["MECHANICAL 24H", "24H ELECTRICIAN"];
+  static final subtypeofAUTOMOBILESInENG = ["MECHANICAL 24H", "24H ELECTRICIAN"];
 
-  var subtypeofAUTOMOBILESInBR = ["MECANICO 24H", "ELETRICISTA 24H"];
+  static final subtypeofAUTOMOBILESInBR = ["MECANICO 24H", "ELETRICISTA 24H"];
 
-  var subtypeofMAINTENANCEInENG = [
+  static final subtypeofMAINTENANCEInENG = [
     "ALARM INSTALLATION",
     "24HORAS SERVICE",
     "DEDETIZATION",
@@ -436,7 +436,7 @@ class Services {
     "GUTTERS"
   ];
 
-  var subtypeofMAINTENANCEInBR = [
+  static final subtypeofMAINTENANCEInBR = [
     "INSTALAÇÃO DE ALARME",
     "ATENDIMENTO 24HORAS",
     "DEDETIZAÇÃO",
@@ -451,9 +451,9 @@ class Services {
     "CALHAS"
   ];
 
-  var subtypeofPERSONALTRAINERInENG = ["BODYBUILDING", "AEROBICS"];
+  static final subtypeofPERSONALTRAINERInENG = ["BODYBUILDING", "AEROBICS"];
 
-  var subtypeofPERSONALTRAINERInBR = ["MUSCULAÇÃO", "AERÓBICA"];
+  static final subtypeofPERSONALTRAINERInBR = ["MUSCULAÇÃO", "AERÓBICA"];
 
   String language;
   //singleton logic

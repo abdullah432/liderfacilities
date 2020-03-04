@@ -34,6 +34,7 @@ class FirstPageState extends State<FirstPage> {
   // //icon is final so can't changed
   //selected type
   String selectedType = '';
+  String selectedSubType = '';
 
   CustomFirestore _customFirestore = new CustomFirestore();
   User _user = new User();
@@ -58,6 +59,7 @@ class FirstPageState extends State<FirstPage> {
   //subtype scrollview
   bool subtypeScrollVisiblity = false;
   var listOfSubtype;
+  List<DocumentSnapshot> allServices;
 
   // GeoPoint _geoPoint;
 
@@ -109,8 +111,6 @@ class FirstPageState extends State<FirstPage> {
         markers[mId] = marker;
       });
     }
-
-    debugPrint('called');
   }
 
   Future<Position> _getLocation() async {
@@ -128,6 +128,7 @@ class FirstPageState extends State<FirstPage> {
     Firestore.instance.collection("services").getDocuments().then((docs) => {
           if (docs.documents.isNotEmpty)
             {
+              allServices = docs.documents,
               for (int i = 0; i < docs.documents.length; ++i)
                 {
                   initMarker(
@@ -135,6 +136,33 @@ class FirstPageState extends State<FirstPage> {
                 }
             }
         });
+  }
+
+  filterTasker(type, filterType, subtype) async {
+    markers.clear();
+    if (filterType == 0) { //filter w.r.t type
+      List<DocumentSnapshot> filterList =
+          allServices.where((element) => element['type'] == type).toList();
+      if (filterList.isNotEmpty) {
+        for (int i = 0; i < filterList.length; i++) {
+          initMarker(filterList[i].data, filterList[i].documentID);
+        }
+      }
+    } else if (filterType == 1) { //filter w.r.t type and it's subtype
+      List<DocumentSnapshot> filterList =
+          allServices.where((element) => element['type'] == type  && element['subtype'] == subtype).toList();
+      if (filterList.isNotEmpty) {
+        for (int i = 0; i < filterList.length; i++) {
+          initMarker(filterList[i].data, filterList[i].documentID);
+        }
+      }
+    } else if (filterType == 2) { //remove filter
+      if (allServices.isNotEmpty) {
+        for (int i = 0; i < allServices.length; i++) {
+          initMarker(allServices[i].data, allServices[i].documentID);
+        }
+      }
+    }
   }
 
   initMarker(request, requestId) {
@@ -168,7 +196,6 @@ class FirstPageState extends State<FirstPage> {
             setState(() {
               //remove cursor blink of search textfield
               FocusScope.of(context).requestFocus(new FocusNode());
-
               showUserProfile = true;
               print('id: ' + markerId.value.toString());
             });
@@ -205,12 +232,12 @@ class FirstPageState extends State<FirstPage> {
             setState(() {
               //remove cursor blink of search textfield
               FocusScope.of(context).requestFocus(new FocusNode());
-
               showUserProfile = false;
-              print('Lat: ' +
-                  geopoint.latitude.toString() +
-                  ' Long: ' +
-                  geopoint.longitude.toString());
+              // print('length of Services list: '+allServices.length.toString());
+              // print('Lat: ' +
+              //     geopoint.latitude.toString() +
+              //     ' Long: ' +
+              //     geopoint.longitude.toString());
             });
           },
         ),
@@ -223,7 +250,9 @@ class FirstPageState extends State<FirstPage> {
                 uperPart(),
                 // searchTF(),
                 typeScrollView(),
-                Visibility(visible: subtypeScrollVisiblity, child: subtypeScrollView()),
+                Visibility(
+                    visible: subtypeScrollVisiblity,
+                    child: subtypeScrollView()),
               ],
             )
             // Stack(
@@ -256,7 +285,6 @@ class FirstPageState extends State<FirstPage> {
   }
 
   getMarkerIcon(type) {
-    print('icon called');
     if (type == 'DE LIMPEZA' || type == 'CLEANING')
       return icon.cleaning;
     else if (type == 'REPARAR' || type == 'REPAIR')
@@ -309,25 +337,6 @@ class FirstPageState extends State<FirstPage> {
       return icon.personaltrainer;
     else
       return BitmapDescriptor.defaultMarker;
-    // switch (type) {
-    //   case 'CLEANING':
-    //     return icon.cleaning;
-    //     break;
-    //   case 'REPAIR':
-    //     return icon.repair;
-    //     break;
-    //   case 'HEALTH':
-    //     return icon.health;
-    //     break;
-    //   case 'WEEDING':
-    //     return icon.weeding;
-    //     break;
-    //   case 'BUISNESS':
-    //     return icon.weeding;
-    //     break;
-    //   default:
-    //     return BitmapDescriptor.defaultMarker;
-    // }
   }
 
   uperPart() {
@@ -433,16 +442,29 @@ class FirstPageState extends State<FirstPage> {
         ? Services.typeofservicesInENG
         : Services.typeofservicesInBR;
 
+    //we will always use enlish list for filtering
+    final listOfServicesInEng = Services.typeofservicesInENG;
+
     // print('services' + listOfServices.length.toString());
     // print('icons' + listOfIcons.length.toString());
     for (int i = 0; i < listOfServices.length; i++) {
       widgets.add(FlatButton(
           onPressed: () => {
                 setState(() {
-                  selectedType = listOfServices[i];
-                  if (selectedType != ''){
-                    markers.clear();
-                    
+                  if (selectedType == listOfServicesInEng[i]) {
+                    //that means user click on selected type again
+                    //empty selected type
+                    selectedType = '';
+                    subtypeScrollVisiblity = false;
+                    //restore all marker
+                    filterTasker(selectedType, 2, '');
+                  } else {
+                    selectedType = listOfServicesInEng[i];
+                    subtypeScrollVisiblity = true;
+                    // debugPrint('selectedType: ' + selectedType.toString());
+                    if (selectedType != '') {
+                      filterTasker(selectedType, 0, '');
+                    }
                   }
                 }),
               },
@@ -453,7 +475,7 @@ class FirstPageState extends State<FirstPage> {
               Image(
                   width: 40,
                   height: 40,
-                  image: getServiceTypeIcon(listOfServices[i])),
+                  image: getServiceTypeIcon(listOfServicesInEng[i])),
               SizedBox(
                 height: 4,
               ),
@@ -470,19 +492,58 @@ class FirstPageState extends State<FirstPage> {
   }
 
   subtypeScrollView() {
-        return
-        Container(
-            color: Color.fromARGB(255, 235, 235, 235),
-            child: SizedBox(
-                height: 75,
-                child: ListView(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    children: _getListData()
-                    // )
-                    )));
+    return Container(
+        color: Colors.white,
+        child: SizedBox(
+            height: 35,
+            child: ListView(
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                children: _getSubtypeList()
+                // )
+                )));
   }
-  
+
+  _getSubtypeList() {
+    List<Widget> widgets = [];
+    // var listOfSubServices = setting.getLanguage() == 'English'
+    //     ? Services.typeofservicesInENG
+    //     : Services.typeofservicesInBR;
+
+    var listOfSubServices = getListOfSubServices();
+
+    // print('services' + listOfServices.length.toString());
+    // print('icons' + listOfIcons.length.toString());
+    for (int i = 0; i < listOfSubServices.length; i++) {
+      widgets.add(FlatButton(
+          onPressed: () => {
+                setState(() {
+                  if (selectedSubType == listOfSubServices[i]) {
+                    //that means user click on selected type again
+                    //empty selected type
+                    selectedSubType = '';
+                    //restore marker of type mean remove filteration of subtype
+                    filterTasker(selectedType, 0, '');
+                  } else {
+                    selectedSubType = listOfSubServices[i];
+                    if (selectedSubType != '') {
+                      filterTasker(selectedType, 1, selectedSubType);
+                    }
+                  }
+                }),
+              },
+          padding: EdgeInsets.only(top: 10.0, right: 5, left: 5),
+          child: Expanded(
+              child: Text(listOfSubServices[i],
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.normal,
+                    color: selectedSubType == listOfSubServices[i] ? Colors.blue : Colors.black87,
+                  )))));
+    }
+    return widgets;
+  }
+
   getServiceTypeIcon(type) {
     // debugPrint('selected: '+selectedType.toString());
     // debugPrint('pass type: '+type.toString());
@@ -537,37 +598,53 @@ class FirstPageState extends State<FirstPage> {
             type == 'ASSISTÊNCIA TÉCNICA') &&
         selectedType == type)
       return Services.selectedtechnicalassistance;
-    else if ((type == 'MASSAGES AND THERAPIES' || type == 'MASSAGENS E TERAPIAS') && selectedType != type)
+    else if ((type == 'MASSAGES AND THERAPIES' ||
+            type == 'MASSAGENS E TERAPIAS') &&
+        selectedType != type)
       return Services.unselectedmassage;
-    else if ((type == 'MASSAGES AND THERAPIES' || type == 'MASSAGENS E TERAPIAS') && selectedType == type)
+    else if ((type == 'MASSAGES AND THERAPIES' ||
+            type == 'MASSAGENS E TERAPIAS') &&
+        selectedType == type)
       return Services.selectedmassage;
-    else if ((type == 'PARTY ANIMATION' || type == 'ANIMACÃO DE FESTAS') && selectedType != type)
+    else if ((type == 'PARTY ANIMATION' || type == 'ANIMACÃO DE FESTAS') &&
+        selectedType != type)
       return Services.unselectedkidparty;
-    else if ((type == 'PARTY ANIMATION' || type == 'ANIMACÃO DE FESTAS') && selectedType == type)
+    else if ((type == 'PARTY ANIMATION' || type == 'ANIMACÃO DE FESTAS') &&
+        selectedType == type)
       return Services.selectedkidparty;
     else if ((type == 'BIKEBOY' || type == 'BIKEBOY') && selectedType != type)
       return Services.unselectedbiker;
     else if ((type == 'BIKEBOY' || type == 'BIKEBOY') && selectedType == type)
       return Services.selectedbiker;
-    else if ((type == 'LOCKSMITH' || type == 'CHAVEIRO') && selectedType != type)
+    else if ((type == 'LOCKSMITH' || type == 'CHAVEIRO') &&
+        selectedType != type)
       return Services.unselectedlocksmith;
-    else if ((type == 'LOCKSMITH' || type == 'CHAVEIRO') && selectedType == type)
+    else if ((type == 'LOCKSMITH' || type == 'CHAVEIRO') &&
+        selectedType == type)
       return Services.selectedlocksmith;
-    else if ((type == 'ELDERLY CAREGIVER' || type == 'CUIDADOR IDOSO') && selectedType != type)
+    else if ((type == 'ELDERLY CAREGIVER' || type == 'CUIDADOR IDOSO') &&
+        selectedType != type)
       return Services.unselectedeldercare;
-    else if ((type == 'ELDERLY CAREGIVER' || type == 'CUIDADOR IDOSO') && selectedType == type)
+    else if ((type == 'ELDERLY CAREGIVER' || type == 'CUIDADOR IDOSO') &&
+        selectedType == type)
       return Services.selectedeldercare;
-    else if ((type == 'PHOTOGRAPHER' || type == 'FOTOGRAFO') && selectedType != type)
+    else if ((type == 'PHOTOGRAPHER' || type == 'FOTOGRAFO') &&
+        selectedType != type)
       return Services.unselectedphotographer;
-    else if ((type == 'PHOTOGRAPHER' || type == 'FOTOGRAFO') && selectedType == type)
+    else if ((type == 'PHOTOGRAPHER' || type == 'FOTOGRAFO') &&
+        selectedType == type)
       return Services.selectedphotographer;
-    else if ((type == 'GARDENER' || type == 'JARDINEIRO') && selectedType != type)
+    else if ((type == 'GARDENER' || type == 'JARDINEIRO') &&
+        selectedType != type)
       return Services.unselectedgardner;
-    else if ((type == 'GARDENER' || type == 'JARDINEIRO') && selectedType == type)
+    else if ((type == 'GARDENER' || type == 'JARDINEIRO') &&
+        selectedType == type)
       return Services.selectedgardner;
-    else if ((type == 'CAR WASH' || type == 'LAVAGEM DE CARRO') && selectedType != type)
+    else if ((type == 'CAR WASH' || type == 'LAVAGEM DE CARRO') &&
+        selectedType != type)
       return Services.unselectedcarwash;
-    else if ((type == 'CAR WASH' || type == 'LAVAGEM DE CARRO') && selectedType == type)
+    else if ((type == 'CAR WASH' || type == 'LAVAGEM DE CARRO') &&
+        selectedType == type)
       return Services.selectedcarwash;
     else if ((type == 'PETS') && selectedType != type)
       return Services.unselectedpets;
@@ -581,17 +658,23 @@ class FirstPageState extends State<FirstPage> {
       return Services.unselectedfood;
     else if ((type == 'FOOD' || type == 'ALIMENTAÇÃO') && selectedType == type)
       return Services.selectedfood;
-    else if ((type == 'AUTOMOBILES' || type == 'AUTOMOVEIS') && selectedType != type)
+    else if ((type == 'AUTOMOBILES' || type == 'AUTOMOVEIS') &&
+        selectedType != type)
       return Services.unselectautomobile;
-    else if ((type == 'AUTOMOBILES' || type == 'AUTOMOVEIS') && selectedType == type)
+    else if ((type == 'AUTOMOBILES' || type == 'AUTOMOVEIS') &&
+        selectedType == type)
       return Services.selectedautomobile;
-    else if ((type == 'MAINTENANCE' || type == 'MANUTENÇÃO') && selectedType != type)
+    else if ((type == 'MAINTENANCE' || type == 'MANUTENÇÃO') &&
+        selectedType != type)
       return Services.unselectedmaintanance;
-    else if ((type == 'MAINTENANCE' || type == 'MANUTENÇÃO') && selectedType == type)
+    else if ((type == 'MAINTENANCE' || type == 'MANUTENÇÃO') &&
+        selectedType == type)
       return Services.selectedmaintanance;
-    else if ((type == 'PERSONAL TRAINER' || type == 'PERSONAL TRAINER') && selectedType != type)
+    else if ((type == 'PERSONAL TRAINER' || type == 'PERSONAL TRAINER') &&
+        selectedType != type)
       return Services.unselectedpersonaltrainer;
-    else if ((type == 'PERSONAL TRAINER' || type == 'PERSONAL TRAINER') && selectedType == type)
+    else if ((type == 'PERSONAL TRAINER' || type == 'PERSONAL TRAINER') &&
+        selectedType == type)
       return Services.selectedpersonaltrainer;
     else
       return Services.unselectedelectrical;
@@ -695,5 +778,105 @@ class FirstPageState extends State<FirstPage> {
             ]),
           )),
         ));
+  }
+
+  getListOfSubServices() {
+    var selectedLanguage = setting.getLanguage();
+    var type = selectedType;
+
+    if (type == 'CLEANING' && selectedLanguage == 'English')
+      return Services.subtypeofcleaningInENG;
+    else if (type == 'CLEANING' && selectedLanguage == 'Portuguese') {
+      return Services.subtypeofcleaningInBR;
+    } else if (type == 'DRIVER' && selectedLanguage == 'English') {
+      return Services.subtypeofDriverInENG;
+    } else if (type == 'DRIVER' && selectedLanguage == 'Portuguese') {
+      return Services.subtypeofDriverInBR;
+    } else if (type == 'ELECTRICAL' && selectedLanguage == 'English') {
+      return Services.subtypeofElectricalInENG;
+    } else if (type == 'ELECTRICAL' && selectedLanguage == 'Portuguese') {
+      return Services.subtypeofElectricalInBR;
+    } else if (type == 'AIR CONDITIONING' && selectedLanguage == 'English')
+      return Services.subtypeofAirCONDITIONINGInENG;
+    else if (type == 'AIR CONDITIONING' && selectedLanguage == 'Portuguese')
+      return Services.subtypeofAirCONDITIONINGInBR;
+    else if (type == 'MUSIC' && selectedLanguage == 'English') {
+      return Services.subtypeofMusicInENG;
+    } else if (type == 'MUSIC' && selectedLanguage == 'Portuguese')
+      return Services.subtypeofMusicInBR;
+    else if (type == 'HYDRAULIC' && selectedLanguage == 'English')
+      return Services.subtypeofHYDRAULICInENG;
+    else if (type == 'HYDRAULIC' && selectedLanguage == 'Portuguese')
+      return Services.subtypeofHYDRAULICInBR;
+    else if (type == 'REFORM' && selectedLanguage == 'English')
+      return Services.subtypeofREFORMInENG;
+    else if (type == 'REFORM' && selectedLanguage == 'Portuguese')
+      return Services.subtypeofREFORMInBR;
+    else if (type == 'FURNITURE ASSEMBLY' && selectedLanguage == 'English')
+      return Services.subtypeofFURNITUREASSEMBLYInENG;
+    else if (type == 'FURNITURE ASSEMBLY' && selectedLanguage == 'Portuguese')
+      return Services.subtypeofFURNITUREASSEMBLYInBR;
+    else if (type == 'TECHNICAL ASSISTANCE' && selectedLanguage == 'English')
+      return Services.subtypeofTECHNICALASSISTANCEInENG;
+    else if (type == 'TECHNICAL ASSISTANCE' && selectedLanguage == 'Portuguese')
+      return Services.subtypeofTECHNICALASSISTANCEInBR;
+    else if (type == 'MASSAGES AND THERAPIES' && selectedLanguage == 'English')
+      return Services.subtypeofMASSAGESandTHERAPIESInENG;
+    else if (type == 'MASSAGES AND THERAPIES' && selectedLanguage == 'Portuguese')
+      return Services.subtypeofMASSAGESandTHERAPIESInBR;
+    else if (type == 'PARTY ANIMATION' && selectedLanguage == 'English')
+      return Services.subtypeofPARTYANIMATIONInENG;
+    else if (type == 'PARTY ANIMATION' && selectedLanguage == 'Portuguese')
+      return Services.subtypeofPARTYANIMATIONInBR;
+    else if (type == 'BIKEBOY' && selectedLanguage == 'English')
+      return Services.subtypeofBIKEBOYInENG;
+    else if (type == 'BIKEBOY' && selectedLanguage == 'Portuguese')
+      return Services.subtypeofBIKEBOYInBR;
+    else if (type == 'LOCKSMITH' && selectedLanguage == 'English')
+      return Services.subtypeofLOCKSMITHInENG;
+    else if (type == 'LOCKSMITH' && selectedLanguage == 'Portuguese')
+      return Services.subtypeofLOCKSMITHInBR;
+    else if (type == 'ELDERLY CAREGIVER' && selectedLanguage == 'English')
+      return Services.subtypeofELDERLYCAREGIVERInENG;
+    else if (type == 'ELDERLY CAREGIVER' && selectedLanguage == 'Portuguese')
+      return Services.subtypeofELDERLYCAREGIVERInBR;
+    else if (type == 'PHOTOGRAPHER' && selectedLanguage == 'English')
+      return Services.subtypeofPHOTOGRAPHERInENG;
+    else if (type == 'PHOTOGRAPHER' && selectedLanguage == 'Portuguese')
+      return Services.subtypeofPHOTOGRAPHERInBR;
+    else if (type == 'GARDENER' && selectedLanguage == 'English')
+      return Services.subtypeofGARDENERInENG;
+    else if (type == 'GARDENER' && selectedLanguage == 'Portuguese')
+      return Services.subtypeofGARDENERInBR;
+    else if (type == 'CAR WASH' && selectedLanguage == 'English')
+      return Services.subtypeofCARWASHInENG;
+    else if (type == 'CAR WASH' && selectedLanguage == 'Portuguese')
+      return Services.subtypeofCARWASHInBR;
+    else if (type == 'PETS' && selectedLanguage == 'English')
+      return Services.subtypeofPETSInENG;
+    else if (type == 'PETS' && selectedLanguage == 'Portuguese')
+      return Services.subtypeofPETSInBR;
+    else if (type == 'MANICURE' && selectedLanguage == 'English')
+      return Services.subtypeofMAINTENANCEInENG;
+    else if (type == 'MANICURE' && selectedLanguage == 'Portuguese')
+      return Services.subtypeofMAINTENANCEInBR;
+    else if (type == 'FOOD' && selectedLanguage == 'English')
+      return Services.subtypeofFOODInENG;
+    else if (type == 'FOOD' && selectedLanguage == 'Portuguese')
+      return Services.subtypeofFOODInBR;
+    else if (type == 'AUTOMOBILES' && selectedLanguage == 'English')
+      return Services.subtypeofAUTOMOBILESInENG;
+    else if (type == 'AUTOMOBILES' && selectedLanguage == 'Portuguese')
+      return Services.subtypeofAUTOMOBILESInBR;
+    else if (type == 'MAINTENANCE' && selectedLanguage == 'English')
+      return Services.subtypeofMAINTENANCEInENG;
+    else if (type == 'MAINTENANCE' && selectedLanguage == 'Portuguese')
+      return Services.subtypeofMAINTENANCEInBR;
+    else if (type == 'PERSONAL TRAINER' && selectedLanguage == 'English')
+      return Services.subtypeofPERSONALTRAINERInENG;
+    else if (type == 'PERSONAL TRAINER' && selectedLanguage == 'Portuguese')
+      return Services.subtypeofPERSONALTRAINERInBR;
+    else
+      return [];
   }
 }
