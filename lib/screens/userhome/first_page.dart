@@ -55,9 +55,9 @@ class FirstPageState extends State<FirstPage> {
   bool fav = false;
   //
   var lang;
-  //listOfIcons is list of services type icons
-  final listOfIcons = Services.listOfIcons;
-  final listOfSelectedIcons = Services.listOfSelectedIcons;
+  //subtype scrollview
+  bool subtypeScrollVisiblity = false;
+  var listOfSubtype;
 
   // GeoPoint _geoPoint;
 
@@ -222,7 +222,8 @@ class FirstPageState extends State<FirstPage> {
               children: <Widget>[
                 uperPart(),
                 // searchTF(),
-                typeScrollView()
+                typeScrollView(),
+                Visibility(visible: subtypeScrollVisiblity, child: subtypeScrollView()),
               ],
             )
             // Stack(
@@ -439,9 +440,13 @@ class FirstPageState extends State<FirstPage> {
           onPressed: () => {
                 setState(() {
                   selectedType = listOfServices[i];
+                  if (selectedType != ''){
+                    markers.clear();
+                    
+                  }
                 }),
               },
-          padding: EdgeInsets.only(top: 10.0),
+          padding: EdgeInsets.only(top: 10.0, right: 5),
           child: Column(
             // Replace with a Row for horizontal icon + text
             children: <Widget>[
@@ -464,70 +469,130 @@ class FirstPageState extends State<FirstPage> {
     return widgets;
   }
 
+  subtypeScrollView() {
+        return
+        Container(
+            color: Color.fromARGB(255, 235, 235, 235),
+            child: SizedBox(
+                height: 75,
+                child: ListView(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    children: _getListData()
+                    // )
+                    )));
+  }
+  
   getServiceTypeIcon(type) {
-    debugPrint('selected: '+selectedType.toString());
+    // debugPrint('selected: '+selectedType.toString());
     // debugPrint('pass type: '+type.toString());
     if (type == 'DE LIMPEZA' || type == 'CLEANING' && selectedType != type)
       return Services.unselectedcleaning;
-    else if ((type == 'DE LIMPEZA' ||
-        type == 'CLEANING') && selectedType == type) {
-      print('selectcleaning called');
+    else if ((type == 'DE LIMPEZA' || type == 'CLEANING') &&
+        selectedType == type) {
       return Services.selectedcleaning;
-    } else if ((type == 'DRIVER' ||
-        type == 'MOTORISTA') && selectedType != type) {
-      print('unselected driver called');
+    } else if ((type == 'DRIVER' || type == 'MOTORISTA') &&
+        selectedType != type) {
       return Services.unselectedcar;
-    } else if ((type == 'DRIVER' ||
-        type == 'MOTORISTA') && selectedType == type) {
-      print('selected driver called');
+    } else if ((type == 'DRIVER' || type == 'MOTORISTA') &&
+        selectedType == type) {
       return Services.selectedcar;
-    }
-    // else if (type == 'ELECTRICAL' || type == 'ELÉTRICOS')
-    //   return listOfIcons[index];
-    // else if (type == 'REPARAR' || type == 'REPAIR' && selectedType == '')
-    //   return listOfIcons[index];
-    // // else if (type == 'REPARAR' || type == 'HEALTH')
-    // //   return icon.repair;
-    // else if (type == 'AIR CONDITIONING' || type == 'DE AR-CONDICIONADO')
-    //   return listOfIcons[index];
-    // else if (type == 'MUSIC' || type == 'MUSICA')
-    //   return listOfIcons[index];
-    // else if (type == 'HYDRAULIC' || type == 'HIDRÁULICOS')
-    //   return listOfIcons[index];
-    // else if (type == 'REFORM' || type == 'DE REFORMA')
-    //   return listOfIcons[index];
-    // else if (type == 'FURNITURE ASSEMBLY' || type == 'MONTAGEM DE MÓVEIS')
-    //   return listOfIcons[index];
-    // else if (type == 'TECHNICAL ASSISTANCE' || type == 'ASSISTÊNCIA TÉCNICA')
-    //   return listOfIcons[index];
-    // else if (type == 'MASSAGES AND THERAPIES' || type == 'MASSAGENS E TERAPIAS')
-    //   return listOfIcons[index];
-    // else if (type == 'PARTY ANIMATION' || type == 'ANIMACÃO DE FESTAS')
-    //   return listOfIcons[index];
-    // else if (type == 'BIKEBOY' || type == 'BIKEBOY')
-    //   return listOfIcons[index];
-    // else if (type == 'LOCKSMITH' || type == 'CHAVEIRO')
-    //   return listOfIcons[index];
-    // else if (type == 'ELDERLY CAREGIVER' || type == 'CUIDADOR IDOSO')
-    //   return listOfIcons[index];
-    // else if (type == 'PHOTOGRAPHER' || type == 'FOTOGRAFO')
-    //   return listOfIcons[index];
-    // else if (type == 'GARDENER' || type == 'JARDINEIRO')
-    //   return listOfIcons[index];
-    // else if (type == 'CAR WASH' || type == 'LAVAGEM DE CARRO')
-    //   return listOfIcons[index];
-    // else if (type == 'PETS' || type == 'PETS')
-    //   return listOfIcons[index];
-    // else if (type == 'MANICURE' || type == 'MANICURE')
-    //   return listOfIcons[index];
-    // else if (type == 'FOOD' || type == 'ALIMENTAÇÃO')
-    //   return listOfIcons[index];
-    // else if (type == 'AUTOMOBILES' || type == 'AUTOMOVEIS')
-    //   return listOfIcons[index];
-    // else if (type == 'MAINTENANCE' || type == 'MANUTENÇÃO')
-    //   return listOfIcons[index];
-    // else if (type == 'PERSONAL TRAINER' || type == 'PERSONAL TRAINER')
-    //   return listOfIcons[index];
+    } else if ((type == 'ELECTRICAL' || type == 'ELÉTRICOS') &&
+        selectedType != type) {
+      return Services.unselectedelectrical;
+    } else if ((type == 'ELECTRICAL' || type == 'ELÉTRICOS') &&
+        selectedType == type) {
+      return Services.selectedelectrical;
+    } else if ((type == 'AIR CONDITIONING' || type == 'DE AR-CONDICIONADO') &&
+        selectedType != type)
+      return Services.unselectedac;
+    else if ((type == 'AIR CONDITIONING' || type == 'DE AR-CONDICIONADO') &&
+        selectedType == type)
+      return Services.selectedac;
+    else if ((type == 'MUSIC' || type == 'MUSICA') && selectedType != type) {
+      return Services.unselectedmusic;
+    } else if ((type == 'MUSIC' || type == 'MUSICA') && selectedType == type) {
+      return Services.selectedmusic;
+    } else if ((lang == 'HYDRAULIC' || type == 'HIDRÁULICOS') &&
+        selectedType != type)
+      return Services.unselectedhydraulic;
+    else if ((lang == 'HYDRAULIC' || type == 'HIDRÁULICOS') &&
+        selectedType == type)
+      return Services.selectedhydraulic;
+    else if ((type == 'REFORM' || type == 'DE REFORMA') && selectedType != type)
+      return Services.unselectedreform;
+    else if ((type == 'REFORM' || type == 'DE REFORMA') && selectedType == type)
+      return Services.selectedreform;
+    else if ((type == 'FURNITURE ASSEMBLY' || type == 'MONTAGEM DE MÓVEIS') &&
+        selectedType != type)
+      return Services.unselectedfa;
+    else if ((type == 'FURNITURE ASSEMBLY' || type == 'MONTAGEM DE MÓVEIS') &&
+        selectedType == type)
+      return Services.selectedfa;
+    else if ((type == 'TECHNICAL ASSISTANCE' ||
+            type == 'ASSISTÊNCIA TÉCNICA') &&
+        selectedType != type)
+      return Services.unselectedtechnicalassistance;
+    else if ((type == 'TECHNICAL ASSISTANCE' ||
+            type == 'ASSISTÊNCIA TÉCNICA') &&
+        selectedType == type)
+      return Services.selectedtechnicalassistance;
+    else if ((type == 'MASSAGES AND THERAPIES' || type == 'MASSAGENS E TERAPIAS') && selectedType != type)
+      return Services.unselectedmassage;
+    else if ((type == 'MASSAGES AND THERAPIES' || type == 'MASSAGENS E TERAPIAS') && selectedType == type)
+      return Services.selectedmassage;
+    else if ((type == 'PARTY ANIMATION' || type == 'ANIMACÃO DE FESTAS') && selectedType != type)
+      return Services.unselectedkidparty;
+    else if ((type == 'PARTY ANIMATION' || type == 'ANIMACÃO DE FESTAS') && selectedType == type)
+      return Services.selectedkidparty;
+    else if ((type == 'BIKEBOY' || type == 'BIKEBOY') && selectedType != type)
+      return Services.unselectedbiker;
+    else if ((type == 'BIKEBOY' || type == 'BIKEBOY') && selectedType == type)
+      return Services.selectedbiker;
+    else if ((type == 'LOCKSMITH' || type == 'CHAVEIRO') && selectedType != type)
+      return Services.unselectedlocksmith;
+    else if ((type == 'LOCKSMITH' || type == 'CHAVEIRO') && selectedType == type)
+      return Services.selectedlocksmith;
+    else if ((type == 'ELDERLY CAREGIVER' || type == 'CUIDADOR IDOSO') && selectedType != type)
+      return Services.unselectedeldercare;
+    else if ((type == 'ELDERLY CAREGIVER' || type == 'CUIDADOR IDOSO') && selectedType == type)
+      return Services.selectedeldercare;
+    else if ((type == 'PHOTOGRAPHER' || type == 'FOTOGRAFO') && selectedType != type)
+      return Services.unselectedphotographer;
+    else if ((type == 'PHOTOGRAPHER' || type == 'FOTOGRAFO') && selectedType == type)
+      return Services.selectedphotographer;
+    else if ((type == 'GARDENER' || type == 'JARDINEIRO') && selectedType != type)
+      return Services.unselectedgardner;
+    else if ((type == 'GARDENER' || type == 'JARDINEIRO') && selectedType == type)
+      return Services.selectedgardner;
+    else if ((type == 'CAR WASH' || type == 'LAVAGEM DE CARRO') && selectedType != type)
+      return Services.unselectedcarwash;
+    else if ((type == 'CAR WASH' || type == 'LAVAGEM DE CARRO') && selectedType == type)
+      return Services.selectedcarwash;
+    else if ((type == 'PETS') && selectedType != type)
+      return Services.unselectedpets;
+    else if ((type == 'PETS') && selectedType == type)
+      return Services.selectedpets;
+    else if (type == 'MANICURE' && selectedType != type)
+      return Services.unselectedmanicure;
+    else if (type == 'MANICURE' && selectedType == type)
+      return Services.selectedmanicure;
+    else if ((type == 'FOOD' || type == 'ALIMENTAÇÃO') && selectedType != type)
+      return Services.unselectedfood;
+    else if ((type == 'FOOD' || type == 'ALIMENTAÇÃO') && selectedType == type)
+      return Services.selectedfood;
+    else if ((type == 'AUTOMOBILES' || type == 'AUTOMOVEIS') && selectedType != type)
+      return Services.unselectautomobile;
+    else if ((type == 'AUTOMOBILES' || type == 'AUTOMOVEIS') && selectedType == type)
+      return Services.selectedautomobile;
+    else if ((type == 'MAINTENANCE' || type == 'MANUTENÇÃO') && selectedType != type)
+      return Services.unselectedmaintanance;
+    else if ((type == 'MAINTENANCE' || type == 'MANUTENÇÃO') && selectedType == type)
+      return Services.selectedmaintanance;
+    else if ((type == 'PERSONAL TRAINER' || type == 'PERSONAL TRAINER') && selectedType != type)
+      return Services.unselectedpersonaltrainer;
+    else if ((type == 'PERSONAL TRAINER' || type == 'PERSONAL TRAINER') && selectedType == type)
+      return Services.selectedpersonaltrainer;
     else
       return Services.unselectedelectrical;
   }

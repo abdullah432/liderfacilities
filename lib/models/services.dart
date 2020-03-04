@@ -22,7 +22,7 @@ class Services {
     'FOOD',
     'AUTOMOBILES',
     'MAINTENANCE',
-    'PERSONAL TRAINER'
+    'PERSONAL TRAINER',
     'PARTY ANIMATION',
     'GLASS',
     'REFORM',
@@ -472,69 +472,46 @@ class Services {
   static AssetImage unselectedmusic = AssetImage("assets/icons/music.png");
   static AssetImage selectedmusic = AssetImage("assets/icons/selectedtypes/musics.png");
   static AssetImage unselectedhydraulic = AssetImage("assets/icons/hydraulic.png");
-  static AssetImage selectedelhydraulic = AssetImage("assets/icons/selectedtypes/hydraulics.png");
+  static AssetImage selectedhydraulic = AssetImage("assets/icons/selectedtypes/hydraulics.png");
   static AssetImage unselectedbiker =  AssetImage("assets/icons/biker.png");
   static AssetImage selectedbiker = AssetImage("assets/icons/selectedtypes/bikers.png");  
   static AssetImage unselectedlocksmith = AssetImage("assets/icons/locksmith.png");
   static AssetImage selectedlocksmith = AssetImage("assets/icons/selectedtypes/locksmiths.png");
   static AssetImage unselectedeldercare = AssetImage("assets/icons/eldercare.png");
-  static AssetImage selectedeldercare = AssetImage("assets/icons/selectedtypes/eldercare.png");
+  static AssetImage selectedeldercare = AssetImage("assets/icons/selectedtypes/eldercares.png");
   static AssetImage unselectedphotographer = AssetImage("assets/icons/photographer.png");
   static AssetImage selectedphotographer= AssetImage("assets/icons/selectedtypes/photographers.png");
   static AssetImage unselectedgardner = AssetImage("assets/icons/gardner.png");
-  static AssetImage selectedelgardner = AssetImage("assets/icons/selectedtypes/gardners.png");
+  static AssetImage selectedgardner = AssetImage("assets/icons/selectedtypes/gardners.png");
   static AssetImage unselectedcarwash = AssetImage("assets/icons/carwash.png");
   static AssetImage selectedcarwash = AssetImage("assets/icons/selectedtypes/carwashs.png");
-  static AssetImage unselectpets = AssetImage("assets/icons/pets.png");
+  static AssetImage unselectedpets = AssetImage("assets/icons/pets.png");
   static AssetImage selectedpets = AssetImage("assets/icons/selectedtypes/petss.png");
-  // static AssetImage unselectedphotographer = AssetImage("assets/icons/photographer.png");
-  // static AssetImage selectedphotographer= AssetImage("assets/icons/selectedtypes/photographers.png");
-  // static AssetImage unselectedgardner = AssetImage("assets/icons/gardner.png");
-  // static AssetImage selectedelgardner = AssetImage("assets/icons/selectedtypes/gardners.png");
+  static AssetImage unselectedmanicure = AssetImage("assets/icons/manicure.png");
+  static AssetImage selectedmanicure= AssetImage("assets/icons/selectedtypes/manicures.png");
+  static AssetImage unselectedfood = AssetImage("assets/icons/food.png");
+  static AssetImage selectedfood = AssetImage("assets/icons/selectedtypes/foods.png");
+  static AssetImage unselectautomobile = AssetImage("assets/icons/automobile.png");
+  static AssetImage selectedautomobile = AssetImage("assets/icons/selectedtypes/automobiles.png");
+  static AssetImage unselectedmaintanance = AssetImage("assets/icons/maintanance.png");
+  static AssetImage selectedmaintanance= AssetImage("assets/icons/selectedtypes/maintanances.png");
+  static AssetImage unselectedac = AssetImage("assets/icons/ac.png");
+  static AssetImage selectedac = AssetImage("assets/icons/selectedtypes/acs.png");
+  static AssetImage unselectedfa = AssetImage("assets/icons/fa.png");
+  static AssetImage selectedfa = AssetImage("assets/icons/selectedtypes/fas.png");
+  static AssetImage unselectedtechnicalassistance = AssetImage("assets/icons/technicalassistance.png");
+  static AssetImage selectedtechnicalassistance= AssetImage("assets/icons/selectedtypes/technicalassistances.png");
+  static AssetImage unselectedmassage = AssetImage("assets/icons/massage.png");
+  static AssetImage selectedmassage = AssetImage("assets/icons/selectedtypes/massages.png");
+  static AssetImage unselectedpersonaltrainer= AssetImage("assets/icons/personaltrainer.png");
+  static AssetImage selectedpersonaltrainer = AssetImage("assets/icons/selectedtypes/personaltrainers.png");
+  static AssetImage unselectedkidparty = AssetImage("assets/icons/kidparty.png");
+  static AssetImage selectedkidparty= AssetImage("assets/icons/selectedtypes/kidpartys.png");
+  static AssetImage unselectedglass = AssetImage("assets/icons/glass.png");
+  static AssetImage selectedglass = AssetImage("assets/icons/selectedtypes/glasss.png");
+  static AssetImage unselectedreform = AssetImage("assets/icons/reform.png");
+  static AssetImage selectedreform= AssetImage("assets/icons/selectedtypes/reforms.png");
+  static AssetImage unselectedfreight = AssetImage("assets/icons/freight.png");
+  static AssetImage selectedfreight= AssetImage("assets/icons/selectedtypes/freights.png");
 
-
-  static final listOfIcons = [
-    "assets/icons/pets.png",
-   "assets/icons/manicure.png",
-    "assets/icons/food.png",
-    "assets/icons/automobile.png",
-    "assets/icons/maintanance.png",
-    "assets/icons/ac.png",
-    "assets/icons/fa.png",
-    "assets/icons/technicalassistance.png",
-    "assets/icons/massage.png",
-    "assets/icons/personaltrainer.png",
-    "assets/icons/kidparty.png",
-   " assets/icons/glass.png",
-    "assets/icons/reform.png",
-    "assets/icons/freight.png"
-    ];
-
-    static final listOfSelectedIcons = [
-    "assets/icons/selectedtypes/cleanings.png",
-    "assets/icons/selectedtypes/cars.png",
-    "assets/icons/selectedtypes/electricals.png",
-    "assets/icons/selectedtypes/musics.png",
-    "assets/icons/selectedtypes/hydraulics.png",
-    "assets/icons/selectedtypes/bikers.png",
-    "assets/icons/selectedtypes/locksmiths.png",
-    "assets/icons/selectedtypes/eldercares.png",
-   "assets/icons/selectedtypes/photographers.png",
-    "assets/icons/selectedtypes/gardners.png",
-    "assets/icons/selectedtypes/carwashs.png",
-    "assets/icons/selectedtypes/petss.png",
-   "assets/icons/selectedtypes/manicures.png",
-    "assets/icons/selectedtypes/foods.png",
-    "assets/icons/selectedtypes/automobiles.png",
-    "assets/icons/selectedtypes/maintanances.png",
-    "assets/icons/selectedtypes/acs.png",
-    "assets/icons/selectedtypes/fas.png",
-    "assets/icons/selectedtypes/technicalassistances.png",
-    "assets/icons/selectedtypes/massages.png",
-    "assets/icons/selectedtypes/personaltrainers.png",
-    "assets/icons/selectedtypes/kidpartys.png",
-   " assets/icons/selectedtypes/glasss.png",
-    "assets/icons/selectedtypes/reforms.png",
-    "assets/icons/selectedtypes/freights.png"
-    ];
 }
