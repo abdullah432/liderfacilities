@@ -11,6 +11,7 @@ import 'package:liderfacilites/models/icons.dart';
 import 'package:liderfacilites/models/services.dart';
 import 'package:liderfacilites/models/setting.dart';
 import 'package:liderfacilites/screens/chatroom/chat.dart';
+import 'package:liderfacilites/screens/payment/book1.dart';
 
 class FirstPage extends StatefulWidget {
   const FirstPage({Key key}) : super(key: key);
@@ -129,6 +130,7 @@ class FirstPageState extends State<FirstPage> {
           if (docs.documents.isNotEmpty)
             {
               allServices = docs.documents,
+              print('allservicelength: '+allServices.length.toString()),
               for (int i = 0; i < docs.documents.length; ++i)
                 {
                   initMarker(
@@ -234,10 +236,10 @@ class FirstPageState extends State<FirstPage> {
               FocusScope.of(context).requestFocus(new FocusNode());
               showUserProfile = false;
               // print('length of Services list: '+allServices.length.toString());
-              // print('Lat: ' +
-              //     geopoint.latitude.toString() +
-              //     ' Long: ' +
-              //     geopoint.longitude.toString());
+              print('Lat: ' +
+                  geopoint.latitude.toString() +
+                  ' Long: ' +
+                  geopoint.longitude.toString());
             });
           },
         ),
@@ -687,7 +689,11 @@ class FirstPageState extends State<FirstPage> {
           bottom: 5.0,
           left: 5.0,
           right: 5.0,
-          child: Card(
+          child: GestureDetector(
+            onTap: () {
+              navigateToBook1Page();
+            },
+            child: Card(
               child: ListTile(
             leading: CircleAvatar(
               radius: 30,
@@ -777,7 +783,7 @@ class FirstPageState extends State<FirstPage> {
               ),
             ]),
           )),
-        ));
+        )));
   }
 
   getListOfSubServices() {
@@ -878,5 +884,11 @@ class FirstPageState extends State<FirstPage> {
       return Services.subtypeofPERSONALTRAINERInBR;
     else
       return [];
+  }
+
+  navigateToBook1Page() {
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return Book1();
+    }));
   }
 }

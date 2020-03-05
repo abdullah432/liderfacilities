@@ -8,7 +8,7 @@ class CustomFirestore {
   final db = Firestore.instance;
 
   Future<bool> createServiceRecord(
-      String type, String subtype, String hourlyrate, String desc) async {
+      String type, String subtype, String hourlyrate, String desc, String serviceImgUrl, GeoPoint geoPoint) async {
     try {
       await db.collection("services").add({
         'type': type,
@@ -17,7 +17,9 @@ class CustomFirestore {
         'description': desc,
         'reference': db.collection('users').document(_user.uid),
         'imgurl': _user.imageUrl,
-        'taskername': _user.name
+        'taskername': _user.name,
+        'serviceimageurl': serviceImgUrl,
+        'geopoint': geoPoint
       }).whenComplete(() {
         return true;
       }).catchError((onError) {

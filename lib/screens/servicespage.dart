@@ -110,25 +110,12 @@ class MyServicesState extends State<MyServices> {
                 overflow: TextOverflow.ellipsis,
               ),
               trailing: Container(
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.blue, width: 2)),
-                child:  GestureDetector(
-                      onTap: () {
-                        //todo tasker chat page
-                      },
-                      child: Padding(
-                    padding: const EdgeInsets.all(6.0),
-                    child: Icon(
-                        Icons.message,
-                        color: Colors.blue,
-                        size: 18,
-                      ),
-                    )),
-              ),
-            ),
+                // decoration: BoxDecoration(
+                //     shape: BoxShape.circle,
+                //     border: Border.all(color: Colors.blue, width: 2)),
+                child:  Text('${record.hourlyrate} \$'),
           ),
-        ));
+        ))));
   }
 
   // myServiceBody(BuildContext context) {
@@ -233,11 +220,7 @@ class MyServicesState extends State<MyServices> {
                 border: Border.all(color: Colors.black38, width: 2)),
             child: Padding(
               padding: const EdgeInsets.all(3.0),
-              child: Icon(
-                Icons.message,
-                color: Colors.black38,
-                size: 18,
-              ),
+              child: Expanded(child: Text('40 \$')),
             ),
           ),
         )),
@@ -277,7 +260,8 @@ class MyServicesState extends State<MyServices> {
             Spacer(),
             FlatButton(
               onPressed: () {
-                if (!user.isTasker) navigateToAddServicePage();
+                // if (!user.isTasker) navigateToAddServicePage();
+                navigateToAddServicePage();
               },
               child: Padding(
                 padding: const EdgeInsets.all(10.0),

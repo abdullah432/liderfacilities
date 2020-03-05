@@ -1,9 +1,15 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:liderfacilites/models/User.dart';
 import 'package:liderfacilites/models/app_localization.dart';
 import 'package:liderfacilites/models/firestore.dart';
 import 'package:liderfacilites/models/services.dart';
 import 'package:liderfacilites/models/setting.dart';
+import 'package:path/path.dart' as p;
 
 class AddService extends StatefulWidget {
   @override
@@ -26,6 +32,12 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
   String selectedService;
   String _dropdownscError;
   String selectedSubCategory;
+
+  //Service image file
+  File _serviceImageFile;
+  //error if user not select image, default it's value will be ''
+  String errorOrDefault = '';
+  bool showRedText = false;
 
   Setting _setting = new Setting();
 
@@ -133,7 +145,7 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
                             child: Align(
                                 alignment: Alignment.topLeft,
                                 child: Text(
-                                  lang.translate('Hourly Rate'),
+                                  lang.translate('Fixed Rate'),
                                   style: TextStyle(fontSize: 16),
                                 )),
                           ),
@@ -161,12 +173,66 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
                                 child: descriptionTextBox(),
                               )),
                           Padding(
+                            padding: const EdgeInsets.only(top: 20, left: 30),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Column(
+                                children: <Widget>[
+                                  Row(children: <Widget>[
+                                    Expanded(
+                                        child: Text(
+                                      // lang.translate('Description'),
+                                      'Upload Image related to your service',
+                                      style: TextStyle(fontSize: 13),
+                                    )),
+                                    GestureDetector(
+                                        onTap: () {
+                                          //load image
+                                          getImage();
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              right: 35, top: 10, bottom: 10),
+                                          child: Icon(
+                                            Icons.cloud_upload,
+                                            color: Colors.blue,
+                                          ),
+                                        )),
+                                  ]),
+                                  Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Text(
+                                        
+                                        _serviceImageFile != null 
+                                            ? p.basename(_serviceImageFile.path)
+                                            : errorOrDefault,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.clip,
+                                        style: TextStyle(color: showRedText ? Colors.red : Colors.black),
+                                      )),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Padding(
                               padding:
                                   const EdgeInsets.only(top: 20, bottom: 20),
                               child: saveButton()),
                         ]),
                       )),
                 ))));
+  }
+
+  Future getImage() async {
+    var image = await ImagePicker.pickImage(
+        source: ImageSource.gallery, imageQuality: 35);
+    if (this.mounted) {
+      setState(() {
+        _serviceImageFile = image;
+        //image not pick error color
+        showRedText = false;
+      });
+    }
   }
 
   typeofservicedropdown() {
@@ -345,18 +411,44 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
 
   saveService() async {
     if (_formKey.currentState.validate()) {
-      CustomFirestore firestore = new CustomFirestore();
-      bool result = await firestore.createServiceRecord(
-          selectedService, selectedSubCategory, hrC.text, desC.text);
-      User user = new User();
-      user.setUserState(true);
-      Navigator.pop(context, true);
-      if (result) {
-        //when user add service, this mean he is now tasker too.
-        firestore.updateToTasker();
-        showSnachBar(lang.translate('Successfully Added'), 1);
+      //after that check if image for this service is selected or not, if not then show error
+      if (_serviceImageFile != null) {
+        //if user select image then first upload image and get url
+        String filename = p.basename(_serviceImageFile.path);
+        StorageReference fstorageRef =
+        FirebaseStorage.instance.ref().child(filename);
+        StorageUploadTask uploadTask = fstorageRef.putFile(_serviceImageFile);
+        StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
+        String downloadUrl = await storageTaskSnapshot.ref.getDownloadURL();
+
+        User user = new User();
+        //before adding new service pick user location
+        GeoPoint _geoPoint;
+        if (user.geopoint != null) {
+          _geoPoint = user.geopoint;
+        } else {
+          _geoPoint = _setting.location;
+        }
+        CustomFirestore firestore = new CustomFirestore();
+        bool result = await firestore.createServiceRecord(
+            selectedService, selectedSubCategory, hrC.text, desC.text, downloadUrl, _geoPoint);
+
+        user.setUserState(true);
+        Navigator.pop(context, true);
+        if (result) {
+          //when user add service, this mean he is now tasker too.
+          firestore.updateToTasker();
+          showSnachBar(lang.translate('Successfully Added'), 1);
+        } else {
+          showSnachBar(lang.translate('Fail to add'), 2);
+        }
       } else {
-        showSnachBar(lang.translate('Fail to add'), 2);
+        if(this.mounted){
+          setState(() {
+            errorOrDefault = 'Image is not selected';
+            showRedText = true;
+          });
+        }
       }
 
       // Navigator.of(context).pop(true);
