@@ -64,6 +64,7 @@ flutter:
     - assets/images/noservice.png
     - assets/images/location.png
     - assets/images/mylocation.png
+    - assets/images/booking.png
     - assets/icons/health.png
     - assets/icons/repair.png
     - assets/icons/cleaning.png

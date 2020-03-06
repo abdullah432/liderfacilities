@@ -314,11 +314,11 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
           Container(
             // width: MediaQuery.of(context).size.width / 1.25,
             padding: EdgeInsets.only(left: 20, top: 3, bottom: 3, right: 14),
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(25),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),
                 // color: Colors.black12,
                 boxShadow: [BoxShadow(color: Colors.black12)]),
             child: TextFormField(
-              cursorColor: Color.fromARGB(214, 214, 214, 100),
+              // cursorColor: Color.fromARGB(214, 214, 214, 100),
               // textAlign: TextAlign.center,
               keyboardType: TextInputType.number,
               validator: validateHR,
@@ -353,11 +353,11 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
           Container(
             // width: MediaQuery.of(context).size.width / 1.25,
             padding: EdgeInsets.only(left: 20, top: 3, bottom: 3, right: 14),
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(25),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),
                 // color: Colors.black12,
                 boxShadow: [BoxShadow(color: Colors.black12)]),
             child: TextFormField(
-              cursorColor: Color.fromARGB(214, 214, 214, 100),
+              // cursorColor: Color.fromARGB(214, 214, 214, 100),
               // textAlign: TextAlign.center,
               keyboardType: TextInputType.multiline,
               maxLines: 2,

@@ -3,6 +3,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:liderfacilites/models/app_localization.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoder/geocoder.dart';
+import 'package:liderfacilites/screens/payment/payment.dart';
 
 class Book1 extends StatefulWidget {
   @override
@@ -224,7 +225,7 @@ class Book1State extends State<Book1> {
             // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Expanded(
-                  // flex: 8,
+                  flex: 8,
                   child: RaisedButton(
                     padding: EdgeInsets.all(13),
                     color: Colors.white,
@@ -241,14 +242,19 @@ class Book1State extends State<Book1> {
                           color: Colors.blueAccent),
                     ),
                   )),
+              Spacer(
+                flex: 1,
+              ),
                Expanded(
-                  // flex: 8,
+                  flex: 8,
                   child: RaisedButton(
                     padding: EdgeInsets.all(13),
                     color: Color.fromRGBO(26, 119, 186, 1),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25.0)),
-                    onPressed: () {},
+                    onPressed: () {
+                      navigateToPaymentPage();
+                    },
                     child: Text(
                       lang.translate('Book'),
                       style: TextStyle(
@@ -260,6 +266,13 @@ class Book1State extends State<Book1> {
             ],
           )),
     );
+  }
+
+  navigateToPaymentPage() {
+    Navigator.push(context,
+              MaterialPageRoute(builder: (context) {
+            return Payment();
+          }));
   }
 
 }
