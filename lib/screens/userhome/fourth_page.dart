@@ -7,9 +7,8 @@ import 'package:liderfacilites/models/authentication.dart';
 import 'package:liderfacilites/models/setting.dart';
 import 'package:liderfacilites/screens/editInfo.dart';
 import 'package:liderfacilites/screens/login.dart';
+import 'package:liderfacilites/screens/payment/addPayment.dart';
 import 'package:liderfacilites/screens/servicespage.dart';
-import 'package:provider/provider.dart';
-import 'package:liderfacilites/models/localmodal.dart';
 
 import '../addservices.dart';
 
@@ -236,6 +235,9 @@ class FourthPageState extends State<FourthPage> {
                     AppLocalizations.of(context).translate('My Payments'),
                     style: TextStyle(color: Colors.black),
                   ),
+                  onTap: () {
+                    navigateToAddPaymentPage();
+                  },
                 ),
                 Divider(
                   height: 1,
@@ -378,4 +380,11 @@ class FourthPageState extends State<FourthPage> {
     );
     // Navigator.pushNamed(context,"/servicespage");
   }
+
+  navigateToAddPaymentPage() {
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return AddPayment();
+    }));
+  }
+
 }

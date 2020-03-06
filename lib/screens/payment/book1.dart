@@ -3,24 +3,51 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:liderfacilites/models/app_localization.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoder/geocoder.dart';
-import 'package:liderfacilites/screens/payment/payment.dart';
+import 'package:liderfacilites/screens/payment/makePayment.dart';
 
 class Book1 extends StatefulWidget {
+  final _taskerData;
+  Book1(this._taskerData);
   @override
   State<StatefulWidget> createState() {
-    return Book1State();
+    return Book1State(_taskerData);
   }
 }
 
 class Book1State extends State<Book1> {
+  var _taskerData;
+  Book1State(this._taskerData);
+
   MediaQueryData mediaQuery;
   AppLocalizations lang;
   //user location
   Geolocator geolocator = Geolocator();
   Position userLocation;
-  String _userAddress = 'Not selected';
   //service data
-  var listOfSubServices = ['Cleaning', 'Driver'];
+  var listOfSubServices = [];
+  String taskername;
+  String taskerAddress;
+  String servicePrice;
+  String profileImgUrl;
+  String serviceImgUrl;
+
+  @override
+  void initState() {
+    listOfSubServices.add(_taskerData['type']);
+    listOfSubServices.add(_taskerData['subtype']);
+    taskername = _taskerData['taskername'];
+    servicePrice = _taskerData['hourlyrate'];
+    taskerAddress = _taskerData['address'];
+    profileImgUrl = _taskerData['imgurl'];
+    print('pro: ' + profileImgUrl);
+    if (_taskerData['serviceimageurl'] != null){
+      serviceImgUrl = _taskerData['serviceimageurl'];
+    print('ser: ' + serviceImgUrl);
+    print('called');
+    }
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,12 +58,23 @@ class Book1State extends State<Book1> {
         new Container(
           height: mediaQuery.size.height / 3,
           width: double.infinity,
-          decoration: new BoxDecoration(
-            image: new DecorationImage(
-              image: new AssetImage("assets/images/placeholder.jpg"),
-              fit: BoxFit.cover,
-            ),
-          ),
+          child: serviceImgUrl == null
+              ? profileImgUrl == null
+                  ? AssetImage("assets/images/placeholder.jpg")
+                  : FadeInImage(
+                      fit: BoxFit.cover,
+                      placeholder: AssetImage('assets/images/placeholder.jpg'),
+                      image: NetworkImage(
+                        profileImgUrl,
+                      ),
+                    )
+              : FadeInImage(
+                  fit: BoxFit.cover,
+                  placeholder: AssetImage('assets/images/placeholder.jpg'),
+                  image: NetworkImage(
+                    serviceImgUrl,
+                  ),
+                ),
         ),
         Scaffold(
           backgroundColor: Colors.transparent,
@@ -48,7 +86,7 @@ class Book1State extends State<Book1> {
                 Navigator.pop(context);
               },
             ),
-            title: new Text("Abdullah khan"),
+            title: new Text(taskername),
             backgroundColor: Colors.transparent,
             elevation: 0.0,
           ),
@@ -56,7 +94,7 @@ class Book1State extends State<Book1> {
               padding: EdgeInsets.only(top: mediaQuery.size.height / 5.5),
               child: Container(
                 height: double.infinity,
-                color: Colors.white,
+                color: Color.fromRGBO(245, 245, 245, 1),
                 child: detailView(),
               )),
         ),
@@ -112,11 +150,11 @@ class Book1State extends State<Book1> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Text(
-          'Abdullah khan',
+          taskername,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         Text(
-          '25 \$',
+          '$servicePrice \$',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ],
@@ -165,7 +203,9 @@ class Book1State extends State<Book1> {
                     ),
                     Expanded(
                       child: Text(
-                        _userAddress,
+                        taskerAddress != null
+                            ? taskerAddress
+                            : 'Unknown Address',
                         style: TextStyle(fontSize: 9, color: Colors.black38),
                       ),
                     )
@@ -222,57 +262,55 @@ class Book1State extends State<Book1> {
           // height: 50,
           // width: MediaQuery.of(context).size.width / 1.25,
           child: Row(
-            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Expanded(
-                  flex: 8,
-                  child: RaisedButton(
-                    padding: EdgeInsets.all(13),
-                    color: Colors.white,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25.0),
-                        side: BorderSide(color: Colors.black54)),
-                    onPressed: () {},
-                    child: Text(
-                      lang.translate('Feedback'),
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 17,
-                          color: Colors.blueAccent),
-                    ),
-                  )),
-              Spacer(
-                flex: 1,
-              ),
-               Expanded(
-                  flex: 8,
-                  child: RaisedButton(
-                    padding: EdgeInsets.all(13),
-                    color: Color.fromRGBO(26, 119, 186, 1),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25.0)),
-                    onPressed: () {
-                      navigateToPaymentPage();
-                    },
-                    child: Text(
-                      lang.translate('Book'),
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 17,
-                          color: Colors.white),
-                    ),
-                  )),
-            ],
-          )),
+        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Expanded(
+              flex: 8,
+              child: RaisedButton(
+                padding: EdgeInsets.all(13),
+                color: Colors.white,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                    side: BorderSide(color: Colors.black54)),
+                onPressed: () {},
+                child: Text(
+                  lang.translate('Feedback'),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 17,
+                      color: Colors.blueAccent),
+                ),
+              )),
+          Spacer(
+            flex: 1,
+          ),
+          Expanded(
+              flex: 8,
+              child: RaisedButton(
+                padding: EdgeInsets.all(13),
+                color: Color.fromRGBO(26, 119, 186, 1),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25.0)),
+                onPressed: () {
+                  navigateToPaymentPage();
+                },
+                child: Text(
+                  lang.translate('Book'),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 17,
+                      color: Colors.white),
+                ),
+              )),
+        ],
+      )),
     );
   }
 
   navigateToPaymentPage() {
-    Navigator.push(context,
-              MaterialPageRoute(builder: (context) {
-            return Payment();
-          }));
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return Payment();
+    }));
   }
-
 }

@@ -96,4 +96,7 @@ class CustomFirestore {
     debugPrint('length of ds: '+documentSnapshot.length.toString());
     return documentSnapshot;
   }
+
+  //add payment collection to firestore
+  
 }

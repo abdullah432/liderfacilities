@@ -888,7 +888,7 @@ class FirstPageState extends State<FirstPage> {
 
   navigateToBook1Page() {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return Book1();
+      return Book1(tasker);
     }));
   }
 }

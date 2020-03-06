@@ -9,6 +9,7 @@ class Setting {
   static final Setting setting = Setting._internal();
   BitmapDescriptor myLocationIcon;
   GeoPoint _geoPoint;
+  Color pColor = Color.fromRGBO(26, 119, 186, 1);
 
   Setting._internal();
   factory Setting() {
@@ -67,5 +68,9 @@ class Setting {
 
   get location {
     return _geoPoint;
+  }
+
+  get primaryColor {
+    return pColor;
   }
 }

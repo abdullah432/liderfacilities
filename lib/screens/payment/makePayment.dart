@@ -103,8 +103,9 @@ class PaymentState extends State<Payment> {
                 children: <Widget>[
                   title1(),
                   Divider(
-                    height: 60,
+                    height: 50,
                   ),
+                  title2(),
                   nameTextBox(),
                   cardnumberTextBox(),
                   expiryCvvTextBox(),
@@ -122,27 +123,31 @@ class PaymentState extends State<Payment> {
         ));
   }
 
+  title2() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20),
+      child: Align(
+          alignment: Alignment.topLeft,
+          child: Text(
+            lang.translate('Add New Card'),
+            style: boldAlign,
+          )),
+    );
+  }
+
   nameTextBox() {
     return Container(
       child: Column(
         children: <Widget>[
           Container(
-            // width: MediaQuery.of(context).size.width / 1.25,
             padding: EdgeInsets.only(left: 20, top: 3, bottom: 3, right: 14),
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),
-                // color: Colors.black12,
                 boxShadow: [BoxShadow(color: Colors.black12)]),
             child: TextFormField(
-              // cursorColor: Color.fromRGBO(214, 214, 214, 1),
-              // textAlign: TextAlign.center,
-              keyboardType: TextInputType.number,
-              validator: validateName,
+              keyboardType: TextInputType.text,
+              validator: validate,
               controller: nameC,
-              // onSaved: (value) {
-              //   _email = value;
-              // },
               decoration: InputDecoration(
-                  // hintText: 'Email',
                   hintText: lang.translate('Name on Card'),
                   border: InputBorder.none,
                   fillColor: Colors.blue),
@@ -153,13 +158,6 @@ class PaymentState extends State<Payment> {
     );
   }
 
-  String validateName(String value) {
-    if (value.isEmpty) {
-      return 'Empty';
-    } else
-      return null;
-  }
-
   cardnumberTextBox() {
     return Padding(
       padding: const EdgeInsets.only(top: 15),
@@ -167,22 +165,14 @@ class PaymentState extends State<Payment> {
         child: Column(
           children: <Widget>[
             Container(
-              // width: MediaQuery.of(context).size.width / 1.25,
               padding: EdgeInsets.only(left: 20, top: 3, bottom: 3, right: 14),
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),
-                  // color: Colors.black12,
                   boxShadow: [BoxShadow(color: Colors.black12)]),
               child: TextFormField(
-                // cursorColor: Color.fromRGBO(214, 214, 214, 1),
-                // textAlign: TextAlign.center,
                 keyboardType: TextInputType.number,
-                validator: validateCardnumber,
+                validator: validate,
                 controller: cardNumC,
-                // onSaved: (value) {
-                //   _email = value;
-                // },
                 decoration: InputDecoration(
-                    // hintText: 'Email',
                     hintText: lang.translate('Card number'),
                     border: InputBorder.none,
                     fillColor: Colors.blue),
@@ -192,13 +182,6 @@ class PaymentState extends State<Payment> {
         ),
       ),
     );
-  }
-
-  String validateCardnumber(String value) {
-    if (value.isEmpty) {
-      return "Can't be Empty";
-    } else
-      return null;
   }
 
   expiryCvvTextBox() {
@@ -251,10 +234,7 @@ class PaymentState extends State<Payment> {
     return Padding(
       padding: EdgeInsets.only(top: 30.0),
       child: Container(
-          // height: 50,
-          // width: MediaQuery.of(context).size.width / 1.25,
           child: Row(
-        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Expanded(
               flex: 8,
@@ -276,9 +256,6 @@ class PaymentState extends State<Payment> {
                           color: Colors.blueAccent),
                     ),
                   ))),
-          // Spacer(
-          //   flex: 1,
-          // ),
           Expanded(
             flex: 8,
             child: Transform.translate(
