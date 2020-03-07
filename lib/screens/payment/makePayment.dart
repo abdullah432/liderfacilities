@@ -1,16 +1,22 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:liderfacilites/models/User.dart';
 import 'package:liderfacilites/models/app_localization.dart';
+import 'package:liderfacilites/screens/payment/payment_card.dart';
+import 'package:liderfacilites/screens/payment/payment.dart';
 
-class Payment extends StatefulWidget {
+class MakePayment extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return PaymentState();
+    return MakePaymentState();
   }
 }
 
-class PaymentState extends State<Payment> {
+class MakePaymentState extends State<MakePayment> {
   MediaQueryData mediaQuery;
   AppLocalizations lang;
+
+  User _user = new User();
 
   //gap size from border
   double gapFromBorder;
@@ -25,6 +31,9 @@ class PaymentState extends State<Payment> {
 
   //prompt visibilty
   bool promptVisibility = false;
+  //by default no card is selected
+  Color cardBgColor = Colors.white;
+  List<bool> selectionList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -102,6 +111,7 @@ class PaymentState extends State<Payment> {
               child: Column(
                 children: <Widget>[
                   title1(),
+                  alreadyAddedCardView(),
                   Divider(
                     height: 50,
                   ),
@@ -123,6 +133,88 @@ class PaymentState extends State<Payment> {
         ));
   }
 
+  alreadyAddedCardView() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: Firestore.instance
+          .collection('users')
+          .document(_user.uid)
+          .collection('payment')
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Visibility(
+              visible: false, child: Container(width: 0.0, height: 0.0));
+
+          // return Container(width: 0.0, height: 0.0);
+        }
+        if (snapshot.hasData) {
+          return _buildList(context, snapshot.data.documents);
+        }
+      },
+    );
+  }
+
+  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
+    for (int i= 0; i<snapshot.length; i++){
+      selectionList.add(false);
+    }
+    return Column(
+      children: <Widget>[
+        ListView(
+          shrinkWrap: true,
+          padding: const EdgeInsets.only(top: 20.0),
+          children:
+              snapshot.map((data) => _buildListItem(context, data)).toList(),
+        )
+      ],
+    );
+  }
+
+  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
+    final _record = Payment.fromSnapshot(data);
+    // _getCardTypeFrmNumber(_record.cardnumber);
+    String _cardnumber = _record.cardnumber;
+    CardType cardType = CardUtils.getCardTypeFrmNumber(_cardnumber);
+    print('card number: ' + _cardnumber);
+
+    return Padding(
+        padding: const EdgeInsets.only(top: 5, bottom: 5),
+        child: Column(
+          children: <Widget>[
+            Container(
+              color: cardBgColor,
+              child: 
+            ListTile(
+              selected: selectionList[0],
+                leading: Icon(Icons.check_circle),
+                trailing: SizedBox(
+                  width: 90,
+                  child: Row(
+                    children: <Widget>[
+                      Text(_cardnumber.substring(0, 4)),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: CardUtils.getCardIcon(cardType),
+                      ),
+                    ],
+                  ),
+                ),onTap: toggleSelection))
+          ],
+        ));
+  }
+
+  void toggleSelection() {
+    // setState(() {
+    //   if (isSelected) {
+    //     // mycolor=Colors.white;
+    //     isSelected = false;
+    //   } else {
+    //     // mycolor=Colors.grey[300];
+    //     isSelected = true;
+    //   }
+    // });
+  }
+
   title2() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 20),
@@ -141,7 +233,8 @@ class PaymentState extends State<Payment> {
         children: <Widget>[
           Container(
             padding: EdgeInsets.only(left: 20, top: 3, bottom: 3, right: 14),
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
                 boxShadow: [BoxShadow(color: Colors.black12)]),
             child: TextFormField(
               keyboardType: TextInputType.text,
@@ -166,7 +259,8 @@ class PaymentState extends State<Payment> {
           children: <Widget>[
             Container(
               padding: EdgeInsets.only(left: 20, top: 3, bottom: 3, right: 14),
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
                   boxShadow: [BoxShadow(color: Colors.black12)]),
               child: TextFormField(
                 keyboardType: TextInputType.number,
@@ -292,10 +386,12 @@ class PaymentState extends State<Payment> {
   }
 
   showPrompt() {
-    return Visibility(visible: promptVisibility, child: Container(
-      color: Color.fromRGBO(26, 119, 186, .4),
-      child: prompt(),
-    ));
+    return Visibility(
+        visible: promptVisibility,
+        child: Container(
+          color: Color.fromRGBO(26, 119, 186, .4),
+          child: prompt(),
+        ));
   }
 
   prompt() {

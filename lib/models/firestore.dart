@@ -128,4 +128,15 @@ class CustomFirestore {
       result = e.toString();
     }
   }
+
+void deletePaymentMethod(deleteUid) {
+  try {
+    db
+        .collection('users')
+        .document(_user.uid)
+        .collection('payment').document(deleteUid).delete();
+  } catch (e) {
+    print(e.toString());
+  }
+}
 }

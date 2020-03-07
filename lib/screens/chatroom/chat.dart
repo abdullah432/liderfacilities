@@ -502,7 +502,7 @@ class ChatScreenState extends State<ChatScreen> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 10),
                   child: Icon(
-                    Icons.cancel,
+                    Icons.arrow_back,
                     color: Colors.white,
                   ),
                 )),

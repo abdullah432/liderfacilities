@@ -61,6 +61,8 @@ flutter:
     - lang/pt.json
     - assets/images/placeholder.jpg
     - assets/images/logo.png
+    - assets/images/mastercard.png
+    - assets/images/visa.png
     - assets/images/account.png
     - assets/images/noservice.png
     - assets/images/location.png

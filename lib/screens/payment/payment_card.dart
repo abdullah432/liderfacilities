@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:liderfacilites/models/strings.dart';
 
 class PaymentCard {
@@ -56,8 +57,8 @@ class CardUtils {
       // it is the year.
       month = int.parse(split[0]);
       year = int.parse(split[1]);
-
-    } else { // Only the month was entered
+    } else {
+      // Only the month was entered
       month = int.parse(value.substring(0, (value.length)));
       year = -1; // Lets use an invalid year intentionally
     }
@@ -128,58 +129,57 @@ class CardUtils {
     return text.replaceAll(regExp, '');
   }
 
-  // static Widget getCardIcon(CardType cardType) {
-  //   String img = "";
-  //   Icon icon;
-  //   switch (cardType) {
-  //     case CardType.Master:
-  //       img = 'mastercard.png';
-  //       break;
-  //     case CardType.Visa:
-  //       img = 'visa.png';
-  //       break;
-  //     case CardType.Verve:
-  //       img = 'verve.png';
-  //       break;
-  //     case CardType.AmericanExpress:
-  //       img = 'american_express.png';
-  //       break;
-  //     case CardType.Discover:
-  //       img = 'discover.png';
-  //       break;
-  //     case CardType.DinersClub:
-  //       img = 'dinners_club.png';
-  //       break;
-  //     case CardType.Jcb:
-  //       img = 'jcb.png';
-  //       break;
-  //     case CardType.Others:
-  //       icon = new Icon(
-  //         Icons.credit_card,
-  //         size: 40.0,
-  //         color: Colors.grey[600],
-  //       );
-  //       break;
-  //     case CardType.Invalid:
-  //       icon = new Icon(
-  //         Icons.warning,
-  //         size: 40.0,
-  //         color: Colors.grey[600],
-  //       );
-  //       break;
-  //   }
-  //   Widget widget;
-  //   if (img.isNotEmpty) {
-  //     widget = new Image.asset(
-  //       'assets/images/$img',
-  //       width: 40.0,
-  //     );
-  //   } else {
-  //     widget = icon;
-  //   }
-  //   return widget;
-  // }
-
+  static Widget getCardIcon(CardType cardType) {
+    String img = "";
+    Icon icon;
+    switch (cardType) {
+      case CardType.Master:
+        img = 'mastercard.png';
+        break;
+      case CardType.Visa:
+        img = 'visa.png';
+        break;
+      // case CardType.Verve:
+      //   img = 'verve.png';
+      //   break;
+      // case CardType.AmericanExpress:
+      //   img = 'american_express.png';
+      //   break;
+      // case CardType.Discover:
+      //   img = 'discover.png';
+      //   break;
+      // case CardType.DinersClub:
+      //   img = 'dinners_club.png';
+      //   break;
+      // case CardType.Jcb:
+      //   img = 'jcb.png';
+      //   break;
+      case CardType.Invalid:
+        icon = new Icon(
+          Icons.warning,
+          size: 40.0,
+          color: Colors.grey[600],
+        );
+        break;
+      default:
+        icon = new Icon(
+          Icons.credit_card,
+          size: 40.0,
+          color: Colors.grey[600],
+        );
+        break;
+    }
+    Widget widget;
+    if (img.isNotEmpty) {
+      widget = new Image.asset(
+        'assets/images/$img',
+        width: 40.0,
+      );
+    } else {
+      widget = icon;
+    }
+    return widget;
+  }
 
   /// With the card number with Luhn Algorithm
   /// https://en.wikipedia.org/wiki/Luhn_algorithm

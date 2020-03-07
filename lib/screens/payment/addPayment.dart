@@ -7,6 +7,7 @@ import 'package:liderfacilites/models/app_localization.dart';
 import 'package:liderfacilites/models/firestore.dart';
 import 'package:liderfacilites/models/setting.dart';
 import 'package:liderfacilites/models/strings.dart';
+import 'package:liderfacilites/screens/payment/payment.dart';
 import 'package:liderfacilites/screens/payment/payment_card.dart';
 import 'input_formaters.dart';
 
@@ -27,6 +28,9 @@ class AddPaymentState extends State<AddPayment> {
   TextEditingController _nameC = TextEditingController();
   TextEditingController _expiryDateC = TextEditingController();
   TextEditingController _cvvC = TextEditingController();
+
+  User _user = new User();
+  CustomFirestore _customFirestore = new CustomFirestore();
 
   /// Card Number Controller
   TextEditingController _cardNumberController = TextEditingController();
@@ -89,11 +93,12 @@ class AddPaymentState extends State<AddPayment> {
               backgroundColor: Colors.transparent,
               actions: <Widget>[
                 Visibility(
-                  visible: false,
-                  child: Padding(
-                  padding: const EdgeInsets.only(right: 30, top: 7, bottom: 7),
-                  child: Center(child: CircularProgressIndicator()),
-                )),
+                    visible: waiting,
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.only(right: 30, top: 7, bottom: 7),
+                      child: Center(child: CircularProgressIndicator()),
+                    )),
               ],
             ),
             body: SingleChildScrollView(
@@ -103,11 +108,111 @@ class AddPaymentState extends State<AddPayment> {
                   padding: EdgeInsets.only(top: 10),
                   child: Container(
                       child: Column(
-                    children: <Widget>[addNewCardView()],
+                    children: <Widget>[
+                       Transform.translate(
+                              offset: Offset(0, -20),
+                              child: alreadyAddedCardView()),
+                      
+                      addNewCardView(),
+                    ],
                   ))),
             ))),
       ],
     );
+  }
+
+  alreadyAddedCardView() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: Firestore.instance
+          .collection('users')
+          .document(_user.uid)
+          .collection('payment')
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Visibility(visible: false,child: Container(width: 0.0, height: 0.0));
+
+          // return Container(width: 0.0, height: 0.0);
+        }
+        if (snapshot.hasData) {
+          return _buildList(context, snapshot.data.documents);
+        }
+      },
+    );
+  }
+
+  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
+    print('length: ' + snapshot.length.toString());
+    return Column(
+      children: <Widget>[
+        ListView(
+          shrinkWrap: true,
+          padding: const EdgeInsets.only(top: 20.0),
+          children:
+              snapshot.map((data) => _buildListItem(context, data)).toList(),
+        )
+      ],
+    );
+  }
+
+  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
+    final _record = Payment.fromSnapshot(data);
+    // _getCardTypeFrmNumber(_record.cardnumber);
+    String _cardnumber = _record.cardnumber;
+    CardType cardType = CardUtils.getCardTypeFrmNumber(_cardnumber);
+    print('card number: ' + _cardnumber);
+
+    return Padding(
+        // key: ValueKey(record.name),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 2.0),
+        child: Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+            child: Padding(
+                padding: const EdgeInsets.only(
+                    top: 10, bottom: 10, left: 30, right: 30),
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        CardUtils.getCardIcon(cardType),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 12.0),
+                          child: Text(_cardnumber.substring(0, 4)),
+                        ),
+                        Spacer(),
+                        Text('EXP: '),
+                        Text(_record.expirydate),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Text(''),
+                        Spacer(),
+                        FlatButton(
+                            onPressed: () {
+                              print('delete');
+                              _customFirestore
+                                  .deletePaymentMethod(data.documentID);
+                            },
+                            child: Row(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.delete_outline,
+                                  color: Colors.red,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 12),
+                                  child: Text('Delete',
+                                      style: TextStyle(color: Colors.red)),
+                                ),
+                              ],
+                            )),
+                      ],
+                    )
+                  ],
+                ))));
   }
 
   addNewCardView() {
@@ -317,19 +422,17 @@ class AddPaymentState extends State<AddPayment> {
   addPaymentDataToFirestore() {
     if (_formKey.currentState.validate()) {
       //start circular progress bar at top
-      waiting = true;
+      // waiting = true;
 
       _paymentCard.name = _nameC.text;
       _paymentCard.number =
           CardUtils.getCleanedNumber(_cardNumberController.text);
       _paymentCard.cvv = int.parse(_cvvC.text);
 
-      CustomFirestore _customFirestore = new CustomFirestore();
       // String result = _customFirestore.addNewPaymentMethod(_nameC.text,
       //     _paymentCard.number, _expiryDateC.text, _paymentCard.cvv);
 
       String result;
-      User _user = new User();
       try {
         Firestore.instance
             .collection('users')
@@ -344,7 +447,7 @@ class AddPaymentState extends State<AddPayment> {
             .then((value) => {
                   result = 'Payment Method added successfully',
                   _showInSnackBar(result),
-                  waiting = false
+                  waiting = false,
                 })
             .timeout(Duration(seconds: 10))
             .catchError((error) {
@@ -352,17 +455,15 @@ class AddPaymentState extends State<AddPayment> {
               print(error);
               result = error.toString();
               _showInSnackBar(result);
-
-              waiting = false;
+              setState(() {
+                waiting = false;
+              });
             });
       } catch (e) {
         print('exception: ' + e.toString());
         result = e.toString();
         _showInSnackBar(result);
-
-        waiting = false;
       }
-
     }
 
     // _paymentCard.number =

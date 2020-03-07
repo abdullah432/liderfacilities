@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:liderfacilites/models/app_localization.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:geocoder/geocoder.dart';
-import 'package:liderfacilites/screens/payment/makePayment.dart';
+
+import 'makePayment.dart';
 
 class Book1 extends StatefulWidget {
   final _taskerData;
@@ -310,7 +310,7 @@ class Book1State extends State<Book1> {
 
   navigateToPaymentPage() {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return Payment();
+      return MakePayment();
     }));
   }
 }
