@@ -186,6 +186,8 @@ class LoginState extends State<Login> {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
           onPressed: () {
+            //remove cursor blink of search textfield
+            FocusScope.of(context).requestFocus(new FocusNode());
             validateUser();
           },
           child: Text(
@@ -332,7 +334,7 @@ class LoginState extends State<Login> {
         if (user.uid != null) {
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) {
-                debugPrint('before navigate: '+user.uid.toString());
+            debugPrint('before navigate: ' + user.uid.toString());
             return HomePage(user.uid);
           }));
         } else {

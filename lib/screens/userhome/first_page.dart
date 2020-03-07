@@ -127,8 +127,10 @@ class FirstPageState extends State<FirstPage> {
 
   populateTaskers() async {
     Firestore.instance.collection("services").getDocuments().then((docs) => {
+        if (docs.documents != null){
           if (docs.documents.isNotEmpty)
             {
+              print('not nullllllll'),
               allServices = docs.documents,
               print('allservicelength: '+allServices.length.toString()),
               for (int i = 0; i < docs.documents.length; ++i)
@@ -137,6 +139,7 @@ class FirstPageState extends State<FirstPage> {
                       docs.documents[i].data, docs.documents[i].documentID)
                 }
             }
+        }
         });
   }
 

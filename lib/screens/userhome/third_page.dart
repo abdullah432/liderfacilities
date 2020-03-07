@@ -16,23 +16,27 @@ class ThirdPage extends StatefulWidget {
 
 class ThirdPageState extends State<ThirdPage> {
   AppLocalizations lang;
-  List<String> favouriteList;
+  // List<String> favouriteList;
   bool favEmpty = true;
   User _user = new User();
+  List<String> _listOfFav;
   List<Service> _favouriteServices = new List();
   CustomFirestore _customFirestore = new CustomFirestore();
   String _imageUrl;
 
   @override
   void initState() {
-    favouriteList = _user.favoriteList;
-    if (favouriteList.isEmpty) {
+    _listOfFav = _user.favoriteList;
+    // if (_favouriteServices.isEmpty && _favouriteServices != null) {
+    //   favEmpty = true;
+    //   debugPrint('data true');
+    // } else {
+    //   favEmpty = false;
+    // }
+    if (_listOfFav?.isEmpty ?? true) {
       favEmpty = true;
-      debugPrint('data true');
     } else {
       favEmpty = false;
-      //    debugPrint('data false');
-      // loadFavServices();
     }
     super.initState();
   }
@@ -74,18 +78,18 @@ class ThirdPageState extends State<ThirdPage> {
                     //   return Center(
                     //     child: Text('No Favourite Service'),
                     //   );
-                    if (snapshot.hasData) {
-                      // debugPrint('data length: '+snapshot.data.documents.toList().length.toString());
-                      if (snapshot.data.length == 0)
-                        return Center(
-                          child: Text('No Favourite Service'),
-                        );
-                      else
-                        return Transform.translate(
-                            offset: Offset(0, -25),
-                            child: SingleChildScrollView(
-                                child: _buildList(context, snapshot.data)));
-                    }
+                      if (snapshot.hasData) {
+                        // debugPrint('data length: '+snapshot.data.documents.toList().length.toString());
+                        if (snapshot.data.length == 0)
+                          return Center(
+                            child: Text('No Favourite Service'),
+                          );
+                        else
+                          return Transform.translate(
+                              offset: Offset(0, -25),
+                              child: SingleChildScrollView(
+                                  child: _buildList(context, snapshot.data)));
+                      }
 
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(
@@ -182,7 +186,7 @@ class ThirdPageState extends State<ThirdPage> {
             borderRadius: BorderRadius.circular(12.0),
           ),
           child: Padding(
-            padding: const EdgeInsets.only( bottom: 10),
+            padding: const EdgeInsets.only(bottom: 10),
             child: ListTile(
               leading: CircleAvatar(
                 radius: 30,

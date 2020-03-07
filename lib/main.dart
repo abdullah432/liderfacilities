@@ -136,8 +136,8 @@ class RootPage extends StatelessWidget {
           // String data = snapshot.data;
           debugPrint('auth change');
           // return isLoggedIn ? TaskerView() : Login();
-          return AddPayment();
-          // return isLoggedIn ? HomePage(snapshot.data) : Login();
+          // return AddPayment();
+          return isLoggedIn ? HomePage(snapshot.data) : Login();
         }
         return _buildWaitingScreen(context);
         //should return splash screen here

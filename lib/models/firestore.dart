@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:liderfacilites/models/Service.dart';
+import 'package:flutter/material.dart';
 import 'package:liderfacilites/models/User.dart';
 
 class CustomFirestore {
@@ -8,7 +8,12 @@ class CustomFirestore {
   final db = Firestore.instance;
 
   Future<bool> createServiceRecord(
-      String type, String subtype, String hourlyrate, String desc, String serviceImgUrl, GeoPoint geoPoint) async {
+      String type,
+      String subtype,
+      String hourlyrate,
+      String desc,
+      String serviceImgUrl,
+      GeoPoint geoPoint) async {
     try {
       await db.collection("services").add({
         'type': type,
@@ -44,7 +49,7 @@ class CustomFirestore {
         }));
   }
 
-    //add reference of service when user like a service
+  //add reference of service when user like a service
   removeServiceFromFavourite(ref) {
     db.collection('users').document(_user.uid).updateData(({
           'favourite': FieldValue.arrayRemove([ref])
@@ -82,21 +87,45 @@ class CustomFirestore {
   }
 
   Future<List<DocumentSnapshot>> loadFavServices() async {
-    // var snapshot = await db.collection('services').document(id).get();
-    // Service service = Service.fromSnapshot(snapshot);
-    // return service;
-    List<String> favouriteList = _user.favoriteList;
-    List<DocumentSnapshot> documentSnapshot = new List();
-    for (int i = 0; i < favouriteList.length; i++) {
-      var snapshot =
-          await db.collection('services').document(favouriteList[i]).get();
-  
-      documentSnapshot.add(snapshot);
-    }
-    debugPrint('length of ds: '+documentSnapshot.length.toString());
-    return documentSnapshot;
+    print('loadfavservices called');
+      List<String> favouriteList = _user.favoriteList;
+      List<DocumentSnapshot> documentSnapshot = new List();
+      for (int i = 0; i < favouriteList.length; i++) {
+        var snapshot =
+            await db.collection('services').document(favouriteList[i]).get();
+
+        documentSnapshot.add(snapshot);
+      }
+      debugPrint('length of ds: ' + documentSnapshot.length.toString());
+      return documentSnapshot;
   }
 
   //add payment collection to firestore
-  
+  addNewPaymentMethod(nameoncard, cardnum, expiryDate, cvv) async {
+    String result;
+    try {
+      await db
+          .collection('users')
+          .document(_user.uid)
+          .collection('payment')
+          .add({
+            'nameoncard': nameoncard,
+            'cardnumber': cardnum,
+            'expirydate': expiryDate,
+            'cvv': cvv
+          })
+          .then((value) => {
+                result = 'Payment Method added successfully',
+              })
+          .timeout(Duration(seconds: 10))
+          .catchError((error) {
+            print("doc save error");
+            print(error);
+            result = error.toString();
+          });
+    } catch (e) {
+      print('exception: ' + e.toString());
+      result = e.toString();
+    }
+  }
 }

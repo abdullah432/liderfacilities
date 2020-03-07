@@ -1,6 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:credit_card_number_validator/credit_card_number_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:liderfacilites/models/User.dart';
 import 'package:liderfacilites/models/app_localization.dart';
+import 'package:liderfacilites/models/firestore.dart';
 import 'package:liderfacilites/models/setting.dart';
+import 'package:liderfacilites/models/strings.dart';
+import 'package:liderfacilites/screens/payment/payment_card.dart';
+import 'input_formaters.dart';
 
 class AddPayment extends StatefulWidget {
   @override
@@ -16,11 +24,31 @@ class AddPaymentState extends State<AddPayment> {
   //styles
   TextStyle boldAlign = TextStyle(fontWeight: FontWeight.bold);
   //textboxes controllers
-  TextEditingController nameC = TextEditingController();
-  TextEditingController cardNumC = TextEditingController();
-  TextEditingController expiryDateC = TextEditingController();
-  TextEditingController cvvC = TextEditingController();
+  TextEditingController _nameC = TextEditingController();
+  TextEditingController _expiryDateC = TextEditingController();
+  TextEditingController _cvvC = TextEditingController();
+
+  /// Card Number Controller
+  TextEditingController _cardNumberController = TextEditingController();
+  // Declare Variables To Store Card Type and Validity
+  String cardType;
+  bool isValid = false;
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  var _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  var _paymentCard = PaymentCard();
+  //adding data waiting circular
+  bool waiting = false;
+
+  @override
+  void dispose() {
+    _nameC.dispose();
+    _expiryDateC.dispose();
+    _cvvC.dispose();
+    _cardNumberController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +74,7 @@ class AddPaymentState extends State<AddPayment> {
                       bottomRight: Radius.circular(40))),
             )),
         Scaffold(
+            key: _scaffoldKey,
             backgroundColor: Colors.transparent,
             appBar: new AppBar(
               leading: IconButton(
@@ -58,6 +87,14 @@ class AddPaymentState extends State<AddPayment> {
               title: new Text('My Payment'),
               elevation: 0.0,
               backgroundColor: Colors.transparent,
+              actions: <Widget>[
+                Visibility(
+                  visible: false,
+                  child: Padding(
+                  padding: const EdgeInsets.only(right: 30, top: 7, bottom: 7),
+                  child: Center(child: CircularProgressIndicator()),
+                )),
+              ],
             ),
             body: SingleChildScrollView(
                 child: Form(
@@ -65,8 +102,9 @@ class AddPaymentState extends State<AddPayment> {
               child: Padding(
                   padding: EdgeInsets.only(top: 10),
                   child: Container(
-                    child: addNewCardView(),
-                  )),
+                      child: Column(
+                    children: <Widget>[addNewCardView()],
+                  ))),
             ))),
       ],
     );
@@ -77,7 +115,7 @@ class AddPaymentState extends State<AddPayment> {
         alignment: Alignment.topCenter,
         child: Container(
           width: mediaQuery.size.width / 1.1,
-          height: mediaQuery.size.height / 1.7,
+          height: mediaQuery.size.height / 1.5,
           decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(
@@ -132,7 +170,7 @@ class AddPaymentState extends State<AddPayment> {
             child: TextFormField(
               keyboardType: TextInputType.text,
               validator: validate,
-              controller: nameC,
+              controller: _nameC,
               decoration: InputDecoration(
                   hintText: lang.translate('Name on Card'),
                   border: InputBorder.none,
@@ -157,8 +195,14 @@ class AddPaymentState extends State<AddPayment> {
                   boxShadow: [BoxShadow(color: Colors.black12)]),
               child: TextFormField(
                 keyboardType: TextInputType.number,
-                validator: validate,
-                controller: cardNumC,
+                //for cardnumber validation i use plugin
+                validator: validateCard,
+                controller: _cardNumberController,
+                inputFormatters: [
+                  WhitelistingTextInputFormatter.digitsOnly,
+                  new LengthLimitingTextInputFormatter(19),
+                  new CardNumberInputFormatter()
+                ],
                 decoration: InputDecoration(
                     hintText: lang.translate('Card number'),
                     border: InputBorder.none,
@@ -185,8 +229,13 @@ class AddPaymentState extends State<AddPayment> {
                     boxShadow: [BoxShadow(color: Colors.black12)]),
                 child: TextFormField(
                   keyboardType: TextInputType.number,
-                  validator: validate,
-                  controller: expiryDateC,
+                  validator: CardUtils.validateDate,
+                  controller: _expiryDateC,
+                  inputFormatters: [
+                    WhitelistingTextInputFormatter.digitsOnly,
+                    new LengthLimitingTextInputFormatter(4),
+                    new CardMonthInputFormatter()
+                  ],
                   decoration: InputDecoration(
                       hintText: lang.translate('Expire Date'),
                       border: InputBorder.none,
@@ -206,8 +255,12 @@ class AddPaymentState extends State<AddPayment> {
                     boxShadow: [BoxShadow(color: Colors.black12)]),
                 child: TextFormField(
                   keyboardType: TextInputType.number,
-                  validator: validate,
-                  controller: cvvC,
+                  validator: CardUtils.validateCVV,
+                  controller: _cvvC,
+                  inputFormatters: [
+                    WhitelistingTextInputFormatter.digitsOnly,
+                    new LengthLimitingTextInputFormatter(4),
+                  ],
                   decoration: InputDecoration(
                       hintText: 'CVV',
                       border: InputBorder.none,
@@ -227,6 +280,7 @@ class AddPaymentState extends State<AddPayment> {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
           onPressed: () {
             print('Add payment to firestore');
+            addPaymentDataToFirestore();
           },
           child: Text(
             'Add',
@@ -243,4 +297,86 @@ class AddPaymentState extends State<AddPayment> {
       return null;
   }
 
+  String validateCard(String value) {
+    // Get Card Type and Validity Data As Map - @param Card Number
+    Map<String, dynamic> cardData = CreditCardValidator.getCard(
+        CardUtils.getCleanedNumber(_cardNumberController.text));
+    setState(() {
+      // Set Card Type and Validity
+      cardType = cardData[CreditCardValidator.cardType];
+      isValid = cardData[CreditCardValidator.isValidCard];
+    });
+
+    debugPrint('valid: ' + isValid.toString());
+    if (isValid)
+      return null;
+    else
+      return Strings.numberIsInvalid;
+  }
+
+  addPaymentDataToFirestore() {
+    if (_formKey.currentState.validate()) {
+      //start circular progress bar at top
+      waiting = true;
+
+      _paymentCard.name = _nameC.text;
+      _paymentCard.number =
+          CardUtils.getCleanedNumber(_cardNumberController.text);
+      _paymentCard.cvv = int.parse(_cvvC.text);
+
+      CustomFirestore _customFirestore = new CustomFirestore();
+      // String result = _customFirestore.addNewPaymentMethod(_nameC.text,
+      //     _paymentCard.number, _expiryDateC.text, _paymentCard.cvv);
+
+      String result;
+      User _user = new User();
+      try {
+        Firestore.instance
+            .collection('users')
+            .document(_user.uid)
+            .collection('payment')
+            .add({
+              'nameoncard': _paymentCard.name,
+              'cardnumber': _paymentCard.number,
+              'expirydate': _expiryDateC.text,
+              'cvv': _paymentCard.cvv
+            })
+            .then((value) => {
+                  result = 'Payment Method added successfully',
+                  _showInSnackBar(result),
+                  waiting = false
+                })
+            .timeout(Duration(seconds: 10))
+            .catchError((error) {
+              print("doc save error");
+              print(error);
+              result = error.toString();
+              _showInSnackBar(result);
+
+              waiting = false;
+            });
+      } catch (e) {
+        print('exception: ' + e.toString());
+        result = e.toString();
+        _showInSnackBar(result);
+
+        waiting = false;
+      }
+
+    }
+
+    // _paymentCard.number =
+    //     CardUtils.getCleanedNumber(_cardNumberController.text);
+    // _paymentCard.name = _nameC.text;
+    // print('date: ' + _expiryDateC.text);
+    // print('name: ' + _paymentCard.name);
+    // print('number: ' + _paymentCard.number);
+  }
+
+  void _showInSnackBar(String value) {
+    _scaffoldKey.currentState.showSnackBar(new SnackBar(
+      content: new Text(value),
+      duration: new Duration(seconds: 3),
+    ));
+  }
 }

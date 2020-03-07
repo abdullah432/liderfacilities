@@ -45,7 +45,7 @@ class FourthPageState extends State<FourthPage> {
 
   @override
   Widget build(BuildContext context) {
-    _imageUrl = _userData.imageUrl;
+    if (_userData.imageUrl != null) _imageUrl = _userData.imageUrl;
     lang = AppLocalizations.of(context);
     debugPrint('isTasker: ' + _userData.isTasker.toString());
     if (_userData.isTasker) {
@@ -120,25 +120,23 @@ class FourthPageState extends State<FourthPage> {
     return CircleAvatar(
       radius: 40,
       // backgroundColor: Colors.black,
-      child: ClipOval(
-          child: FadeInImage.assetNetwork(
-        height: double.infinity,
-        width: double.infinity,
-        fit: BoxFit.cover,
-        fadeInCurve: Curves.bounceIn,
-        placeholder: 'assets/images/account.png',
-        image: _imageUrl,
-      )),
-      // ClipOval(
-      //     child: _imageUrl == null
-      //         ? Image.asset(
-      //             'assets/images/account.png',
-      //           )
-      //         :  Image.network(
-      //             _imageUrl,
-      //             fit: BoxFit.fill,
-      //             width: 77,
-      //           )),
+      child:
+          ClipOval(
+              child: _imageUrl == null
+                  ? Image.asset(
+                      'assets/images/account.png',
+                      height: double.infinity,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    )
+                  : FadeInImage.assetNetwork(
+                      height: double.infinity,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      fadeInCurve: Curves.bounceIn,
+                      placeholder: 'assets/images/account.png',
+                      image: _imageUrl,
+                    )),
     );
   }
 
@@ -386,5 +384,4 @@ class FourthPageState extends State<FourthPage> {
       return AddPayment();
     }));
   }
-
 }

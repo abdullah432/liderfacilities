@@ -113,8 +113,8 @@ class RegisterState extends State<Register> {
 
   nameTF() {
     return Padding(
-        padding: const EdgeInsets.only(top: 20.0),
-        child: Container(
+      padding: const EdgeInsets.only(top: 20.0),
+      child: Container(
           width: MediaQuery.of(context).size.width / 1.25,
           padding: EdgeInsets.only(left: 20, top: 3, bottom: 3, right: 14),
           decoration: BoxDecoration(
@@ -236,6 +236,8 @@ class RegisterState extends State<Register> {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
           onPressed: () {
+            //remove cursor blink of search textfield
+            FocusScope.of(context).requestFocus(new FocusNode());
             registerUserInFireStore();
           },
           child: Text(
@@ -374,11 +376,12 @@ class RegisterState extends State<Register> {
             .then((authData) => {
                   createRecord(authData),
                   user = authData.user,
-                  Navigator.pushReplacement(context,
-                      new MaterialPageRoute(builder: (context) => HomePage(user.uid)))
+                  Navigator.pushReplacement(
+                      context,
+                      new MaterialPageRoute(
+                          builder: (context) => HomePage(user.uid)))
                 })
-            .catchError((e) => {
-              print(e.toString())});
+            .catchError((e) => {print(e.toString())});
       } catch (e) {
         print(e.toString());
       }
@@ -386,19 +389,14 @@ class RegisterState extends State<Register> {
   }
 
   void createRecord(AuthResult authData) async {
-    await db
-        .collection("users")
-        .document(authData.user.uid)
-        .setData({
+    await db.collection("users").document(authData.user.uid).setData({
       'name': _name,
       'email': _email,
       'phonenumber': _phonenumber,
       'password': _password,
-      'istasker': false
-
+      'istasker': false,
+      'favourite': [],
     });
-
-    
 
     // DocumentReference ref = await databaseReference.collection("books")
     //     .add({

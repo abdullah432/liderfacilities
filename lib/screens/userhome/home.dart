@@ -228,7 +228,7 @@ class _HomePageState extends State<HomePage> {
 //   }
 
   updateUserData(DocumentSnapshot snapshot) async {
-    // debugPrint('before');s
+    debugPrint('update user data');
     _userRecord = User.fromSnapshot(snapshot);
     User user = new User();
     user.setUID(useruid);
@@ -366,29 +366,29 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // debugPrint('selected index: ' + _selectedIndex.toString());
+    print('useruid: ' + useruid);
     return Scaffold(
         bottomNavigationBar: _bottomNavigationBar(),
-        body:
-            // PageStorage(
-            //   child: pages[_selectedIndex],
-            //   bucket: bucket,
-            // ),
-            StreamBuilder(
-                stream: Firestore.instance
-                    .collection('users')
-                    .document(useruid)
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) return Center(child: CircularProgressIndicator(),);
+        body: StreamBuilder(
+            stream: Firestore.instance
+                .collection('users')
+                .document(useruid)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData)
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
 
-                  // final record = User.fromSnapshot(snapshot.data);
-                  updateUserData(snapshot.data);
-                  return PageStorage(
-                    child: pages[_selectedIndex],
-                    bucket: bucket,
-                  );
-                }));
+              if (snapshot.hasData) {
+                print('data found');
+                updateUserData(snapshot.data);
+              }
+              return PageStorage(
+                child: pages[_selectedIndex],
+                bucket: bucket,
+              );
+            }));
   }
 
   getColor(int index) {

@@ -145,6 +145,8 @@ class EditInfoState extends State<EditInfo> {
     return Center(
         child: GestureDetector(
             onTap: () {
+              //remove cursor blink of search textfield
+              FocusScope.of(context).requestFocus(new FocusNode());
               getImage();
             },
             child: CircleAvatar(
@@ -152,14 +154,21 @@ class EditInfoState extends State<EditInfo> {
                 // backgroundColor: Colors.black,
                 child: ClipOval(
                   child: _image == null
-                      ? FadeInImage.assetNetwork(
-                          height: double.infinity,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                          fadeInCurve: Curves.bounceIn,
-                          placeholder: 'assets/images/account.png',
-                          image: _imageUrl,
-                        )
+                      ? _imageUrl == null
+                          ? Image.asset(
+                              'assets/images/account.png',
+                              height: double.infinity,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                            )
+                          : FadeInImage.assetNetwork(
+                              height: double.infinity,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                              fadeInCurve: Curves.bounceIn,
+                              placeholder: 'assets/images/account.png',
+                              image: _imageUrl,
+                            )
                       : Image.file(
                           _image,
                           fit: BoxFit.cover,
@@ -592,37 +601,4 @@ class EditInfoState extends State<EditInfo> {
 
     return userLocation;
   }
-
-  // _getLocation() async {
-  //   _serviceEnabled = await location.serviceEnabled();
-  //   if (!_serviceEnabled) {
-  //     _serviceEnabled = await location.requestService();
-  //     if (!_serviceEnabled) {
-  //       return;
-  //     }
-  //   }
-
-  //   _permissionGranted = await location.hasPermission();
-  //   if (_permissionGranted == PermissionStatus.DENIED) {
-  //     _permissionGranted = await location.requestPermission();
-  //     if (_permissionGranted != PermissionStatus.GRANTED) {
-  //       return;
-  //     }
-  //   }
-
-  //   _locationData = await location.getLocation();
-
-  //   final coordinates =
-  //       new Coordinates(_locationData.latitude, _locationData.longitude);
-  //   var addresses =
-  //       await Geocoder.local.findAddressesFromCoordinates(coordinates);
-  //   var first = addresses.first;
-  //   setState(() {
-  //     _userAddress = first.addressLine;
-  //   });
-
-  //   print(
-  //       ' ${first.locality}, ${first.adminArea},${first.subLocality}, ${first.subAdminArea},${first.addressLine}');
-  //   return first;
-  // }
 }
