@@ -20,7 +20,7 @@ class ThirdPageState extends State<ThirdPage> {
   bool favEmpty = true;
   User _user = new User();
   List<String> _listOfFav;
-  List<Service> _favouriteServices = new List();
+  // List<Service> _favouriteServices = new List();
   CustomFirestore _customFirestore = new CustomFirestore();
   String _imageUrl;
 
@@ -186,7 +186,7 @@ class ThirdPageState extends State<ThirdPage> {
             borderRadius: BorderRadius.circular(12.0),
           ),
           child: Padding(
-            padding: const EdgeInsets.only(bottom: 10),
+            padding: const EdgeInsets.only(bottom: 10, top: 10),
             child: ListTile(
               leading: CircleAvatar(
                 radius: 30,
@@ -217,7 +217,7 @@ class ThirdPageState extends State<ThirdPage> {
                     shape: BoxShape.circle,
                     border: Border.all(color: Colors.blue, width: 2)),
                 child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(4.0),
                     child: GestureDetector(
                       onTap: () {
                         //todo tasker chat page
@@ -225,7 +225,7 @@ class ThirdPageState extends State<ThirdPage> {
                       child: Icon(
                         Icons.message,
                         color: Colors.blue,
-                        size: 18,
+                        size: 17,
                       ),
                     )),
               ),

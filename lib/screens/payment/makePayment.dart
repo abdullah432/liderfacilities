@@ -1,18 +1,33 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:liderfacilites/models/User.dart';
 import 'package:liderfacilites/models/app_localization.dart';
+import 'package:liderfacilites/models/firestore.dart';
 import 'package:liderfacilites/screens/payment/payment_card.dart';
 import 'package:liderfacilites/screens/payment/payment.dart';
 
 class MakePayment extends StatefulWidget {
+  final _taskerData;
+  final _taskerID;
+  MakePayment(this._taskerData, this._taskerID);
+
   @override
   State<StatefulWidget> createState() {
-    return MakePaymentState();
+    return MakePaymentState(_taskerData, _taskerID);
   }
 }
 
 class MakePaymentState extends State<MakePayment> {
+  var _taskerData;
+  var _taskerID;
+  MakePaymentState(this._taskerData, this._taskerID);
+  String servicetype;
+  String taskername;
+  String servicesubtype;
+  String servicePrice;
+  String taskerImgUrl;
+
   MediaQueryData mediaQuery;
   AppLocalizations lang;
 
@@ -33,7 +48,20 @@ class MakePaymentState extends State<MakePayment> {
   bool promptVisibility = false;
   //by default no card is selected
   Color cardBgColor = Colors.white;
-  List<bool> selectionList = [];
+  List<ListTileSelection> selectionList = [];
+  //firestore
+  Firestore db = Firestore.instance;
+  CustomFirestore _customF = new CustomFirestore();
+
+  @override
+  void initState() {
+    taskername = _taskerData['taskername'];
+    servicePrice = _taskerData['hourlyrate'];
+    servicetype = _taskerData['type'];
+    servicesubtype = _taskerData['subtype'];
+    taskerImgUrl = _taskerData['imgurl'];
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -155,8 +183,8 @@ class MakePaymentState extends State<MakePayment> {
   }
 
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
-    for (int i= 0; i<snapshot.length; i++){
-      selectionList.add(false);
+    for (int i = 0; i < snapshot.length; i++) {
+      selectionList.add(ListTileSelection(snapshot[i].documentID));
     }
     return Column(
       children: <Widget>[
@@ -172,47 +200,66 @@ class MakePaymentState extends State<MakePayment> {
 
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
     final _record = Payment.fromSnapshot(data);
+
     // _getCardTypeFrmNumber(_record.cardnumber);
     String _cardnumber = _record.cardnumber;
     CardType cardType = CardUtils.getCardTypeFrmNumber(_cardnumber);
-    print('card number: ' + _cardnumber);
+    // print('card number: ' + _cardnumber);
 
     return Padding(
         padding: const EdgeInsets.only(top: 5, bottom: 5),
         child: Column(
           children: <Widget>[
             Container(
-              color: cardBgColor,
-              child: 
-            ListTile(
-              selected: selectionList[0],
-                leading: Icon(Icons.check_circle),
-                trailing: SizedBox(
-                  width: 90,
-                  child: Row(
-                    children: <Widget>[
-                      Text(_cardnumber.substring(0, 4)),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: CardUtils.getCardIcon(cardType),
+                color: cardBgColor,
+                child: ListTile(
+                    selected: getListTileSelection(data.documentID),
+                    leading: Icon(Icons.check_circle),
+                    trailing: SizedBox(
+                      width: 90,
+                      child: Row(
+                        children: <Widget>[
+                          Text(_cardnumber.substring(0, 4)),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: CardUtils.getCardIcon(cardType),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),onTap: toggleSelection))
+                    ),
+                    onTap: () {
+                      print(data.documentID);
+                      for (int i = 0; i < selectionList.length; i++) {
+                        if (selectionList[i].doucumentID == data.documentID) {
+                          if (selectionList[i].isSelected) {
+                            setState(() {
+                              selectionList[i].isSelected = false;
+                            });
+                          } else {
+                            setState(() {
+                              selectionList[i].isSelected = true;
+                            });
+                          }
+                        } else {
+                          selectionList[i].isSelected = false;
+                        }
+                        //above logic work fine for multiple selection. but if we want to unselect other when one is selected
+
+                      }
+                    }))
           ],
         ));
   }
 
-  void toggleSelection() {
-    // setState(() {
-    //   if (isSelected) {
-    //     // mycolor=Colors.white;
-    //     isSelected = false;
-    //   } else {
-    //     // mycolor=Colors.grey[300];
-    //     isSelected = true;
-    //   }
-    // });
+  getListTileSelection(id) {
+    for (int i = 0; i < selectionList.length; i++) {
+      if (selectionList[i].doucumentID == id) {
+        if (selectionList[i].isSelected)
+          return true;
+        else
+          return false;
+      }
+    }
   }
 
   title2() {
@@ -326,7 +373,7 @@ class MakePaymentState extends State<MakePayment> {
 
   payBookBtn() {
     return Padding(
-      padding: EdgeInsets.only(top: 30.0),
+      padding: EdgeInsets.only(top: 30.0, bottom: 20),
       child: Container(
           child: Row(
         children: <Widget>[
@@ -343,7 +390,7 @@ class MakePaymentState extends State<MakePayment> {
                         side: BorderSide(color: Colors.black54)),
                     onPressed: () {},
                     child: Text(
-                      '300 \$',
+                      '$servicePrice \$',
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 17,
@@ -361,7 +408,27 @@ class MakePaymentState extends State<MakePayment> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25.0)),
                 onPressed: () {
-                  // navigateToPaymentPage();
+                  String selectedPaymentID;
+                  bool select = false;
+                  for (int i = 0; i < selectionList.length; i++) {
+                    if (selectionList[i].isSelected) {
+                      selectedPaymentID = selectionList[i].doucumentID;
+                      select = true;
+                      bookTasker(selectedPaymentID);
+                      break;
+                    }
+                  }
+
+                  if (!select) {
+                    Fluttertoast.showToast(
+                        msg: "No card is selected",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIos: 1,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                  }
                 },
                 child: Text(
                   lang.translate('Pay & Book'),
@@ -447,7 +514,9 @@ class MakePaymentState extends State<MakePayment> {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
           onPressed: () {
-            print('hide prompt');
+            setState(() {
+              promptVisibility = false;
+            });
           },
           child: Text(
             'Ok',
@@ -532,4 +601,79 @@ class MakePaymentState extends State<MakePayment> {
           ],
         ));
   }
+
+  bookTasker(paymentuid) async {
+    String result;
+    try {
+      await db
+          .collection('book')
+          .add({
+            'name': taskername,
+            'bookby': _user.uid,
+            'bookto': _taskerID,
+            'paymentuid': paymentuid,
+            'price': servicePrice,
+            'imageurl': taskerImgUrl,
+            'type': servicetype,
+            'subtype': servicesubtype,
+            'state': 'Waiting for tasker response',
+            'timestamp': DateTime.now().millisecondsSinceEpoch,
+          })
+          .then((value) => {
+                //add book array to users
+                db.collection('users').document(_user.uid).updateData({
+                  'booking': FieldValue.arrayUnion([value.documentID])
+                }).catchError((error) {
+                  print("doc save error");
+                  print(error);
+                }),
+                //add request array to tasker
+                db.collection('users').document(_taskerID).updateData({
+                  'requests': FieldValue.arrayUnion([value.documentID])
+                }).catchError((error) {
+                  print("doc save error");
+                  print(error);
+                }),
+                //this method will add ref to user book array and tasker request array
+                this.setState(() {
+                  promptVisibility = true;
+                }),
+              })
+          .timeout(Duration(seconds: 10))
+          .catchError((error) {
+            print("doc save error");
+            print(error);
+            result = error.toString();
+            setState(() {
+              Fluttertoast.showToast(
+                  msg: result,
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIos: 1,
+                  backgroundColor: Colors.red,
+                  textColor: Colors.white,
+                  fontSize: 16.0);
+            });
+          });
+    } catch (e) {
+      print('exception: ' + e.toString());
+      result = e.toString();
+      setState(() {
+        Fluttertoast.showToast(
+            msg: result,
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIos: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      });
+    }
+  }
+}
+
+class ListTileSelection {
+  bool isSelected = false;
+  String doucumentID;
+  ListTileSelection(this.doucumentID);
 }

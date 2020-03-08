@@ -12,6 +12,7 @@ class User {
   String _social_security;
   String _address;
   List<String> _favourite;
+  List<String> _booking;
   DocumentReference reference;
 
   //singleton logic
@@ -36,7 +37,8 @@ class User {
         _reg = map['reg'],
         _address = map['address'],
         _geoPoint = map['geopoint'],
-        _favourite = List.from(map['favourite']);
+        _favourite = List.from(map['favourite']),
+        _booking = List.from(map['booking']);
 
   User.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data, reference: snapshot.reference);
@@ -79,6 +81,10 @@ class User {
 
   get favoriteList {
     return _favourite;
+  }
+
+  get bookingList {
+    return _booking;
   }
 
   get geopoint {
@@ -127,5 +133,9 @@ class User {
 
   void setFavouriteList(favourite){
     _favourite = favourite;
+  }
+
+  void setBookingList(booking){
+    _booking = booking;
   }
 }

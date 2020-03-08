@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:liderfacilites/models/User.dart';
+import 'package:liderfacilites/models/booking.dart';
+import 'package:intl/intl.dart';
 
 class CustomFirestore {
   User _user = new User();
@@ -88,16 +90,30 @@ class CustomFirestore {
 
   Future<List<DocumentSnapshot>> loadFavServices() async {
     print('loadfavservices called');
-      List<String> favouriteList = _user.favoriteList;
-      List<DocumentSnapshot> documentSnapshot = new List();
-      for (int i = 0; i < favouriteList.length; i++) {
-        var snapshot =
-            await db.collection('services').document(favouriteList[i]).get();
+    List<String> favouriteList = _user.favoriteList;
+    List<DocumentSnapshot> documentSnapshot = new List();
+    for (int i = 0; i < favouriteList.length; i++) {
+      var snapshot =
+          await db.collection('services').document(favouriteList[i]).get();
 
-        documentSnapshot.add(snapshot);
-      }
-      debugPrint('length of ds: ' + documentSnapshot.length.toString());
-      return documentSnapshot;
+      documentSnapshot.add(snapshot);
+    }
+    debugPrint('length of ds: ' + documentSnapshot.length.toString());
+    return documentSnapshot;
+  }
+
+  Future<List<DocumentSnapshot>> loadBooking() async {
+    print('load booking called');
+    List<String> _bookingList = _user.bookingList;
+    List<DocumentSnapshot> documentSnapshot = new List();
+    for (int i = 0; i < _bookingList.length; i++) {
+      var snapshot =
+          await db.collection('book').document(_bookingList[i]).get();
+
+      documentSnapshot.add(snapshot);
+      print(documentSnapshot[i].documentID.toString());
+    }
+    return documentSnapshot;
   }
 
   //add payment collection to firestore
@@ -129,14 +145,108 @@ class CustomFirestore {
     }
   }
 
-void deletePaymentMethod(deleteUid) {
-  try {
-    db
-        .collection('users')
-        .document(_user.uid)
-        .collection('payment').document(deleteUid).delete();
-  } catch (e) {
-    print(e.toString());
+  void deletePaymentMethod(deleteUid) {
+    try {
+      db
+          .collection('users')
+          .document(_user.uid)
+          .collection('payment')
+          .document(deleteUid)
+          .delete();
+    } catch (e) {
+      print(e.toString());
+    }
   }
-}
+
+  //add booking collection to firestore
+  addNewbooking(
+      bookby, bookto, paymentuid, price, imageurl, type, subtype) async {
+    String result;
+    try {
+      await db
+          .collection('book')
+          .add({
+            'bookby': bookby,
+            'bookto': bookto,
+            'paymentuid': paymentuid,
+            'price': price,
+            'imageurl': imageurl,
+            'type': type,
+            'subtype': subtype,
+          })
+          .then((value) => {
+                result = 'Payment Method added successfully',
+              })
+          .timeout(Duration(seconds: 10))
+          .catchError((error) {
+            print("doc save error");
+            print(error);
+            result = error.toString();
+          });
+    } catch (e) {
+      print('exception: ' + e.toString());
+      result = e.toString();
+    }
+  }
+
+  bookingHistroy(bookID, taskerid) {
+    try {
+      //add book array to users
+      db.collection('users').document(_user.uid).updateData({
+        'booking': FieldValue.arrayUnion([bookID])
+      }).catchError((error) {
+        print("doc save error");
+        print(error);
+      });
+      //add request array to tasker
+      db.collection('users').document(taskerid).updateData({
+        'requests': FieldValue.arrayUnion([bookID])
+      }).catchError((error) {
+        print("doc save error");
+        print(error);
+      });
+    } catch (e) {
+      print('exception: ' + e.toString());
+    }
+  }
+
+  checkBookingTiming() async {
+    if (_user.bookingList != null) {
+      var now = new DateTime.now();
+      // // var cutoff = now.millisecond - 2 * 60 * 60 * 1000;
+      // print('now: '+now.toString());
+      // print('cutoff: '+cutoff.toString());
+      List<String> _bookingList = _user.bookingList;
+      List<Booking> bookingList = new List();
+      for (int i = 0; i < _bookingList.length; i++) {
+        var snapshot =
+            await db.collection('book').document(_bookingList[i]).get();
+
+        var record = Booking.fromSnapshot(snapshot);
+        bookingList.add(record);
+      }
+
+      for (int i = 0; i < bookingList.length; i++) {
+        var timestamp = bookingList[i].timestamp;
+        var format = DateFormat('HH:mm a');
+        var date = DateTime.fromMillisecondsSinceEpoch(timestamp);
+        var diff = now.difference(date);
+        var time = '';
+        final inMinutes = now.difference(date).inMinutes;
+        print('dateutc: '+date.toUtc().toString());
+        print('date: '+date.toString());
+        print('minutes: '+inMinutes.toString());
+        print ('diff: '+diff.inMinutes.toString());
+        if (diff.inMinutes >= 13) {
+          time = format.format(date);
+          print('greater than 13');
+        }else {
+           print('less than 13');
+           time = format.format(date);
+        }
+      }
+    } else {
+      print('booking is null');
+    }
+  }
 }

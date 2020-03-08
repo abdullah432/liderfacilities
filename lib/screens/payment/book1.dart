@@ -7,16 +7,18 @@ import 'makePayment.dart';
 
 class Book1 extends StatefulWidget {
   final _taskerData;
-  Book1(this._taskerData);
+  final _taskerID;
+  Book1(this._taskerData, this._taskerID);
   @override
   State<StatefulWidget> createState() {
-    return Book1State(_taskerData);
+    return Book1State(_taskerData, _taskerID);
   }
 }
 
 class Book1State extends State<Book1> {
   var _taskerData;
-  Book1State(this._taskerData);
+  var _taskerID;
+  Book1State(this._taskerData, this._taskerID);
 
   MediaQueryData mediaQuery;
   AppLocalizations lang;
@@ -39,11 +41,12 @@ class Book1State extends State<Book1> {
     servicePrice = _taskerData['hourlyrate'];
     taskerAddress = _taskerData['address'];
     profileImgUrl = _taskerData['imgurl'];
-    print('pro: ' + profileImgUrl);
+
+    // print('pro: ' + profileImgUrl);
     if (_taskerData['serviceimageurl'] != null){
       serviceImgUrl = _taskerData['serviceimageurl'];
-    print('ser: ' + serviceImgUrl);
-    print('called');
+    // print('ser: ' + serviceImgUrl);
+    // print('called');
     }
 
     super.initState();
@@ -310,7 +313,7 @@ class Book1State extends State<Book1> {
 
   navigateToPaymentPage() {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return MakePayment();
+      return MakePayment(_taskerData, _taskerID);
     }));
   }
 }

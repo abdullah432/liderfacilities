@@ -500,7 +500,7 @@ class ChatScreenState extends State<ChatScreen> {
                   Navigator.of(context).pop();
                 },
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 10),
+                  padding: const EdgeInsets.only(left: 10, top: 17),
                   child: Icon(
                     Icons.arrow_back,
                     color: Colors.white,

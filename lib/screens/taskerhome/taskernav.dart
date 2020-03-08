@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:liderfacilites/models/User.dart';
 import 'package:liderfacilites/models/app_localization.dart';
 import 'package:liderfacilites/screens/taskerhome/tasker_homepage.dart';
+import 'package:liderfacilites/screens/userhome/home.dart';
 import 'package:liderfacilites/screens/userhome/second_page.dart';
 import 'package:liderfacilites/screens/userhome/third_page.dart';
 
@@ -20,12 +22,12 @@ class _TaskerViewState extends State<TaskerView> {
     ThirdPage(
       key: PageStorageKey('Page3'),
     ),
-    Center(child: Text('Switch')),
   ];
 
   final PageStorageBucket bucket = PageStorageBucket();
 
   int _selectedIndex = 0;
+  User _user = new User();
 
   Widget _bottomNavigationBar() {
     return ClipRRect(
@@ -107,21 +109,6 @@ class _TaskerViewState extends State<TaskerView> {
           child: pages[_selectedIndex],
           bucket: bucket,
         ));
-    // StreamBuilder(
-    //     stream: Firestore.instance
-    //         .collection('users')
-    //         .document(useruid)
-    //         .snapshots(),
-    //     builder: (context, snapshot) {
-    //       if (!snapshot.hasData) return SplashScreen();
-
-    //       // final record = User.fromSnapshot(snapshot.data);
-    //       updateUserData(snapshot.data);
-    //       return PageStorage(
-    //         child: pages[_selectedIndex],
-    //         bucket: bucket,
-    //       );
-    //     }));
   }
 
   getColor(int index) {
@@ -133,25 +120,16 @@ class _TaskerViewState extends State<TaskerView> {
   }
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    if (index == 3) {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) {
+          return HomePage(_user.uid);
+        }));
+      }  else {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
   }
 
-  showBecomeTaskerAlert() {
-    showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-              title: Text('You are not a Tasker'),
-              content: Text('Go to Account and become a tasker'),
-              actions: <Widget>[
-                FlatButton(
-                  onPressed: () {
-                    //nothing
-                  },
-                  child: Text('OK'),
-                ),
-              ],
-            ));
-  }
 }

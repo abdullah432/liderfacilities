@@ -2,7 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:liderfacilites/models/User.dart';
 import 'package:liderfacilites/models/app_localization.dart';
-import 'package:liderfacilites/screens/splashscreen.dart';
+import 'package:liderfacilites/models/firestore.dart';
+import 'package:liderfacilites/screens/taskerhome/taskernav.dart';
 import 'package:liderfacilites/screens/userhome/first_page.dart';
 import 'package:liderfacilites/screens/userhome/second_page.dart';
 import 'package:liderfacilites/screens/userhome/third_page.dart';
@@ -244,6 +245,8 @@ class _HomePageState extends State<HomePage> {
     if (_userRecord.geopoint != null) user.setGeoPoint(_userRecord.geopoint);
     if (_userRecord.favoriteList != null)
       user.setFavouriteList(_userRecord.favoriteList);
+    if (_userRecord.bookingList != null)
+      user.setBookingList(_userRecord.bookingList);
   }
 
 //   // loadCurrentUserData() async {
@@ -285,6 +288,7 @@ class _HomePageState extends State<HomePage> {
   final PageStorageBucket bucket = PageStorageBucket();
 
   int _selectedIndex = 0;
+  CustomFirestore _customFirestore = new CustomFirestore(); 
 
   Widget _bottomNavigationBar() {
     return ClipRRect(
@@ -383,6 +387,7 @@ class _HomePageState extends State<HomePage> {
               if (snapshot.hasData) {
                 print('data found');
                 updateUserData(snapshot.data);
+                _customFirestore.checkBookingTiming();
               }
               return PageStorage(
                 child: pages[_selectedIndex],
@@ -402,6 +407,10 @@ class _HomePageState extends State<HomePage> {
   void _onItemTapped(int index) {
     if (index == 4) {
       if (_userRecord.isTasker) {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) {
+          return TaskerView();
+        }));
       } else {
         showBecomeTaskerAlert();
       }

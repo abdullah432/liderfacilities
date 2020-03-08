@@ -127,25 +127,25 @@ class FirstPageState extends State<FirstPage> {
 
   populateTaskers() async {
     Firestore.instance.collection("services").getDocuments().then((docs) => {
-        if (docs.documents != null){
-          if (docs.documents.isNotEmpty)
+          if (docs.documents != null)
             {
-              print('not nullllllll'),
-              allServices = docs.documents,
-              print('allservicelength: '+allServices.length.toString()),
-              for (int i = 0; i < docs.documents.length; ++i)
+              if (docs.documents.isNotEmpty)
                 {
-                  initMarker(
-                      docs.documents[i].data, docs.documents[i].documentID)
+                  allServices = docs.documents,
+                  for (int i = 0; i < docs.documents.length; ++i)
+                    {
+                      initMarker(
+                          docs.documents[i].data, docs.documents[i].documentID)
+                    }
                 }
             }
-        }
         });
   }
 
   filterTasker(type, filterType, subtype) async {
     markers.clear();
-    if (filterType == 0) { //filter w.r.t type
+    if (filterType == 0) {
+      //filter w.r.t type
       List<DocumentSnapshot> filterList =
           allServices.where((element) => element['type'] == type).toList();
       if (filterList.isNotEmpty) {
@@ -153,15 +153,19 @@ class FirstPageState extends State<FirstPage> {
           initMarker(filterList[i].data, filterList[i].documentID);
         }
       }
-    } else if (filterType == 1) { //filter w.r.t type and it's subtype
-      List<DocumentSnapshot> filterList =
-          allServices.where((element) => element['type'] == type  && element['subtype'] == subtype).toList();
+    } else if (filterType == 1) {
+      //filter w.r.t type and it's subtype
+      List<DocumentSnapshot> filterList = allServices
+          .where((element) =>
+              element['type'] == type && element['subtype'] == subtype)
+          .toList();
       if (filterList.isNotEmpty) {
         for (int i = 0; i < filterList.length; i++) {
           initMarker(filterList[i].data, filterList[i].documentID);
         }
       }
-    } else if (filterType == 2) { //remove filter
+    } else if (filterType == 2) {
+      //remove filter
       if (allServices.isNotEmpty) {
         for (int i = 0; i < allServices.length; i++) {
           initMarker(allServices[i].data, allServices[i].documentID);
@@ -219,7 +223,6 @@ class FirstPageState extends State<FirstPage> {
     lang = AppLocalizations.of(context);
     return Scaffold(
         body:
-            // Center(child: Text('center'),),
             Stack(
       children: <Widget>[
         GoogleMap(
@@ -260,17 +263,6 @@ class FirstPageState extends State<FirstPage> {
                     child: subtypeScrollView()),
               ],
             )
-            // Stack(
-            //   children: <Widget>[
-            //    Positioned(
-            //         bottom: 0, left: 0, right: 0, child: typeScrollView()),
-            //     Positioned(top: 0, left: 0, right: 0, child: uperPart()),
-            //     Align(
-            //       alignment: Alignment.center,
-            //       child: searchTF(),
-            //     )
-            //   ],
-            // ),
             ),
         bottomServiceView(),
       ],
@@ -543,7 +535,9 @@ class FirstPageState extends State<FirstPage> {
                   style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.normal,
-                    color: selectedSubType == listOfSubServices[i] ? Colors.blue : Colors.black87,
+                    color: selectedSubType == listOfSubServices[i]
+                        ? Colors.blue
+                        : Colors.black87,
                   )))));
     }
     return widgets;
@@ -689,104 +683,113 @@ class FirstPageState extends State<FirstPage> {
     return Visibility(
         visible: showUserProfile,
         child: Positioned(
-          bottom: 5.0,
-          left: 5.0,
-          right: 5.0,
-          child: GestureDetector(
-            onTap: () {
-              navigateToBook1Page();
-            },
-            child: Card(
-              child: ListTile(
-            leading: CircleAvatar(
-              radius: 30,
-              // backgroundColor: Colors.black,
-              child: ClipOval(
-                  child: _imageUrl == null
-                      ? Image.asset(
-                          'assets/images/account.png',
-                        )
-                      : Image.network(
-                          _imageUrl,
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                          height: double.infinity,
-                        )),
-            ),
-            title: tasker == null
-                ? Text('taskername')
-                : Text(tasker['taskername']),
-            subtitle: tasker == null
-                ? Text('description')
-                : Text(tasker['description']),
-
-            // subtitle: tasker['description'] ?? 'description',
-            trailing: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
-              Container(
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                          color: fav == true ? Colors.green : Colors.black12,
-                          width: 2)),
+            bottom: 5.0,
+            left: 5.0,
+            right: 5.0,
+            child: GestureDetector(
+              onTap: () {
+                navigateToBook1Page();
+              },
+              child: Card(
                   child: Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          //todo tasker chat page
-                          print('save');
-                          // print('ref: '+taskerId);
-                          if (!fav) {
-                            _customFirestore.addServiceToFavourit(taskerId);
-                            setState(() {
-                              fav = true;
-                            });
-                          } else {
-                            _customFirestore
-                                .removeServiceFromFavourite(taskerId);
-                            setState(() {
-                              fav = false;
-                            });
-                          }
-                        },
-                        child: Icon(
-                          Icons.favorite,
-                          color: fav == true ? Colors.green : Colors.black12,
-                          size: 15,
-                        ),
-                      ))),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Container(
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.black12, width: 2)),
-                    child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: GestureDetector(
-                          onTap: () {
-                            //we need user id not service id
-                            DocumentReference docRef = tasker['reference'];
-                            //todo tasker chat page
-                            print('navigate to chage page');
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Chat(
-                                          peerId: docRef.documentID,
-                                          peerAvatar: tasker['imgurl'],
-                                          peername: tasker['taskername'],
-                                        )));
-                          },
-                          child: Icon(
-                            Icons.message,
-                            color: Colors.black38,
-                            size: 15,
-                          ),
-                        ))),
-              ),
-            ]),
-          )),
-        )));
+                padding: const EdgeInsets.only(top: 10, bottom: 10),
+                child: ListTile(
+                  leading: CircleAvatar(
+                    radius: 30,
+                    // backgroundColor: Colors.black,
+                    child: ClipOval(
+                        child: _imageUrl == null
+                            ? Image.asset(
+                                'assets/images/account.png',
+                              )
+                            : Image.network(
+                                _imageUrl,
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                height: double.infinity,
+                              )),
+                  ),
+                  title: tasker == null
+                      ? Text('taskername')
+                      : Text(tasker['taskername']),
+                  subtitle: tasker == null
+                      ? Text('description')
+                      : Text(tasker['description']),
+
+                  // subtitle: tasker['description'] ?? 'description',
+                  trailing:
+                      Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
+                    Container(
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                                color:
+                                    fav == true ? Colors.green : Colors.black12,
+                                width: 2)),
+                        child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                //todo tasker chat page
+                                print('save');
+                                // print('ref: '+taskerId);
+                                if (!fav) {
+                                  _customFirestore
+                                      .addServiceToFavourit(taskerId);
+                                  setState(() {
+                                    fav = true;
+                                  });
+                                } else {
+                                  _customFirestore
+                                      .removeServiceFromFavourite(taskerId);
+                                  setState(() {
+                                    fav = false;
+                                  });
+                                }
+                              },
+                              child: Icon(
+                                Icons.favorite,
+                                color:
+                                    fav == true ? Colors.green : Colors.black12,
+                                size: 15,
+                              ),
+                            ))),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Container(
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border:
+                                  Border.all(color: Colors.black12, width: 2)),
+                          child: Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  //we need user id not service id
+                                  DocumentReference docRef =
+                                      tasker['reference'];
+                                  //todo tasker chat page
+                                  print('navigate to chage page');
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Chat(
+                                                peerId: docRef.documentID,
+                                                peerAvatar: tasker['imgurl'],
+                                                peername: tasker['taskername'],
+                                              )));
+                                },
+                                child: Icon(
+                                  Icons.message,
+                                  color: Colors.black38,
+                                  size: 15,
+                                ),
+                              ))),
+                    ),
+                  ]),
+                ),
+              )),
+            )));
   }
 
   getListOfSubServices() {
@@ -831,7 +834,8 @@ class FirstPageState extends State<FirstPage> {
       return Services.subtypeofTECHNICALASSISTANCEInBR;
     else if (type == 'MASSAGES AND THERAPIES' && selectedLanguage == 'English')
       return Services.subtypeofMASSAGESandTHERAPIESInENG;
-    else if (type == 'MASSAGES AND THERAPIES' && selectedLanguage == 'Portuguese')
+    else if (type == 'MASSAGES AND THERAPIES' &&
+        selectedLanguage == 'Portuguese')
       return Services.subtypeofMASSAGESandTHERAPIESInBR;
     else if (type == 'PARTY ANIMATION' && selectedLanguage == 'English')
       return Services.subtypeofPARTYANIMATIONInENG;
@@ -891,7 +895,7 @@ class FirstPageState extends State<FirstPage> {
 
   navigateToBook1Page() {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return Book1(tasker);
+      return Book1(tasker, taskerId);
     }));
   }
 }
