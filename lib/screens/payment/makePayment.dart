@@ -608,7 +608,8 @@ class MakePaymentState extends State<MakePayment> {
       await db
           .collection('book')
           .add({
-            'name': taskername,
+            'taskername': taskername,
+            'buyername': _user.name,
             'bookby': _user.uid,
             'bookto': _taskerID,
             'paymentuid': paymentuid,
@@ -628,9 +629,10 @@ class MakePaymentState extends State<MakePayment> {
                   print(error);
                 }),
                 //add request array to tasker
-                db.collection('users').document(_taskerID).updateData({
-                  'requests': FieldValue.arrayUnion([value.documentID])
-                }).catchError((error) {
+                print('taskerid: '+_taskerID.toString()),
+                db.collection('users').document(_taskerID).setData({
+                  'requests': FieldValue.arrayUnion([value.documentID]),
+                }, merge: true).catchError((error) {
                   print("doc save error");
                   print(error);
                 }),

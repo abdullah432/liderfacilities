@@ -132,7 +132,6 @@ class TaskerHomeState extends State<TaskerHome> {
         markerId: markerId,
         position:
             LatLng(request['geopoint'].latitude, request['geopoint'].longitude),
-        icon: getMarkerIcon(request['type']),
         onTap: () {
           tasker = request;
           taskerId = markerId.value;
@@ -203,92 +202,131 @@ class TaskerHomeState extends State<TaskerHome> {
           ),
         ),
         Visibility(
-            visible: showUserProfile,
+            visible: true,
+            // visible: showUserProfile,
             child: Positioned(
               bottom: 5.0,
               left: 5.0,
               right: 5.0,
-              child: Card(
-                  child: ListTile(
-                leading: CircleAvatar(
-                  radius: 30,
-                  // backgroundColor: Colors.black,
-                  child: ClipOval(
-                      child: _imageUrl == null
-                          ? Image.asset(
-                              'assets/images/account.png',
-                            )
-                          : Image.network(
-                              _imageUrl,
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                              height: double.infinity,
-                            )),
-                ),
-                title: tasker == null
-                    ? Text('taskername')
-                    : Text(tasker['taskername']),
-                subtitle: tasker == null
-                    ? Text('description')
-                    : Text(tasker['description']),
-
-                // subtitle: tasker['description'] ?? 'description',
-                trailing:
-                    Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
-                  Container(
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: fav == true ? Colors.green : Colors.black12, width: 2)),
+              child: Column(
+                children: <Widget>[
+                  Transform.translate(
+                      offset: Offset(0, 30),
                       child: Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: GestureDetector(
-                            onTap: () {
-                              //todo tasker chat page
-                              print('save');
-                              // print('ref: '+taskerId);
-                              if (!fav){
-                                _customFirestore.addServiceToFavourit(taskerId);
-                                setState(() {
-                                  fav = true;
-                                });
-                                
-                              }
-                              else{
-                                _customFirestore.removeServiceFromFavourite(taskerId);
-                                setState(() {
-                                  fav = false;
-                                });
-                              }
-                            },
-                            child: Icon(
-                              Icons.favorite,
-                              color: fav == true ? Colors.green : Colors.black12,
-                              size: 15,
-                            ),
-                          ))),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Container(
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border:
-                                Border.all(color: Colors.black12, width: 2)),
-                        child: Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: GestureDetector(
-                              onTap: () {
-                                //todo tasker chat page
-                                print('navigate to chage page');
-                              },
-                              child: Icon(
-                                Icons.message,
-                                color: Colors.black38,
-                                size: 15,
+                        padding: const EdgeInsets.only(left: 6.0, right: 6.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: setting.taskerViewColor,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15))),
+                          width: MediaQuery.of(context).size.width,
+                          height: 70,
+                          child: Align(
+                              alignment: Alignment.topCenter,
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 15),
+                                child: Text('You have 13 minutes to respond',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold)),
+                              )),
+                        ),
+                      )),
+                  Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      child: Padding(
+                          padding: const EdgeInsets.only(top: 10, bottom: 10),
+                          child: Column(
+                            children: <Widget>[
+                              ListTile(
+                                leading: CircleAvatar(
+                                  radius: 30,
+                                  // backgroundColor: Colors.black,
+                                  child: ClipOval(
+                                      child: _imageUrl == null
+                                          ? Image.asset(
+                                              'assets/images/account.png',
+                                            )
+                                          : Image.network(
+                                              _imageUrl,
+                                              fit: BoxFit.cover,
+                                              width: double.infinity,
+                                              height: double.infinity,
+                                            )),
+                                ),
+                                title: Text('Service Requested'),
+                                subtitle: Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: <Widget>[
+                                        Align(
+                                            alignment: Alignment.topLeft,
+                                            child: Text(
+                                                // record.type,
+                                                'Type1')),
+                                        Align(
+                                            alignment: Alignment.topLeft,
+                                            child: Text(
+                                              // record.subtype,
+                                              'Type 2',
+                                            )),
+                                      ],
+                                    )),
+                                trailing: Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: Container(
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                              color: Colors.black12, width: 2)),
+                                      child: Padding(
+                                          padding: const EdgeInsets.all(5.0),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              //todo tasker chat page
+                                              print('navigate to chage page');
+                                            },
+                                            child: Icon(
+                                              Icons.message,
+                                              color: Colors.black38,
+                                              size: 15,
+                                            ),
+                                          ))),
+                                ),
                               ),
-                            ))),
-                  ),
-                ]),
-              )),
+                              Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 12, top: 10),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: <Widget>[
+                                      Text('15 min away',
+                                          style:
+                                              TextStyle(color: Colors.green)),
+                                      Text(
+                                        '15 \$',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      GestureDetector(
+                                          onTap: () {
+                                            print(
+                                                'line between tasker and buyer');
+                                          },
+                                          child: Icon(Icons.directions)),
+                                    ],
+                                  )),
+                              Divider(),
+                              acceptRejectBtn(),
+                            ],
+                          ))),
+                ],
+              ),
             )),
       ],
     )
@@ -306,40 +344,12 @@ class TaskerHomeState extends State<TaskerHome> {
     controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
   }
 
-  getMarkerIcon(type) {
-    debugPrint('type: ' + type.toString());
-    if (type == 'DE LIMPEZA' || type == 'CLEANING')
-      return icon.cleaning;
-    else if (type == 'REPARAR' || type == 'REPAIR')
-      return icon.repair;
-    else if (type == 'REPARAR' || type == 'HEALTH') return icon.repair;
-    // switch (type) {
-    //   case 'CLEANING':
-    //     return icon.cleaning;
-    //     break;
-    //   case 'REPAIR':
-    //     return icon.repair;
-    //     break;
-    //   case 'HEALTH':
-    //     return icon.health;
-    //     break;
-    //   case 'WEEDING':
-    //     return icon.weeding;
-    //     break;
-    //   case 'BUISNESS':
-    //     return icon.weeding;
-    //     break;
-    //   default:
-    //     return BitmapDescriptor.defaultMarker;
-    // }
-  }
-
   uperPart() {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height / 5.5,
       decoration: BoxDecoration(
-          color: Color.fromRGBO(255, 107, 107, 1),
+          color: setting.taskerViewColor,
           borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(20),
               bottomRight: Radius.circular(20))),
@@ -390,5 +400,55 @@ class TaskerHomeState extends State<TaskerHome> {
             ],
           ),
         ));
+  }
+
+  acceptRejectBtn() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+      child: Container(
+          child: Row(
+        children: <Widget>[
+          Expanded(
+              flex: 8,
+              child: RaisedButton(
+                padding: EdgeInsets.all(13),
+                color: Colors.white,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                    side: BorderSide(color: Colors.black54)),
+                onPressed: () {},
+                child: Text(
+                  lang.translate('Accept'),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 17,
+                      color: Colors.blueAccent),
+                ),
+              )),
+          Spacer(
+            flex: 1,
+          ),
+          Expanded(
+              flex: 8,
+              child: RaisedButton(
+                padding: EdgeInsets.all(13),
+                color: Color.fromRGBO(26, 119, 186, 1),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25.0)),
+                onPressed: () {
+                  // navigateToPaymentPage();
+                },
+                child: Text(
+                  lang.translate('Reject'),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 17,
+                      color: Colors.white),
+                ),
+              )),
+        ],
+      )),
+    );
   }
 }

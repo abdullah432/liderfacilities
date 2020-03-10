@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:liderfacilites/models/User.dart';
 import 'package:liderfacilites/models/app_localization.dart';
+import 'package:liderfacilites/screens/taskerhome/buyer_request.dart';
 import 'package:liderfacilites/screens/taskerhome/tasker_homepage.dart';
 import 'package:liderfacilites/screens/userhome/home.dart';
 import 'package:liderfacilites/screens/userhome/second_page.dart';
-import 'package:liderfacilites/screens/userhome/third_page.dart';
 
 class TaskerView extends StatefulWidget {
   @override
@@ -19,7 +19,7 @@ class _TaskerViewState extends State<TaskerView> {
     SecondPage(
       key: PageStorageKey('Page2'),
     ),
-    ThirdPage(
+    BuyerRequest(
       key: PageStorageKey('Page3'),
     ),
   ];

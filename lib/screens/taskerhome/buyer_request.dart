@@ -1,39 +1,40 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:liderfacilites/models/booking.dart';
 import 'package:liderfacilites/models/User.dart';
 import 'package:liderfacilites/models/app_localization.dart';
 import 'package:liderfacilites/models/firestore.dart';
+import 'package:liderfacilites/models/requests.dart';
+import 'package:liderfacilites/models/setting.dart';
 import 'package:liderfacilites/screens/chatroom/chat.dart';
-import 'package:intl/intl.dart';
 
-class SecondPage extends StatefulWidget {
-  const SecondPage({Key key}) : super(key: key);
+class BuyerRequest extends StatefulWidget {
+  const BuyerRequest({Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return SecondPageState();
+    return BuyerRequestState();
   }
 }
 
-class SecondPageState extends State<SecondPage> {
+class BuyerRequestState extends State<BuyerRequest> {
   AppLocalizations lang;
   // List<String> favouriteList;
-  bool favEmpty = true;
+  bool requestEmpty = true;
   User _user = new User();
-  List<String> _listOfbooking;
-  List<Booking> _bookingList = new List();
+  List<String> _listOfRequest;
+  // List<Service> _favouriteServices = new List();
   CustomFirestore _customFirestore = new CustomFirestore();
   String _imageUrl;
+  Setting setting = new Setting();
 
   @override
   void initState() {
-    _listOfbooking = _user.bookingList;
+    _listOfRequest = _user.favoriteList;
 
-    if (_listOfbooking?.isEmpty ?? true) {
-      favEmpty = true;
+    if (_listOfRequest?.isEmpty ?? true) {
+      requestEmpty = true;
     } else {
-      favEmpty = false;
+      requestEmpty = false;
     }
     super.initState();
   }
@@ -47,17 +48,17 @@ class SecondPageState extends State<SecondPage> {
         children: <Widget>[
           uperPart(),
           searchTF(),
-          favEmpty == true
+          requestEmpty == true
               ? Center(
-                  child: Text('No Booking'),
+                  child: Text('No Request'),
                 )
               : FutureBuilder(
-                  future: _customFirestore.loadBooking(),
+                  future: _customFirestore.loadAllRequests(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       if (snapshot.data.length == 0)
                         return Center(
-                          child: Text('No Booking'),
+                          child: Text('No Request'),
                         );
                       else
                         return Transform.translate(
@@ -73,6 +74,7 @@ class SecondPageState extends State<SecondPage> {
                     }
                   },
                 ),
+          // StreamBuilder(stream: Firestore.instance.collection(path).g,)
         ],
       ),
     ));
@@ -83,7 +85,7 @@ class SecondPageState extends State<SecondPage> {
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height / 5.5,
       decoration: BoxDecoration(
-          color: Color.fromRGBO(26, 119, 186, 1),
+          color: setting.taskerViewColor,
           borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(20),
               bottomRight: Radius.circular(20))),
@@ -149,19 +151,17 @@ class SecondPageState extends State<SecondPage> {
   }
 
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
-    print('before');
-    final record = Booking.fromSnapshot(data);
+    final record = Request.fromSnapshot(data);
     _imageUrl = record.imageurl;
-    print(_imageUrl);
 
     return Padding(
         // key: ValueKey(record.name),
         padding: const EdgeInsets.symmetric(horizontal: 12.0),
         child: Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.0),
-            ),
-            child: Padding(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+          child: Padding(
               padding: const EdgeInsets.only(bottom: 10, top: 10),
               child: Column(
                 children: <Widget>[
@@ -184,11 +184,7 @@ class SecondPageState extends State<SecondPage> {
                                   height: double.infinity,
                                 )),
                     ),
-                    title: Text(
-                      record.taskername,
-                      style:
-                          TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                    ),
+                    title: Text(record.buyername),
                     subtitle: Align(
                         alignment: Alignment.topLeft,
                         child: Column(
@@ -198,101 +194,134 @@ class SecondPageState extends State<SecondPage> {
                                 alignment: Alignment.topLeft,
                                 child: Text(
                                   record.type,
+                                  // 'Type1'
                                 )),
                             Align(
                                 alignment: Alignment.topLeft,
                                 child: Text(
                                   record.subtype,
+                                  // 'Type 2',
                                 )),
                           ],
                         )),
-                    trailing: Container(
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.blue, width: 2)),
-                      child: Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: GestureDetector(
-                            onTap: () {
-                              //todo tasker chat page
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Chat(
-                                            peerId: record.bookby,
-                                            peerAvatar: _imageUrl,
-                                            peername: record.taskername,
-                                          )));
-                            },
-                            child: Icon(
-                              Icons.message,
-                              color: Colors.blue,
-                              size: 17,
-                            ),
-                          )),
-                    ),
+                    trailing: requiredWidget(record),
                   ),
                   Padding(
                       padding:
-                          const EdgeInsets.only(left: 20, right: 12, top: 10),
+                          const EdgeInsets.only(left: 20, right: 20, top: 10),
                       child: Row(
+                        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
+                          requiredTextWidget(record),
+                          Spacer(),
                           Text(
-                            readTimestamp(record.timestamp),
-                            // style: TextStyle(color: Colors.green),
+                            '${record.price} \$',
+                            style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: Text('State: ', style: TextStyle(fontWeight: FontWeight.bold),),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 4),
-                            child: Text(record.state, style: getStyle(record.state)),
-                          )
+                          Spacer(),
+                          GestureDetector(
+                              onTap: () {
+                                print('chat');
+                                navigateToChatRoom(record);
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 10.0),
+                                child: Icon(
+                                  Icons.message,
+                                  color: setting.pColor,
+                                ),
+                              )),
+                          GestureDetector(
+                              onTap: () {
+                                print('line between tasker and buyer');
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 10.0),
+                                child: Icon(
+                                  Icons.directions,
+                                  color: setting.pColor,
+                                ),
+                              )),
                         ],
-                      ))
+                      )),
                 ],
+              )),
+        ));
+  }
+
+  requiredWidget(Request record) {
+    return record.state == 'Waiting for tasker response'
+        ? Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.red, width: 2)),
+                child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        print('cancel');
+                        _customFirestore.cancelRequest(record.reference.documentID);
+                        setState(() {
+                          
+                        });
+                      },
+                      child: Icon(
+                        Icons.close,
+                        color: Colors.red,
+                        size: 17,
+                      ),
+                    )),
               ),
-            )));
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.green, width: 2)),
+                child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        print('accept');
+                      },
+                      child: Icon(
+                        Icons.check,
+                        color: Colors.green,
+                        size: 17,
+                      ),
+                    )),
+              ),
+            ),
+          ])
+        : Container(width: 0, height: 0);
   }
 
-  getStyle(style) {
-    switch(style) {
-      case 'Waiting for tasker response':
-        return TextStyle(color: Colors.green);
-        break;
-      case 'Tasker fail to respond':
-        return TextStyle(color: Colors.red);
-        break;
-    }
+  requiredTextWidget(record) {
+    Widget widget;
+    if (record.state == 'Waiting for tasker response')
+      widget = Text('15 min away', style: TextStyle(color: Colors.green));
+    else
+      widget = Text(record.state, style: TextStyle(color: Colors.red));
+
+    return widget;
   }
 
-  readTimestamp(timestamp) {
-    var now = DateTime.now();
-    var format = DateFormat('HH:mm a');
-    var date = DateTime.fromMillisecondsSinceEpoch(timestamp);
-    var diff = now.difference(date);
-    var time = '';
-
-    if (diff.inSeconds <= 0 ||
-        diff.inSeconds > 0 && diff.inMinutes == 0 ||
-        diff.inMinutes > 0 && diff.inHours == 0 ||
-        diff.inHours > 0 && diff.inDays == 0) {
-      time = format.format(date);
-    } else if (diff.inDays > 0 && diff.inDays < 7) {
-      if (diff.inDays == 1) {
-        time = diff.inDays.toString() + ' DAY AGO';
-      } else {
-        time = diff.inDays.toString() + ' DAYS AGO';
-      }
-    } else {
-      if (diff.inDays == 7) {
-        time = (diff.inDays / 7).floor().toString() + ' WEEK AGO';
-      } else {
-        time = (diff.inDays / 7).floor().toString() + ' WEEKS AGO';
-      }
-    }
-
-    return time;
+  navigateToChatRoom(Request record) {
+    //we need user id not service id
+    // DocumentReference docRef = record.bookby;
+    //todo tasker chat page
+    print('navigate to chage page');
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Chat(
+                  peerId: record.bookby,
+                  peerAvatar: record.imageurl,
+                  peername: record.buyername,
+                )));
   }
 }

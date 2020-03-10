@@ -247,6 +247,8 @@ class _HomePageState extends State<HomePage> {
       user.setFavouriteList(_userRecord.favoriteList);
     if (_userRecord.bookingList != null)
       user.setBookingList(_userRecord.bookingList);
+    if (_userRecord.requestList != null)
+      user.setRequestList(_userRecord.requestList);
   }
 
 //   // loadCurrentUserData() async {
@@ -433,7 +435,7 @@ class _HomePageState extends State<HomePage> {
               actions: <Widget>[
                 FlatButton(
                   onPressed: () {
-                    //nothing
+                    Navigator.of(context, rootNavigator: true).pop('dialog');
                   },
                   child: Text('OK'),
                 ),

@@ -396,6 +396,8 @@ class RegisterState extends State<Register> {
       'password': _password,
       'istasker': false,
       'favourite': [],
+      'booking': [],
+      'requests': [],
     });
 
     // DocumentReference ref = await databaseReference.collection("books")

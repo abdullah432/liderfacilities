@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Booking {
+class Request {
   String _taskername;
   String _buyername;
+  String _bookto;
   String _bookby;
   String _type;
   String _subtype;
@@ -15,19 +16,20 @@ class Booking {
   DocumentReference reference;
 
   //singleton logic
-  static final Booking booking = Booking._internal();
-  Booking._internal();
-  factory Booking() {
-    return booking;
+  static final Request request = Request._internal();
+  Request._internal();
+  factory Request() {
+    return request;
   }
 
   //assert mean these fields are manditory, other can be null
-  Booking.fromMap(Map<String, dynamic> map, {this.reference})
+  Request.fromMap(Map<String, dynamic> map, {this.reference})
       : assert(map['type'] != null),
         assert(map['subtype'] != null),
         assert(map['price'] != null),
         _taskername = map['taskername'],
         _buyername = map['buyername'],
+        _bookto = map['bookto'],
         _bookby = map['bookby'],
         _type = map['type'],
         _subtype = map['subtype'],
@@ -36,7 +38,7 @@ class Booking {
         _state = map['state'],
         _timestamp = map['timestamp'];
 
-  Booking.fromSnapshot(DocumentSnapshot snapshot)
+  Request.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data, reference: snapshot.reference);
 
   get type {
@@ -73,6 +75,10 @@ class Booking {
 
   get bookby {
     return _bookby;
+  }
+
+  get bookto {
+    return _bookto;
   }
 
   get timestamp {

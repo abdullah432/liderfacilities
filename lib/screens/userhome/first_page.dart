@@ -203,9 +203,9 @@ class FirstPageState extends State<FirstPage> {
             // selectedType = request['type'];
             // markers[taskerId].icon = getMarkerIcon(request['type']);
             setState(() {
-              //remove cursor blink of search textfield
-              FocusScope.of(context).requestFocus(new FocusNode());
               showUserProfile = true;
+              //remove cursor blink of search textfield
+              // FocusScope.of(context).requestFocus(new FocusNode());
               print('id: ' + markerId.value.toString());
             });
           }
@@ -222,8 +222,7 @@ class FirstPageState extends State<FirstPage> {
   Widget build(BuildContext context) {
     lang = AppLocalizations.of(context);
     return Scaffold(
-        body:
-            Stack(
+        body: Stack(
       children: <Widget>[
         GoogleMap(
           mapType: MapType.normal,
@@ -262,8 +261,7 @@ class FirstPageState extends State<FirstPage> {
                     visible: subtypeScrollVisiblity,
                     child: subtypeScrollView()),
               ],
-            )
-            ),
+            )),
         bottomServiceView(),
       ],
     )
@@ -894,8 +892,10 @@ class FirstPageState extends State<FirstPage> {
   }
 
   navigateToBook1Page() {
+    //we need user id not service id
+    DocumentReference docRef = tasker['reference'];
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return Book1(tasker, taskerId);
+      return Book1(tasker, docRef.documentID);
     }));
   }
 }

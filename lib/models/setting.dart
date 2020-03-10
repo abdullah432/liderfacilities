@@ -10,6 +10,7 @@ class Setting {
   BitmapDescriptor myLocationIcon;
   GeoPoint _geoPoint;
   Color pColor = Color.fromRGBO(26, 119, 186, 1);
+  Color taskerViewColor = Color.fromRGBO(255, 107, 107, 1);
 
   Setting._internal();
   factory Setting() {

@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:liderfacilites/models/User.dart';
 import 'package:liderfacilites/models/booking.dart';
-import 'package:intl/intl.dart';
 
 class CustomFirestore {
   User _user = new User();
@@ -116,6 +115,22 @@ class CustomFirestore {
     return documentSnapshot;
   }
 
+  Future<List<DocumentSnapshot>> loadAllRequests() async {
+    print('load requests called');
+    List<String> requestsList = _user.requestList;
+    List<DocumentSnapshot> documentSnapshot = new List();
+    for (int i = 0; i < requestsList.length; i++) {
+      var snapshot =
+          await db.collection('book').document(requestsList[i]).get();
+
+      print('id: ' + requestsList[i].toString());
+
+      documentSnapshot.add(snapshot);
+    }
+    debugPrint('length of ds: ' + documentSnapshot.length.toString());
+    return documentSnapshot;
+  }
+
   //add payment collection to firestore
   addNewPaymentMethod(nameoncard, cardnum, expiryDate, cvv) async {
     String result;
@@ -190,6 +205,9 @@ class CustomFirestore {
   }
 
   bookingHistroy(bookID, taskerid) {
+    print('booking histroy');
+    print('useruid: ' + _user.uid);
+    print('taskeruid: ' + taskerid);
     try {
       //add book array to users
       db.collection('users').document(_user.uid).updateData({
@@ -228,25 +246,44 @@ class CustomFirestore {
 
       for (int i = 0; i < bookingList.length; i++) {
         var timestamp = bookingList[i].timestamp;
-        var format = DateFormat('HH:mm a');
+        // var format = DateFormat('HH:mm a');
         var date = DateTime.fromMillisecondsSinceEpoch(timestamp);
         var diff = now.difference(date);
-        var time = '';
-        final inMinutes = now.difference(date).inMinutes;
-        print('dateutc: '+date.toUtc().toString());
-        print('date: '+date.toString());
-        print('minutes: '+inMinutes.toString());
-        print ('diff: '+diff.inMinutes.toString());
+        // var time = '';
+        // final inMinutes = now.difference(date).inMinutes;
+        // print('dateutc: '+date.toUtc().toString());
+        // print('date: '+date.toString());
+        // print('minutes: '+inMinutes.toString());
+        // print ('diff: '+diff.inMinutes.toString());
         if (diff.inMinutes >= 13) {
-          time = format.format(date);
+          // time = format.format(date);
           print('greater than 13');
-        }else {
-           print('less than 13');
-           time = format.format(date);
+          print('doc: ' + bookingList[i].reference.documentID);
+          //if greater than 13 than change status to 'Tasker not respond'
+          try {
+            db
+                .collection('book')
+                .document(_bookingList[i])
+                .updateData({'state': 'Tasker fail to respond'});
+          } catch (e) {
+            print('Exception: ' + e);
+          }
+        } else {
+          print('less than 13');
+          //  time = format.format(date);
         }
       }
     } else {
       print('booking is null');
+    }
+  }
+
+  cancelRequest(id) {
+    print('id: '+id);
+    try {
+      db.collection('book').document(id).updateData({'state': 'Rejected'});
+    } catch (e) {
+      print('Exception: ' + e);
     }
   }
 }
