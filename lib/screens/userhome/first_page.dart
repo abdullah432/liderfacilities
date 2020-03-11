@@ -501,26 +501,26 @@ class FirstPageState extends State<FirstPage> {
 
   _getSubtypeList() {
     List<Widget> widgets = [];
-    // var listOfSubServices = setting.getLanguage() == 'English'
-    //     ? Services.typeofservicesInENG
-    //     : Services.typeofservicesInBR;
 
-    var listOfSubServices = getListOfSubServices();
+    var lang = setting.getLanguage();
 
-    // print('services' + listOfServices.length.toString());
-    // print('icons' + listOfIcons.length.toString());
+    var listOfSubServices = getListOfSubServices(selectedType, lang);
+    var listOfSubServiceInEng = getListOfSubServices(selectedType, 'English');
+
     for (int i = 0; i < listOfSubServices.length; i++) {
       widgets.add(FlatButton(
           onPressed: () => {
+              
                 setState(() {
-                  if (selectedSubType == listOfSubServices[i]) {
+                  if (selectedSubType == listOfSubServiceInEng[i]) {
                     //that means user click on selected type again
                     //empty selected type
                     selectedSubType = '';
                     //restore marker of type mean remove filteration of subtype
                     filterTasker(selectedType, 0, '');
                   } else {
-                    selectedSubType = listOfSubServices[i];
+                    selectedSubType = listOfSubServiceInEng[i];
+                    // selectedSubType = listOfSubServices[i];
                     if (selectedSubType != '') {
                       filterTasker(selectedType, 1, selectedSubType);
                     }
@@ -533,7 +533,7 @@ class FirstPageState extends State<FirstPage> {
                   style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.normal,
-                    color: selectedSubType == listOfSubServices[i]
+                    color: selectedSubType == listOfSubServiceInEng[i]
                         ? Colors.blue
                         : Colors.black87,
                   )))));
@@ -571,10 +571,10 @@ class FirstPageState extends State<FirstPage> {
       return Services.unselectedmusic;
     } else if ((type == 'MUSIC' || type == 'MUSICA') && selectedType == type) {
       return Services.selectedmusic;
-    } else if ((lang == 'HYDRAULIC' || type == 'HIDRÁULICOS') &&
+    } else if ((type == 'HYDRAULIC' || type == 'HIDRÁULICOS') &&
         selectedType != type)
       return Services.unselectedhydraulic;
-    else if ((lang == 'HYDRAULIC' || type == 'HIDRÁULICOS') &&
+    else if ((type == 'HYDRAULIC' || type == 'HIDRÁULICOS') &&
         selectedType == type)
       return Services.selectedhydraulic;
     else if ((type == 'REFORM' || type == 'DE REFORMA') && selectedType != type)
@@ -667,12 +667,18 @@ class FirstPageState extends State<FirstPage> {
     else if ((type == 'MAINTENANCE' || type == 'MANUTENÇÃO') &&
         selectedType == type)
       return Services.selectedmaintanance;
-    else if ((type == 'PERSONAL TRAINER' || type == 'PERSONAL TRAINER') &&
+    else if ((type == 'PERSONAL TRAINER') &&
         selectedType != type)
       return Services.unselectedpersonaltrainer;
-    else if ((type == 'PERSONAL TRAINER' || type == 'PERSONAL TRAINER') &&
+    else if ((type == 'PERSONAL TRAINER' ) &&
         selectedType == type)
       return Services.selectedpersonaltrainer;
+    else if ((type == 'FREIGHT') &&
+        selectedType != type)
+      return Services.unselectedfa;
+    else if ((type == 'FREIGHT') &&
+        selectedType == type)
+      return Services.selectedfa;
     else
       return Services.unselectedelectrical;
   }
@@ -790,9 +796,7 @@ class FirstPageState extends State<FirstPage> {
             )));
   }
 
-  getListOfSubServices() {
-    var selectedLanguage = setting.getLanguage();
-    var type = selectedType;
+  getListOfSubServices(type, selectedLanguage) {
 
     if (type == 'CLEANING' && selectedLanguage == 'English')
       return Services.subtypeofcleaningInENG;

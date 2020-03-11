@@ -419,16 +419,21 @@ class MakePaymentState extends State<MakePayment> {
                     }
                   }
 
+                  //if no card selected then for tempory i will add empty payment field
                   if (!select) {
-                    Fluttertoast.showToast(
-                        msg: "No card is selected",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.BOTTOM,
-                        timeInSecForIos: 1,
-                        backgroundColor: Colors.red,
-                        textColor: Colors.white,
-                        fontSize: 16.0);
+                     bookTasker('');
                   }
+
+                  // if (!select) {
+                  //   Fluttertoast.showToast(
+                  //       msg: "No card is selected",
+                  //       toastLength: Toast.LENGTH_SHORT,
+                  //       gravity: ToastGravity.BOTTOM,
+                  //       timeInSecForIos: 1,
+                  //       backgroundColor: Colors.red,
+                  //       textColor: Colors.white,
+                  //       fontSize: 16.0);
+                  // }
                 },
                 child: Text(
                   lang.translate('Pay & Book'),

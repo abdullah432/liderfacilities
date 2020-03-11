@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:liderfacilites/models/app_localization.dart';
+import 'package:liderfacilites/models/authentication.dart';
 import 'package:liderfacilites/screens/userhome/home.dart';
 import 'package:liderfacilites/screens/register.dart';
 
@@ -286,7 +287,9 @@ class LoginState extends State<Login> {
                     color: Colors.white,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25.0)),
-                    onPressed: () {},
+                    onPressed: () {
+                      signInWithGoogle();
+                    },
                     child: Text(
                       'Google',
                       style: TextStyle(
@@ -350,5 +353,14 @@ class LoginState extends State<Login> {
         print(e.toString());
       }
     }
+  }
+
+  void signInWithGoogle() async{
+    BaseAuth auth = new Auth();
+    String uid = await auth.signInWithGoogle();
+    Navigator.pushReplacement(
+                      context,
+                      new MaterialPageRoute(
+                          builder: (context) => HomePage(uid)));
   }
 }

@@ -35,13 +35,9 @@ class Services {
     'ELÉTRICOS',
     'MUSICA',
     'HIDRÁULICOS',
-    'DE REFORMA',
     'MONTAGEM DE MÓVEIS',
-    'FRETES',
     'ASSISTÊNCIA TÉCNICA',
-    'VIDRACEIRO',
     'MASSAGENS E TERAPIAS',
-    'ANIMACÃO DE FESTAS',
     'BIKEBOY',
     'CHAVEIRO',
     'CUIDADOR IDOSO',
@@ -53,7 +49,11 @@ class Services {
     'ALIMENTAÇÃO',
     'AUTOMOVEIS',
     'MANUTENÇÃO',
-    'PERSONAL TRAINER'
+    'PERSONAL TRAINER',
+    'ANIMACÃO DE FESTAS',
+    'VIDRACEIRO',
+    'DE REFORMA',
+    'FRETES',
   ];
 
   static final subtypeofcleaningInBR = [

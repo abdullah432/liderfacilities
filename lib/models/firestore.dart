@@ -286,4 +286,13 @@ class CustomFirestore {
       print('Exception: ' + e);
     }
   }
+
+  acceptRequest(id) {
+    print('id: '+id);
+    try {
+      db.collection('book').document(id).updateData({'state': 'Accepted'});
+    } catch (e) {
+      print('Exception: ' + e);
+    }
+  }
 }

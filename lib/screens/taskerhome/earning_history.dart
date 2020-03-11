@@ -7,19 +7,19 @@ import 'package:liderfacilites/models/requests.dart';
 import 'package:liderfacilites/models/setting.dart';
 import 'package:liderfacilites/screens/chatroom/chat.dart';
 
-class BuyerRequest extends StatefulWidget {
-  const BuyerRequest({Key key}) : super(key: key);
+class EarningHistory extends StatefulWidget {
+  const EarningHistory({Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return BuyerRequestState();
+    return EarningHistoryState();
   }
 }
 
-class BuyerRequestState extends State<BuyerRequest> {
+class EarningHistoryState extends State<EarningHistory> {
   AppLocalizations lang;
   // List<String> favouriteList;
-  bool requestEmpty = true;
+  bool noEarning = true;
   User _user = new User();
   List<String> _listOfRequest;
   // List<Service> _favouriteServices = new List();
@@ -29,13 +29,15 @@ class BuyerRequestState extends State<BuyerRequest> {
 
   @override
   void initState() {
-    _listOfRequest = _user.requestList;
+    //FIXME: Retreive earning history list
 
-    if (_listOfRequest?.isEmpty ?? true) {
-      requestEmpty = true;
-    } else {
-      requestEmpty = false;
-    }
+    // _listOfRequest = _user.requestList;
+
+    // if (_listOfRequest?.isEmpty ?? true) {
+    //   noEarning = true;
+    // } else {
+    //   noEarning = false;
+    // }
     super.initState();
   }
 
@@ -48,9 +50,9 @@ class BuyerRequestState extends State<BuyerRequest> {
         children: <Widget>[
           uperPart(),
           searchTF(),
-          requestEmpty == true
+          noEarning == true
               ? Center(
-                  child: Text('No Request'),
+                  child: Text('No Earning'),
                 )
               : FutureBuilder(
                   future: _customFirestore.loadAllRequests(),
@@ -58,7 +60,7 @@ class BuyerRequestState extends State<BuyerRequest> {
                     if (snapshot.hasData) {
                       if (snapshot.data.length == 0)
                         return Center(
-                          child: Text('No Request'),
+                          child: Text('No Earning'),
                         );
                       else
                         return Transform.translate(

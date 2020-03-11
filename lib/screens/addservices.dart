@@ -40,6 +40,8 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
   bool showRedText = false;
 
   Setting _setting = new Setting();
+  //show circularprogressbar when user click on save btn
+  bool dataUploading = false;
 
   //snackbar
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -70,157 +72,182 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     lang = AppLocalizations.of(context);
+    return Stack(
+      children: <Widget>[
+        addServiceUI(),
+        uploadingCircularBar(),
+      ],
+    );
+  }
+
+  addServiceUI() {
     return Scaffold(
-        key: _scaffoldKey,
-        appBar: AppBar(
-          leading: new IconButton(
-            icon: new Icon(Icons.arrow_back),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-          title: Text(lang.translate('Add Services')),
+      key: _scaffoldKey,
+      appBar: AppBar(
+        leading: new IconButton(
+          icon: new Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
         ),
-        body: SingleChildScrollView(
-            child: Padding(
-                padding: const EdgeInsets.only(top: 15),
-                child: Center(
-                  child: Container(
-                      width: MediaQuery.of(context).size.width / 1.1,
-                      // height: MediaQuery.of(context).size.height / 2.1,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(20),
-                              bottomRight: Radius.circular(20),
-                              topLeft: Radius.circular(20),
-                              topRight: Radius.circular(20))),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20, left: 30),
-                            child: Align(
-                                alignment: Alignment.topLeft,
-                                child: Text(
-                                  lang.translate('Type of service'),
-                                  style: TextStyle(fontSize: 16),
-                                )),
-                          ),
-                          Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 15, left: 20, right: 20),
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: typeofservicedropdown(),
+        title: Text(lang.translate('Add Services')),
+      ),
+      body: SingleChildScrollView(
+          child: Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: Center(
+                child: Container(
+                    width: MediaQuery.of(context).size.width / 1.1,
+                    // height: MediaQuery.of(context).size.height / 2.1,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(20),
+                            bottomRight: Radius.circular(20),
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20))),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20, left: 30),
+                          child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                lang.translate('Type of service'),
+                                style: TextStyle(fontSize: 16),
                               )),
-                          _dropdowntosError == null
-                              ? SizedBox.shrink()
-                              : Text(
-                                  _dropdowntosError ?? "",
-                                  style: TextStyle(color: Colors.red),
-                                ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20, left: 30),
-                            child: Align(
-                                alignment: Alignment.topLeft,
-                                child: Text(
-                                  lang.translate('Sub category'),
-                                  style: TextStyle(fontSize: 16),
-                                )),
-                          ),
-                          Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 15, left: 20, right: 20),
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: subcategorydropdown(),
-                              )),
-                          _dropdownscError == null
-                              ? SizedBox.shrink()
-                              : Text(
-                                  _dropdownscError ?? "",
-                                  style: TextStyle(color: Colors.red),
-                                ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20, left: 30),
-                            child: Align(
-                                alignment: Alignment.topLeft,
-                                child: Text(
-                                  lang.translate('Fixed Rate'),
-                                  style: TextStyle(fontSize: 16),
-                                )),
-                          ),
-                          Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 15, left: 20, right: 20),
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: hourlyRateTextBox(),
-                              )),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20, left: 30),
-                            child: Align(
-                                alignment: Alignment.topLeft,
-                                child: Text(
-                                  lang.translate('Description'),
-                                  style: TextStyle(fontSize: 16),
-                                )),
-                          ),
-                          Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 15, left: 20, right: 20),
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: descriptionTextBox(),
-                              )),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20, left: 30),
+                        ),
+                        Padding(
+                            padding: const EdgeInsets.only(
+                                top: 15, left: 20, right: 20),
                             child: Align(
                               alignment: Alignment.topLeft,
-                              child: Column(
-                                children: <Widget>[
-                                  Row(children: <Widget>[
-                                    Expanded(
-                                        child: Text(
-                                      // lang.translate('Description'),
-                                      'Upload Image related to your service',
-                                      style: TextStyle(fontSize: 13),
-                                    )),
-                                    GestureDetector(
-                                        onTap: () {
-                                          //load image
-                                          getImage();
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              right: 35, top: 10, bottom: 10),
-                                          child: Icon(
-                                            Icons.cloud_upload,
-                                            color: Colors.blue,
-                                          ),
-                                        )),
-                                  ]),
-                                  Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Text(
-                                        
-                                        _serviceImageFile != null 
-                                            ? p.basename(_serviceImageFile.path)
-                                            : errorOrDefault,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.clip,
-                                        style: TextStyle(color: showRedText ? Colors.red : Colors.black),
-                                      )),
-                                ],
+                              child: typeofservicedropdown(),
+                            )),
+                        _dropdowntosError == null
+                            ? SizedBox.shrink()
+                            : Text(
+                                _dropdowntosError ?? "",
+                                style: TextStyle(color: Colors.red),
                               ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20, left: 30),
+                          child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                lang.translate('Sub category'),
+                                style: TextStyle(fontSize: 16),
+                              )),
+                        ),
+                        Padding(
+                            padding: const EdgeInsets.only(
+                                top: 15, left: 20, right: 20),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: subcategorydropdown(),
+                            )),
+                        _dropdownscError == null
+                            ? SizedBox.shrink()
+                            : Text(
+                                _dropdownscError ?? "",
+                                style: TextStyle(color: Colors.red),
+                              ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20, left: 30),
+                          child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                lang.translate('Fixed Rate'),
+                                style: TextStyle(fontSize: 16),
+                              )),
+                        ),
+                        Padding(
+                            padding: const EdgeInsets.only(
+                                top: 15, left: 20, right: 20),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: hourlyRateTextBox(),
+                            )),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20, left: 30),
+                          child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                lang.translate('Description'),
+                                style: TextStyle(fontSize: 16),
+                              )),
+                        ),
+                        Padding(
+                            padding: const EdgeInsets.only(
+                                top: 15, left: 20, right: 20),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: descriptionTextBox(),
+                            )),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20, left: 30),
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Column(
+                              children: <Widget>[
+                                Row(children: <Widget>[
+                                  Expanded(
+                                      child: Text(
+                                    // lang.translate('Description'),
+                                    'Upload Image related to your service',
+                                    style: TextStyle(fontSize: 13),
+                                  )),
+                                  GestureDetector(
+                                      onTap: () {
+                                        //load image
+                                        getImage();
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            right: 35, top: 10, bottom: 10),
+                                        child: Icon(
+                                          Icons.cloud_upload,
+                                          color: Colors.blue,
+                                        ),
+                                      )),
+                                ]),
+                                Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+                                      _serviceImageFile != null
+                                          ? p.basename(_serviceImageFile.path)
+                                          : errorOrDefault,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.clip,
+                                      style: TextStyle(
+                                          color: showRedText
+                                              ? Colors.red
+                                              : Colors.black),
+                                    )),
+                              ],
                             ),
                           ),
-                          Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 20, bottom: 20),
-                              child: saveButton()),
-                        ]),
-                      )),
-                ))));
+                        ),
+                        Padding(
+                            padding: const EdgeInsets.only(top: 20, bottom: 20),
+                            child: saveButton()),
+                      ]),
+                    )),
+              ))),
+    );
+  }
+
+  uploadingCircularBar() {
+    return Visibility(
+        // visible: true,
+        visible: dataUploading,
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          color: Colors.black26,
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        ));
   }
 
   Future getImage() async {
@@ -411,12 +438,17 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
 
   saveService() async {
     if (_formKey.currentState.validate()) {
+      //make circularprogressindicator visible 
+      setState(() {
+        dataUploading = true;
+      });
+      
       //after that check if image for this service is selected or not, if not then show error
       if (_serviceImageFile != null) {
         //if user select image then first upload image and get url
         String filename = p.basename(_serviceImageFile.path);
         StorageReference fstorageRef =
-        FirebaseStorage.instance.ref().child(filename);
+            FirebaseStorage.instance.ref().child(filename);
         StorageUploadTask uploadTask = fstorageRef.putFile(_serviceImageFile);
         StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
         String downloadUrl = await storageTaskSnapshot.ref.getDownloadURL();
@@ -430,8 +462,8 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
           _geoPoint = _setting.location;
         }
         CustomFirestore firestore = new CustomFirestore();
-        bool result = await firestore.createServiceRecord(
-            selectedService, selectedSubCategory, hrC.text, desC.text, downloadUrl, _geoPoint);
+        bool result = await firestore.createServiceRecord(selectedService,
+            selectedSubCategory, hrC.text, desC.text, downloadUrl, _geoPoint);
 
         user.setUserState(true);
         Navigator.pop(context, true);
@@ -443,13 +475,18 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
           showSnachBar(lang.translate('Fail to add'), 2);
         }
       } else {
-        if(this.mounted){
+        if (this.mounted) {
           setState(() {
             errorOrDefault = 'Image is not selected';
             showRedText = true;
           });
         }
       }
+
+      //make circularprogressindicator invisible
+      setState(() {
+        dataUploading = false;
+      });
 
       // Navigator.of(context).pop(true);
 

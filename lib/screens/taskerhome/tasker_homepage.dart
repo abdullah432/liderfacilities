@@ -202,7 +202,8 @@ class TaskerHomeState extends State<TaskerHome> {
           ),
         ),
         Visibility(
-            visible: true,
+            //FIXME:
+            visible: false,
             // visible: showUserProfile,
             child: Positioned(
               bottom: 5.0,

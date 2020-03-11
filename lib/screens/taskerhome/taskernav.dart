@@ -4,7 +4,7 @@ import 'package:liderfacilites/models/app_localization.dart';
 import 'package:liderfacilites/screens/taskerhome/buyer_request.dart';
 import 'package:liderfacilites/screens/taskerhome/tasker_homepage.dart';
 import 'package:liderfacilites/screens/userhome/home.dart';
-import 'package:liderfacilites/screens/userhome/second_page.dart';
+import 'package:liderfacilites/screens/taskerhome/earning_history.dart';
 
 class TaskerView extends StatefulWidget {
   @override
@@ -16,11 +16,11 @@ class _TaskerViewState extends State<TaskerView> {
     TaskerHome(
       key: PageStorageKey('taskerhomepage'),
     ),
-    SecondPage(
-      key: PageStorageKey('Page2'),
+    EarningHistory(
+      key: PageStorageKey('earning'),
     ),
     BuyerRequest(
-      key: PageStorageKey('Page3'),
+      key: PageStorageKey('buyerrequest'),
     ),
   ];
 

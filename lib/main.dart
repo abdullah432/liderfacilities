@@ -5,9 +5,6 @@ import 'package:liderfacilites/models/auth_provider.dart';
 import 'package:liderfacilites/models/authentication.dart';
 import 'package:liderfacilites/models/icons.dart';
 import 'package:liderfacilites/models/setting.dart';
-import 'package:liderfacilites/screens/payment/addPayment.dart';
-import 'package:liderfacilites/screens/payment/book1.dart';
-import 'package:liderfacilites/screens/taskerhome/taskernav.dart';
 import 'package:liderfacilites/screens/userhome/home.dart';
 import 'package:liderfacilites/screens/login.dart';
 import 'models/app_localization.dart';
@@ -136,7 +133,7 @@ class RootPage extends StatelessWidget {
           // String data = snapshot.data;
           debugPrint('auth change');
           // return isLoggedIn ? TaskerView() : Login();
-          // return AddPayment();
+          // return TestMapPolyline();
           return isLoggedIn ? HomePage(snapshot.data) : Login();
         }
         return _buildWaitingScreen(context);
