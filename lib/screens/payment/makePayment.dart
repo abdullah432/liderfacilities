@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:liderfacilites/models/User.dart';
 import 'package:liderfacilites/models/app_localization.dart';
 import 'package:liderfacilites/models/firestore.dart';
+import 'package:liderfacilites/models/utils.dart';
 import 'package:liderfacilites/screens/payment/payment_card.dart';
 import 'package:liderfacilites/screens/payment/payment.dart';
 
@@ -414,25 +415,34 @@ class MakePaymentState extends State<MakePayment> {
                     if (selectionList[i].isSelected) {
                       selectedPaymentID = selectionList[i].doucumentID;
                       select = true;
-                      bookTasker(selectedPaymentID);
+                      //before booking we will check is user select location or not.
+                      if (_user.geopoint != null)
+                        bookTasker(selectedPaymentID);
+                      else {
+                        Utils.showToast('Update Location');
+                      }
                       break;
                     }
                   }
 
                   //if no card selected then for tempory i will add empty payment field
                   if (!select) {
-                     bookTasker('');
+                    if (_user.geopoint != null)
+                      bookTasker('');
+                    else {
+                      Utils.showToast('Update Location');
+                    }
                   }
 
                   // if (!select) {
-                  //   Fluttertoast.showToast(
-                  //       msg: "No card is selected",
-                  //       toastLength: Toast.LENGTH_SHORT,
-                  //       gravity: ToastGravity.BOTTOM,
-                  //       timeInSecForIos: 1,
-                  //       backgroundColor: Colors.red,
-                  //       textColor: Colors.white,
-                  //       fontSize: 16.0);
+                  // Fluttertoast.showToast(
+                  //     msg: "No card is selected",
+                  //     toastLength: Toast.LENGTH_SHORT,
+                  //     gravity: ToastGravity.BOTTOM,
+                  //     timeInSecForIos: 1,
+                  //     backgroundColor: Colors.red,
+                  //     textColor: Colors.white,
+                  //     fontSize: 16.0);
                   // }
                 },
                 child: Text(
@@ -619,11 +629,13 @@ class MakePaymentState extends State<MakePayment> {
             'bookto': _taskerID,
             'paymentuid': paymentuid,
             'price': servicePrice,
-            'imageurl': taskerImgUrl,
+            'taskerimageurl': taskerImgUrl,
+            'buyerimageurl': _user.imageUrl,
             'type': servicetype,
             'subtype': servicesubtype,
             'state': 'Waiting for tasker response',
             'timestamp': DateTime.now().millisecondsSinceEpoch,
+            'geopoint': _user.geopoint
           })
           .then((value) => {
                 //add book array to users
@@ -634,7 +646,7 @@ class MakePaymentState extends State<MakePayment> {
                   print(error);
                 }),
                 //add request array to tasker
-                print('taskerid: '+_taskerID.toString()),
+                print('taskerid: ' + _taskerID.toString()),
                 db.collection('users').document(_taskerID).setData({
                   'requests': FieldValue.arrayUnion([value.documentID]),
                 }, merge: true).catchError((error) {

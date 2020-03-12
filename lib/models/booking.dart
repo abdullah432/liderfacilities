@@ -8,7 +8,8 @@ class Booking {
   String _subtype;
   var _uid;
   String _price;
-  String _imageurl;
+  String _buyerimageurl;
+  String _taskerimageurl;
   String _state;
   var _timestamp;
   // GeoPoint _geoPoint;
@@ -32,7 +33,8 @@ class Booking {
         _type = map['type'],
         _subtype = map['subtype'],
         _price = map['price'],
-        _imageurl = map['imageurl'],
+        _buyerimageurl = map['buyerimageurl'],
+        _taskerimageurl = map['taskerimageurl'],
         _state = map['state'],
         _timestamp = map['timestamp'];
 
@@ -51,8 +53,12 @@ class Booking {
     return _uid;
   }
 
-  get imageurl {
-    return _imageurl;
+  get buyerimageurl {
+    return _buyerimageurl;
+  }
+
+  get taskerimageurl {
+    return _taskerimageurl;
   }
 
   get price {
@@ -88,9 +94,9 @@ class Booking {
     this._type = value;
   }
 
-  void setImageUrl(String value) {
-    this._imageurl = value;
-  }
+  // void setImageUrl(String value) {
+  //   this._imageurl = value;
+  // }
 
   void setUID(var value) {
     this._uid = value;

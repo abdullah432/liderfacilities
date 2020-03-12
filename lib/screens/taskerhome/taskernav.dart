@@ -76,7 +76,7 @@ class _TaskerViewState extends State<TaskerView> {
                   color: getColor(2),
                 ),
                 title: Text(
-                  AppLocalizations.of(context).translate('History'),
+                  AppLocalizations.of(context).translate('Request'),
                   style: TextStyle(color: Colors.black45),
                 ),
               ),

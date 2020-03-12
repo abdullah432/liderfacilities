@@ -154,7 +154,6 @@ class EarningHistoryState extends State<EarningHistory> {
 
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
     final record = Request.fromSnapshot(data);
-    _imageUrl = record.imageurl;
 
     return Padding(
         // key: ValueKey(record.name),
@@ -323,13 +322,13 @@ class EarningHistoryState extends State<EarningHistory> {
     // DocumentReference docRef = record.bookby;
     //todo tasker chat page
     print('navigate to chage page');
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => Chat(
-                  peerId: record.bookby,
-                  peerAvatar: record.imageurl,
-                  peername: record.buyername,
-                )));
+    // Navigator.push(
+    //     context,
+    //     MaterialPageRoute(
+    //         builder: (context) => Chat(
+    //               peerId: record.bookby,
+    //               peerAvatar: record.imageurl,
+    //               peername: record.buyername,
+    //             )));
   }
 }

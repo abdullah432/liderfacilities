@@ -12,6 +12,10 @@ class Setting {
   Color pColor = Color.fromRGBO(26, 119, 186, 1);
   Color taskerViewColor = Color.fromRGBO(255, 107, 107, 1);
 
+  //when tasker home first time call then routecall will be falses
+  bool routeCall = false;
+  GeoPoint buyerLocation;
+
   Setting._internal();
   factory Setting() {
     return setting;
@@ -67,11 +71,28 @@ class Setting {
     _geoPoint = geoPoint;
   }
 
+  setRouteState(value) {
+    routeCall = value;
+  }
+
+  setRoute(value, GeoPoint geoPoint) {
+    routeCall = value;
+    buyerLocation = geoPoint;
+  }
+
   get location {
     return _geoPoint;
   }
 
   get primaryColor {
     return pColor;
+  }
+
+  get routecall {
+    return routeCall;
+  }
+
+  get buyerlocation {
+    return buyerLocation;
   }
 }

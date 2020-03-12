@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:liderfacilites/models/app_localization.dart';
+import 'package:liderfacilites/models/authentication.dart';
 import 'package:liderfacilites/screens/userhome/home.dart';
 import 'package:liderfacilites/screens/login.dart';
 
@@ -319,7 +320,9 @@ class RegisterState extends State<Register> {
                 color: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25.0)),
-                onPressed: () {},
+                onPressed: () {
+                  signInWithGoogle();
+                },
                 child: Text(
                   'Google',
                   style: TextStyle(
@@ -406,5 +409,12 @@ class RegisterState extends State<Register> {
     //       'description': 'Complete Programming Guide to learn Flutter'
     //     });
     // print(ref.documentID);
+  }
+
+  void signInWithGoogle() async {
+    BaseAuth auth = new Auth();
+    String uid = await auth.signInWithGoogle();
+    Navigator.pushReplacement(
+        context, new MaterialPageRoute(builder: (context) => HomePage(uid)));
   }
 }

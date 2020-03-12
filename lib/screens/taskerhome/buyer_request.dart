@@ -6,6 +6,7 @@ import 'package:liderfacilites/models/firestore.dart';
 import 'package:liderfacilites/models/requests.dart';
 import 'package:liderfacilites/models/setting.dart';
 import 'package:liderfacilites/screens/chatroom/chat.dart';
+import 'package:liderfacilites/screens/taskerhome/taskernav.dart';
 
 class BuyerRequest extends StatefulWidget {
   const BuyerRequest({Key key}) : super(key: key);
@@ -152,7 +153,7 @@ class BuyerRequestState extends State<BuyerRequest> {
 
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
     final record = Request.fromSnapshot(data);
-    _imageUrl = record.imageurl;
+    _imageUrl = record.buyerimageurl;
 
     return Padding(
         // key: ValueKey(record.name),
@@ -234,6 +235,9 @@ class BuyerRequestState extends State<BuyerRequest> {
                           GestureDetector(
                               onTap: () {
                                 print('line between tasker and buyer');
+                                GeoPoint buyerLoc = record.geopoint;
+                                setting.setRoute(true, buyerLoc);
+                                navigateToTaskerHomePage();
                               },
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 10.0),
@@ -263,10 +267,9 @@ class BuyerRequestState extends State<BuyerRequest> {
                     child: GestureDetector(
                       onTap: () {
                         print('cancel');
-                        _customFirestore.cancelRequest(record.reference.documentID);
-                        setState(() {
-                          
-                        });
+                        _customFirestore
+                            .cancelRequest(record.reference.documentID);
+                        setState(() {});
                       },
                       child: Icon(
                         Icons.close,
@@ -287,10 +290,9 @@ class BuyerRequestState extends State<BuyerRequest> {
                     child: GestureDetector(
                       onTap: () {
                         print('accept');
-                        _customFirestore.acceptRequest(record.reference.documentID);
-                        setState(() {
-                          
-                        });
+                        _customFirestore
+                            .acceptRequest(record.reference.documentID);
+                        setState(() {});
                       },
                       child: Icon(
                         Icons.check,
@@ -326,8 +328,15 @@ class BuyerRequestState extends State<BuyerRequest> {
         MaterialPageRoute(
             builder: (context) => Chat(
                   peerId: record.bookby,
-                  peerAvatar: record.imageurl,
+                  peerAvatar: record.taskerimageurl,
                   peername: record.buyername,
                 )));
+  }
+
+  navigateToTaskerHomePage() {
+    Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) {
+          return TaskerView();
+        }));
   }
 }

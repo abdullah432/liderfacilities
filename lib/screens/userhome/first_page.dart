@@ -42,7 +42,7 @@ class FirstPageState extends State<FirstPage> {
 
   final MarkerId mId = MarkerId('mylocation');
   //current location
-  Geolocator geolocator = Geolocator();
+  final Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
   Position userLocation;
   static double zoomValue = 13;
   // GeoPoint _geoPoint = new GeoPoint(0, 0);
@@ -116,12 +116,17 @@ class FirstPageState extends State<FirstPage> {
 
   Future<Position> _getLocation() async {
     var currentLocation;
+    print('get location called');
     try {
       currentLocation = await geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.best);
+      
+      print(currentLocation.toString());
     } catch (e) {
+      print(e.toString());
       currentLocation = null;
     }
+    print('current location: '+currentLocation.toString());
     return currentLocation;
   }
 
@@ -275,6 +280,7 @@ class FirstPageState extends State<FirstPage> {
   }
 
   Future<void> _goToNewLocation(CameraPosition cameraPosition) async {
+    print('go to new location');
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
   }

@@ -151,7 +151,7 @@ class SecondPageState extends State<SecondPage> {
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
     print('before');
     final record = Booking.fromSnapshot(data);
-    _imageUrl = record.imageurl;
+    _imageUrl = record.taskerimageurl;
     print(_imageUrl);
 
     return Padding(

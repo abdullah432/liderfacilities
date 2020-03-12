@@ -148,4 +148,12 @@ class User {
   void setRequestList(request){
     _request = request;
   }
+
+  void clearUserData() {
+    _name = '';
+    _email = '';
+    _phonenumber = 0;
+    _imageUrl = '';
+    _uid = '';
+  }
 }

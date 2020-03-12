@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,8 @@ import 'package:liderfacilites/models/app_localization.dart';
 import 'package:liderfacilites/models/firestore.dart';
 import 'package:liderfacilites/models/icons.dart';
 import 'package:liderfacilites/models/setting.dart';
+import 'package:liderfacilites/models/custom_google_map.dart';
+import 'package:http/http.dart' as http;
 
 class TaskerHome extends StatefulWidget {
   const TaskerHome({Key key}) : super(key: key);
@@ -49,15 +52,20 @@ class TaskerHomeState extends State<TaskerHome> {
   bool fav = false;
   //
   var lang;
-
-  // GeoPoint _geoPoint;
-
-  // static final CameraPosition _kGooglePlex = CameraPosition(
-  //   target: LatLng(37.42796133580664, -122.085749655962),
-  //   zoom: 14.4746,
-  // );
+  //route between two location
+  final Set<Polyline> _mapPolylines = {};
+  int _polylineIdCounter = 1;
+  String encodedPoly;
+  LatLng latLng1;
+  LatLng latLng2;
 
   static CameraPosition _newLocation;
+
+  @override
+  void dispose() {
+    setting.setRouteState(false);
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -76,7 +84,24 @@ class TaskerHomeState extends State<TaskerHome> {
 
       _goToNewLocation(_newLocation);
     });
-    // populateTaskers();
+
+    // latLng1 = LatLng(33.6376147, 73.039058);
+    // latLng2 = LatLng(33.61329219101094, 73.038329444482565);
+    // _add();
+
+    if (setting.routecall) {
+      // print('route call');
+      // print('goepoint:'+_geoPoint.latitude.toString()+' long: '+_geoPoint.longitude.toString());
+      // print('buyer goepoint:'+setting.buyerLocation.latitude.toString()+' long: '+setting.buyerLocation.longitude.toString());
+      latLng1 = LatLng(_geoPoint.latitude, _geoPoint.longitude);
+      latLng2 = LatLng(
+          setting.buyerLocation.latitude, setting.buyerLocation.longitude);
+    //       latLng1 = LatLng(33.6376147, 73.039058);
+    // latLng2 = LatLng(33.61329219101094, 73.038329444482565);
+    _add();
+    initMarker();
+      // _add();
+    }
     super.initState();
   }
 
@@ -111,48 +136,18 @@ class TaskerHomeState extends State<TaskerHome> {
     return currentLocation;
   }
 
-  populateTaskers() async {
-    Firestore.instance.collection("services").getDocuments().then((docs) => {
-          if (docs.documents.isNotEmpty)
-            {
-              for (int i = 0; i < docs.documents.length; ++i)
-                {
-                  initMarker(
-                      docs.documents[i].data, docs.documents[i].documentID)
-                }
-            }
-        });
-  }
+  initMarker() {
+    final String markerIdVal = 'marker_id_$_polylineIdCounter';
+    _polylineIdCounter++;
 
-  initMarker(request, requestId) {
-    var markerIdVal = requestId;
     final MarkerId markerId = MarkerId(markerIdVal);
     // creating a new MARKER
     final Marker marker = Marker(
         markerId: markerId,
         position:
-            LatLng(request['geopoint'].latitude, request['geopoint'].longitude),
-        onTap: () {
-          tasker = request;
-          taskerId = markerId.value;
-          _imageUrl = tasker['imgurl'];
-
-          List<String> listoffav = _user.favoriteList;
-          fav = false;
-          for (int i = 0; i < listoffav.length; i++) {
-            if (listoffav[i] == taskerId) {
-              fav = true;
-              break;
-            }
-          }
-
-          if (this.mounted) {
-            setState(() {
-              showUserProfile = true;
-              print('id: ' + markerId.value.toString());
-            });
-          }
-        });
+            LatLng(setting.buyerLocation.latitude, setting.buyerLocation.longitude),
+        icon: BitmapDescriptor.defaultMarker
+    );
     if (this.mounted) {
       setState(() {
         markers[markerId] = marker;
@@ -180,6 +175,7 @@ class TaskerHomeState extends State<TaskerHome> {
           onMapCreated: (GoogleMapController controller) {
             _controller.complete(controller);
           },
+          polylines: _mapPolylines,
           onTap: (geopoint) {
             setState(() {
               showUserProfile = false;
@@ -451,5 +447,37 @@ class TaskerHomeState extends State<TaskerHome> {
         ],
       )),
     );
+  }
+
+  Future<String> getRouteCoordinates(LatLng l1, LatLng l2) async {
+    print('l1: '+l1.toString());
+    print('l2: '+l2.toString());
+    String url =
+        "https://maps.googleapis.com/maps/api/directions/json?origin=${l1.latitude},${l1.longitude}&destination=${l2.latitude},${l2.longitude}&key=${'AIzaSyBP2zsniGw5dymT4QMvS6kzcpfQ1Pni_Xo'}";
+    http.Response response = await http.get(url);
+    Map values = jsonDecode(response.body);
+    // ProjectLog.logIt(TAG, "Predictions", values.toString());
+    print('TAG: '+values.toString());
+    return values["routes"][0]["overview_polyline"]["points"];
+  }
+
+  void _add() async {
+    // print('add called.   kjkdosjdksjdkjskdjlkd');
+    encodedPoly = await getRouteCoordinates(latLng1, latLng2);
+
+    final String polylineIdVal = 'polyline_id_$_polylineIdCounter';
+    _polylineIdCounter++;
+    final PolylineId polylineId = PolylineId(polylineIdVal);
+
+    _mapPolylines.add(Polyline(
+        polylineId: polylineId, //pass any string here
+        width: 5,
+        geodesic: true,
+        points: CustomGoogleMap.convertToLatLng(
+            CustomGoogleMap.decodePoly(encodedPoly)),
+        color: Colors.red));
+
+    setState(() {
+    });
   }
 }

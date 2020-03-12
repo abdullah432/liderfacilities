@@ -358,6 +358,9 @@ class FourthPageState extends State<FourthPage> {
       final BaseAuth auth = AuthProvider.of(context).auth;
       await auth.signOut();
 
+      //clear user data so when another user login with same phone, no unexpected data open
+      _userData.clearUserData();
+
       //due to some issue, i will navigate to login page manually
       Navigator.pushReplacement(context, MaterialPageRoute(
         builder: (context) {

@@ -545,9 +545,8 @@ class EditInfoState extends State<EditInfo> {
         } catch (e) {
           print('user location:' + e.toString());
         }
-      }
 
-      //if user is tasker too. Then update location and geopoint values on all services
+              //if user is tasker too. Then update location and geopoint values on all services
       if (user.isTasker) {
         var db = Firestore.instance;
         // DocumentReference docRef = db.collection('users').document(user.uid);
@@ -564,6 +563,7 @@ class EditInfoState extends State<EditInfo> {
                     GeoPoint(userLocation.latitude, userLocation.longitude)
               })
             });
+      }
       }
 
       progress = false;

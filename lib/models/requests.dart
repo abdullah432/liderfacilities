@@ -9,9 +9,11 @@ class Request {
   String _subtype;
   var _uid;
   String _price;
-  String _imageurl;
+  String _buyerimageurl;
+  String _taskerimageurl;
   String _state;
   var _timestamp;
+  GeoPoint _geoPoint;
   // GeoPoint _geoPoint;
   DocumentReference reference;
 
@@ -34,9 +36,11 @@ class Request {
         _type = map['type'],
         _subtype = map['subtype'],
         _price = map['price'],
-        _imageurl = map['imageurl'],
+        _buyerimageurl = map['buyerimageurl'],
+        _taskerimageurl = map['taskerimageurl'],
         _state = map['state'],
-        _timestamp = map['timestamp'];
+        _timestamp = map['timestamp'],
+        _geoPoint = map['geopoint'];
 
   Request.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data, reference: snapshot.reference);
@@ -53,8 +57,12 @@ class Request {
     return _uid;
   }
 
-  get imageurl {
-    return _imageurl;
+  get buyerimageurl {
+    return _buyerimageurl;
+  }
+
+  get taskerimageurl {
+    return _taskerimageurl;
   }
 
   get price {
@@ -85,18 +93,18 @@ class Request {
     return _timestamp;
   }
 
-  // get geopoint {
-  //   return _geoPoint;
-  // }
+  get geopoint {
+    return _geoPoint;
+  }
 
 
   void settype(String value) {
     this._type = value;
   }
 
-  void setImageUrl(String value) {
-    this._imageurl = value;
-  }
+  // void setImageUrl(String value) {
+  //   this._imageurl = value;
+  // }
 
   void setUID(var value) {
     this._uid = value;
@@ -118,7 +126,7 @@ class Request {
     this._timestamp = value;
   }
 
-  // void setGeopoint(GeoPoint value) {
-  //   this._geoPoint = value;
-  // }
+  void setGeopoint(GeoPoint value) {
+    this._geoPoint = value;
+  }
 }
