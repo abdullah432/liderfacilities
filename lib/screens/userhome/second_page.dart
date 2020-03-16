@@ -51,7 +51,8 @@ class SecondPageState extends State<SecondPage> {
               ? Center(
                   child: Text('No Booking'),
                 )
-              : FutureBuilder(
+              : 
+              FutureBuilder(
                   future: _customFirestore.loadBooking(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {

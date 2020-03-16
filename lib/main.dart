@@ -7,6 +7,7 @@ import 'package:liderfacilites/models/icons.dart';
 import 'package:liderfacilites/models/setting.dart';
 import 'package:liderfacilites/screens/userhome/home.dart';
 import 'package:liderfacilites/screens/login.dart';
+import 'package:liderfacilites/screens/controlpanel.dart';
 import 'models/app_localization.dart';
 
 void main() => runApp(MyApp());
@@ -133,7 +134,7 @@ class RootPage extends StatelessWidget {
           // String data = snapshot.data;
           debugPrint('auth change');
           // return isLoggedIn ? TaskerView() : Login();
-          // return TestMapPolyline();
+          // return ControlPanel();
           return isLoggedIn ? HomePage(snapshot.data) : Login();
         }
         return _buildWaitingScreen(context);

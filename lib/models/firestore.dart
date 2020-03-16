@@ -69,6 +69,10 @@ class CustomFirestore {
     // return list;
   }
 
+  // Future<List<DocumentSnapshot>> loadAllUsersData() {
+  //   List<DocumentSnapshot> documentSnapshot = new List();
+  // }
+
   Future<User> loadUserData() async {
     var snapshot = await db.collection('users').document(_user.uid).get();
     User userRecord = User.fromSnapshot(snapshot);

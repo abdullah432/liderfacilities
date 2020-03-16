@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:liderfacilites/models/User.dart';
 import 'package:liderfacilites/models/app_localization.dart';
 import 'package:liderfacilites/models/firestore.dart';
+import 'package:liderfacilites/models/utils.dart';
 import 'package:liderfacilites/screens/taskerhome/taskernav.dart';
 import 'package:liderfacilites/screens/userhome/first_page.dart';
 import 'package:liderfacilites/screens/userhome/second_page.dart';
@@ -372,7 +373,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    print('useruid: ' + useruid);
     return Scaffold(
         bottomNavigationBar: _bottomNavigationBar(),
         body: StreamBuilder(
@@ -387,7 +387,6 @@ class _HomePageState extends State<HomePage> {
                 );
 
               if (snapshot.hasData) {
-                print('data found');
                 updateUserData(snapshot.data);
                 _customFirestore.checkBookingTiming();
               }

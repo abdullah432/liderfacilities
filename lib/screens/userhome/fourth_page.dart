@@ -7,6 +7,7 @@ import 'package:liderfacilites/models/authentication.dart';
 import 'package:liderfacilites/models/setting.dart';
 import 'package:liderfacilites/screens/editInfo.dart';
 import 'package:liderfacilites/screens/login.dart';
+import 'package:liderfacilites/screens/controlpanel.dart';
 import 'package:liderfacilites/screens/payment/addPayment.dart';
 import 'package:liderfacilites/screens/servicespage.dart';
 
@@ -183,7 +184,7 @@ class FourthPageState extends State<FourthPage> {
         child: Center(
           child: Container(
             width: MediaQuery.of(context).size.width / 1.1,
-            height: MediaQuery.of(context).size.height / 2.4,
+            height: MediaQuery.of(context).size.height / 1.8,
             decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -261,6 +262,28 @@ class FourthPageState extends State<FourthPage> {
                   height: 1,
                   thickness: 1,
                 ),
+                ListTile(
+                  leading: CircleAvatar(
+                    // radius: 20,
+                    backgroundColor: Colors.transparent,
+                    child: Icon(
+                      Icons.settings_system_daydream,
+                      size: 30,
+                      color: Colors.blue,
+                    ),
+                  ),
+                  title: Text(
+                    AppLocalizations.of(context).translate('Control Panel'),
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  onTap: () {
+                    navigateToControlPanelPage();
+                  },
+                ),
+                Divider(
+                  height: 1,
+                  thickness: 1,
+                ),
                 Visibility(
                     visible: taskerTxtVisibility,
                     child: Padding(
@@ -314,6 +337,15 @@ class FourthPageState extends State<FourthPage> {
       },
       value: language,
     ));
+  }
+
+  navigateToControlPanelPage() {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation1, animation2) => ControlPanel(),
+      ),
+    );
   }
 
   navigateToAddServicePage() async {
