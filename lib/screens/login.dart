@@ -268,7 +268,9 @@ class LoginState extends State<Login> {
                     color: Colors.white,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25.0)),
-                    onPressed: () {},
+                    onPressed: () {
+                      signInWithFacebook();
+                    },
                     child: Text(
                       'Facebook',
                       style: TextStyle(
@@ -355,12 +357,20 @@ class LoginState extends State<Login> {
     }
   }
 
-  void signInWithGoogle() async{
+  void signInWithGoogle() async {
     BaseAuth auth = new Auth();
     String uid = await auth.signInWithGoogle();
     Navigator.pushReplacement(
-                      context,
-                      new MaterialPageRoute(
-                          builder: (context) => HomePage(uid)));
+        context, new MaterialPageRoute(builder: (context) => HomePage(uid)));
+  }
+
+  void signInWithFacebook() async {
+    BaseAuth auth = new Auth();
+    String uid = await auth.signInWithFacebook();
+    print('facebook uid: ' + uid);
+    if (uid != 'canceled' && uid != 'error' && uid != null) {
+      Navigator.pushReplacement(
+          context, new MaterialPageRoute(builder: (context) => HomePage(uid)));
+    }
   }
 }
