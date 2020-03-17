@@ -5,11 +5,13 @@ import 'package:liderfacilites/models/app_localization.dart';
 import 'package:liderfacilites/models/auth_provider.dart';
 import 'package:liderfacilites/models/authentication.dart';
 import 'package:liderfacilites/models/setting.dart';
+import 'package:liderfacilites/models/strippayment.dart';
 import 'package:liderfacilites/screens/editInfo.dart';
 import 'package:liderfacilites/screens/login.dart';
 import 'package:liderfacilites/screens/controlpanel.dart';
 import 'package:liderfacilites/screens/payment/addPayment.dart';
 import 'package:liderfacilites/screens/servicespage.dart';
+import 'package:stripe_payment/stripe_payment.dart';
 
 import '../addservices.dart';
 
@@ -38,6 +40,8 @@ class FourthPageState extends State<FourthPage> {
   //Global applocalization variable;
   AppLocalizations lang;
 
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+
   @override
   void initState() {
     language = setting.getLanguage();
@@ -58,6 +62,7 @@ class FourthPageState extends State<FourthPage> {
     }
 
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Color.fromRGBO(246, 248, 250, 1),
       body: SingleChildScrollView(
         child: Container(
@@ -121,23 +126,22 @@ class FourthPageState extends State<FourthPage> {
     return CircleAvatar(
       radius: 40,
       // backgroundColor: Colors.black,
-      child:
-          ClipOval(
-              child: _imageUrl == null
-                  ? Image.asset(
-                      'assets/images/account.png',
-                      height: double.infinity,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    )
-                  : FadeInImage.assetNetwork(
-                      height: double.infinity,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      fadeInCurve: Curves.bounceIn,
-                      placeholder: 'assets/images/account.png',
-                      image: _imageUrl,
-                    )),
+      child: ClipOval(
+          child: _imageUrl == null
+              ? Image.asset(
+                  'assets/images/account.png',
+                  height: double.infinity,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                )
+              : FadeInImage.assetNetwork(
+                  height: double.infinity,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  fadeInCurve: Curves.bounceIn,
+                  placeholder: 'assets/images/account.png',
+                  image: _imageUrl,
+                )),
     );
   }
 
@@ -235,7 +239,13 @@ class FourthPageState extends State<FourthPage> {
                     style: TextStyle(color: Colors.black),
                   ),
                   onTap: () {
-                    navigateToAddPaymentPage();
+                    // navigateToAddPaymentPage();
+                    StripePayment.paymentRequestWithCardForm(
+                            CardFormPaymentRequest())
+                        .then((paymentMethod) {
+                          CustomStripePayment.addCard(paymentMethod.id);
+                        })
+                        .catchError(setError);
                   },
                 ),
                 Divider(
@@ -418,5 +428,13 @@ class FourthPageState extends State<FourthPage> {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return AddPayment();
     }));
+  }
+
+  void setError(dynamic error) {
+    _scaffoldKey.currentState
+        .showSnackBar(SnackBar(content: Text(error.toString())));
+    // setState(() {
+    //   _error = error.toString();
+    // });
   }
 }

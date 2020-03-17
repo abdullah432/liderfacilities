@@ -133,6 +133,7 @@ class Auth implements BaseAuth {
       // 'phonenumber': userdata.currentUser.number,
       // 'password': userdata.currentUser.password,
       'istasker': false,
+      'customerstripeid': '',
       'favourite': [],
       'booking': [],
       'requests': [],

@@ -9,6 +9,7 @@ import 'package:liderfacilites/screens/userhome/first_page.dart';
 import 'package:liderfacilites/screens/userhome/second_page.dart';
 import 'package:liderfacilites/screens/userhome/third_page.dart';
 import 'package:liderfacilites/screens/userhome/fourth_page.dart';
+import 'package:stripe_payment/stripe_payment.dart';
 
 class HomePage extends StatefulWidget {
   final useruid;
@@ -30,6 +31,16 @@ class _HomePageState extends State<HomePage> {
   final db = Firestore.instance;
   //user record
   User _userRecord;
+
+  @override
+  void initState() {
+    super.initState();
+
+    StripePayment.setOptions(StripeOptions(
+        publishableKey: "pk_test_hTtMDzqHYQp6R6NnFXroNpO9001VoFKriY",
+        merchantId: "Test",
+        androidPayMode: 'test'));
+  }
 
 //   final List<Widget> pages = [
 //     FirstPage(
@@ -291,7 +302,7 @@ class _HomePageState extends State<HomePage> {
   final PageStorageBucket bucket = PageStorageBucket();
 
   int _selectedIndex = 0;
-  CustomFirestore _customFirestore = new CustomFirestore(); 
+  CustomFirestore _customFirestore = new CustomFirestore();
 
   Widget _bottomNavigationBar() {
     return ClipRRect(
