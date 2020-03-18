@@ -437,7 +437,7 @@ class AddPaymentState extends State<AddPayment> {
         Firestore.instance
             .collection('users')
             .document(_user.uid)
-            .collection('payment')
+            .collection('card')
             .add({
               'nameoncard': _paymentCard.name,
               'cardnumber': _paymentCard.number,

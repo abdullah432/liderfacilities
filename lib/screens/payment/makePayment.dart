@@ -627,7 +627,7 @@ class MakePaymentState extends State<MakePayment> {
             'buyername': _user.name,
             'bookby': _user.uid,
             'bookto': _taskerID,
-            'paymentuid': paymentuid,
+            'carduid': paymentuid,
             'price': servicePrice,
             'taskerimageurl': taskerImgUrl,
             'buyerimageurl': _user.imageUrl,

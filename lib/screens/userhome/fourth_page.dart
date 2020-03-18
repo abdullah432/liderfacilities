@@ -39,13 +39,23 @@ class FourthPageState extends State<FourthPage> {
   bool taskerTxtVisibility = true;
   //Global applocalization variable;
   AppLocalizations lang;
-
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+
+  CreditCard card = CreditCard(
+    number: '4000002760003184',
+    expMonth: 12,
+    expYear: 21,
+  );
 
   @override
   void initState() {
     language = setting.getLanguage();
     super.initState();
+
+    StripePayment.setOptions(StripeOptions(
+        publishableKey: "pk_test_hTtMDzqHYQp6R6NnFXroNpO9001VoFKriY",
+        merchantId: "Test",
+        androidPayMode: 'test'));
   }
 
   @override
@@ -239,13 +249,29 @@ class FourthPageState extends State<FourthPage> {
                     style: TextStyle(color: Colors.black),
                   ),
                   onTap: () {
-                    // navigateToAddPaymentPage();
-                    StripePayment.paymentRequestWithCardForm(
-                            CardFormPaymentRequest())
-                        .then((paymentMethod) {
-                          CustomStripePayment.addCard(paymentMethod.id);
-                        })
-                        .catchError(setError);
+                    navigateToAddPaymentPage();
+                    // StripePayment.paymentRequestWithCardForm(CardFormPaymentRequest())
+                    // .then((paymentMethod) => {
+                    //   StripePayment.createTokenWithCard(
+                    //   paymentMethod.card
+                    // ).then((token) => {
+                    //   print('token before adding to firestore: '+token.toString()),
+                    //   CustomStripePayment.addCard(paymentMethod.card.token)
+                    // }).catchError(setError)
+                    // }).catchError(setError);
+
+                    // StripePayment.paymentRequestWithCardForm(CardFormPaymentRequest())
+                    //   .then((paymentMethod) => {
+                    //     CustomStripePayment.addCard(paymentMethod)
+                    //   });
+
+                    // StripePayment.createTokenWithCard(card)
+                    //     .then((token) => {
+                    //           print('token before adding to firestore: ' +
+                    //               token.tokenId),
+                    //           CustomStripePayment.addCard(token.tokenId)
+                    //         })
+                    //     .catchError(setError);
                   },
                 ),
                 Divider(

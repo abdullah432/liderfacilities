@@ -400,7 +400,7 @@ class RegisterState extends State<Register> {
       'phonenumber': _phonenumber,
       'password': _password,
       'istasker': false,
-      'customerstripeid': '',
+      'custId': 'new',
       'favourite': [],
       'booking': [],
       'requests': [],
