@@ -252,6 +252,8 @@ class _HomePageState extends State<HomePage> {
     if (_userRecord.imageUrl != null) user.setImageUrl(_userRecord.imageUrl);
     if (_userRecord.socialsecurity != null)
       user.setSocialSecurity(_userRecord.socialsecurity);
+    if (_userRecord.socialsecuritynumber != null)
+      user.setSocialSecurityNumber(_userRecord.socialsecuritynumber);
     if (_userRecord.reg != null) user.setReg(_userRecord.reg);
     if (_userRecord.address != null) user.setAddress(_userRecord.address);
     if (_userRecord.geopoint != null) user.setGeoPoint(_userRecord.geopoint);
@@ -440,8 +442,10 @@ class _HomePageState extends State<HomePage> {
     showDialog(
         context: context,
         builder: (_) => AlertDialog(
-              title: Text('You are not a Tasker'),
-              content: Text('Go to Account and become a tasker'),
+              title: Text(AppLocalizations.of(context)
+                  .translate('You are not a Tasker')),
+              content: Text(AppLocalizations.of(context)
+                  .translate('Go to Account and become a tasker')),
               actions: <Widget>[
                 FlatButton(
                   onPressed: () {

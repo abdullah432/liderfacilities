@@ -4,6 +4,7 @@ import 'package:liderfacilites/models/Service.dart';
 import 'package:liderfacilites/models/User.dart';
 import 'package:liderfacilites/models/app_localization.dart';
 import 'package:liderfacilites/models/firestore.dart';
+import 'package:liderfacilites/screens/chatroom/chat.dart';
 
 class ThirdPage extends StatefulWidget {
   const ThirdPage({Key key}) : super(key: key);
@@ -27,6 +28,7 @@ class ThirdPageState extends State<ThirdPage> {
   @override
   void initState() {
     _listOfFav = _user.favoriteList;
+    print(_listOfFav);
     // if (_favouriteServices.isEmpty && _favouriteServices != null) {
     //   favEmpty = true;
     //   debugPrint('data true');
@@ -69,7 +71,7 @@ class ThirdPageState extends State<ThirdPage> {
           searchTF(),
           favEmpty == true
               ? Center(
-                  child: Text('No Favourite Service'),
+                  child: Text(lang.translate('No Favorite Services')),
                 )
               : FutureBuilder(
                   future: _customFirestore.loadFavServices(),
@@ -82,7 +84,7 @@ class ThirdPageState extends State<ThirdPage> {
                         // debugPrint('data length: '+snapshot.data.documents.toList().length.toString());
                         if (snapshot.data.length == 0)
                           return Center(
-                            child: Text('No Favourite Service'),
+                            child: Text(lang.translate('No Favorite Services')),
                           );
                         else
                           return Transform.translate(
@@ -221,6 +223,14 @@ class ThirdPageState extends State<ThirdPage> {
                     child: GestureDetector(
                       onTap: () {
                         //todo tasker chat page
+                        Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Chat(
+                                            peerId: record.docReference.documentID,
+                                            peerAvatar: _imageUrl,
+                                            peername: record.name,
+                                          )));
                       },
                       child: Icon(
                         Icons.message,

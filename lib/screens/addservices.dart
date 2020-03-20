@@ -29,7 +29,10 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
   var subTypesList = ['SELECT SERVICE FIRST'];
 
   String _dropdowntosError;
+  //for dropdown
   String selectedService;
+  //for subtype selectin
+  String selService;
   String _dropdownscError;
   String selectedSubCategory;
 
@@ -66,6 +69,7 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
   void dispose() {
     hrC.dispose();
     desC.dispose();
+    
     super.dispose();
   }
 
@@ -192,8 +196,9 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
                                 Row(children: <Widget>[
                                   Expanded(
                                       child: Text(
-                                    // lang.translate('Description'),
-                                    'Upload Image related to your service',
+                                    lang.translate(
+                                        'Upload Image related to your service'),
+                                    // 'Upload Image related to your service',
                                     style: TextStyle(fontSize: 13),
                                   )),
                                   GestureDetector(
@@ -282,20 +287,95 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
                 child: Text(dropDownStringItem),
               );
             }).toList(),
-            hint: Text('Select type'),
+            hint: Text(lang.translate('Select type')),
             decoration: InputDecoration(
                 enabledBorder:
                     UnderlineInputBorder(borderSide: BorderSide.none)),
             validator: (value) => value == null ? 'Field required' : null,
             onChanged: (String value) {
               setState(() {
-                selectedService = value;
+                print(value);
+                if (_setting.language != 'English') {
+                  selectedService = value;
+                  selService = selectServiceConvertToEnglish(value);
+                } else
+                  selectedService = value;
                 selectSubtype();
               });
             },
             value: selectedService,
           )),
     );
+  }
+
+  String selectServiceConvertToEnglish(value) {
+    switch (value) {
+      case 'DE LIMPEZA':
+        return 'CLEANING';
+        break;
+      case 'DE AR-CONDICIONADO':
+        return 'AIR CONDITIONING';
+        break;
+      case 'MOTORISTA':
+        return 'DRIVER';
+        break;
+      case 'ELÉTRICOS':
+        return 'ELECTRICAL';
+        break;
+      case 'MUSICA':
+        return 'MUSIC';
+        break;
+      case 'HIDRÁULICOS':
+        return 'HYDRAULIC';
+        break;
+      case 'MONTAGEM DE MÓVEIS':
+        return 'FURNITURE ASSEMBLY';
+        break;
+      case 'ASSISTÊNCIA TÉCNICA':
+        return 'TECHNICAL ASSISTANCE';
+        break;
+      case 'MASSAGENS E TERAPIAS':
+        return 'MASSAGES AND THERAPIES';
+        break;
+      case 'CHAVEIRO':
+        return 'LOCKSMITH';
+        break;
+      case 'CUIDADOR IDOSO':
+        return 'ELDERLY CAREGIVER';
+        break;
+      case 'FOTOGRAFO':
+        return 'PHOTOGRAPHER';
+        break;
+      case 'JARDINEIRO':
+        return 'GARDENER';
+        break;
+      case 'LAVAGEM DE CARRO':
+        return 'CAR WASH';
+        break;
+      case 'ALIMENTAÇÃO':
+        return 'FOOD';
+        break;
+      case 'AUTOMOVEIS':
+        return 'AUTOMOBILES';
+        break;
+      case 'MANUTENÇÃO':
+        return 'MAINTENANCE';
+        break;
+      case 'ANIMACÃO DE FESTAS':
+        return 'PARTY ANIMATION';
+        break;
+      case 'VIDRACEIRO':
+        return 'GLASS';
+        break;
+      case 'DE REFORMA':
+        return 'REFORM';
+        break;
+      case 'FRETES':
+        return 'FREIGHT';
+        break;
+        default:
+          return '';
+    }
   }
 
   subcategorydropdown() {
@@ -322,7 +402,7 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
                 child: Text(dropDownStringItem),
               );
             }).toList(),
-            hint: Text('Select sub category'),
+            hint: Text(lang.translate('Select sub category')),
             validator: (value) => value == null ? 'Field required' : null,
             onChanged: (String value) {
               setState(() {
@@ -355,7 +435,7 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
               // },
               decoration: InputDecoration(
                   // hintText: 'Email',
-                  hintText: "\$ 50.00",
+                  hintText: "R\$ 50.00",
                   border: InputBorder.none,
                   fillColor: Colors.blue),
             ),
@@ -427,7 +507,7 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
           saveService();
         },
         child: Text(
-          'Save',
+          lang.translate('Save'),
           // AppLocalizations.of(context).translate('Login'),
           style: TextStyle(
               fontWeight: FontWeight.bold, fontSize: 23, color: Colors.white),
@@ -438,11 +518,11 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
 
   saveService() async {
     if (_formKey.currentState.validate()) {
-      //make circularprogressindicator visible 
+      //make circularprogressindicator visible
       setState(() {
         dataUploading = true;
       });
-      
+
       //after that check if image for this service is selected or not, if not then show error
       if (_serviceImageFile != null) {
         //if user select image then first upload image and get url
@@ -512,7 +592,7 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
   }
 
   selectSubtype() {
-    switch (selectedService) {
+    switch (selService) {
       case 'CLEANING':
         if (_setting.language == 'English')
           subTypesList = Services.subtypeofcleaningInENG;

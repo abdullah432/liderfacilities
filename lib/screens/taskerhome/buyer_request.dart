@@ -51,7 +51,7 @@ class BuyerRequestState extends State<BuyerRequest> {
           searchTF(),
           requestEmpty == true
               ? Center(
-                  child: Text('No Request'),
+                  child: Text(lang.translate('No Request')),
                 )
               : FutureBuilder(
                   future: _customFirestore.loadAllRequests(),
@@ -59,7 +59,7 @@ class BuyerRequestState extends State<BuyerRequest> {
                     if (snapshot.hasData) {
                       if (snapshot.data.length == 0)
                         return Center(
-                          child: Text('No Request'),
+                          child: Text(lang.translate('No Request')),
                         );
                       else
                         return Transform.translate(

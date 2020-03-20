@@ -9,6 +9,7 @@ class Service {
   var _uid;
   String _hourlyrate;
   String _address;
+  DocumentReference _documentReference;
   GeoPoint _geoPoint;
   DocumentReference reference;
 
@@ -32,6 +33,7 @@ class Service {
         _subservice = map['subtype'],
         _imgUrl = map['imgurl'],
         _hourlyrate = map['hourlyrate'],
+        _documentReference = map['reference'],
         _address = map['address'],
         _geoPoint = map['geopoint'];
 
@@ -72,6 +74,10 @@ class Service {
 
   get geopoint {
     return _geoPoint;
+  }
+  
+  get docReference {
+    return _documentReference;
   }
 
   void setname(String value) {

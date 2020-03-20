@@ -49,7 +49,7 @@ class SecondPageState extends State<SecondPage> {
           searchTF(),
           favEmpty == true
               ? Center(
-                  child: Text('No Booking'),
+                  child: Text(lang.translate('No Booking')),
                 )
               : 
               FutureBuilder(
@@ -58,7 +58,7 @@ class SecondPageState extends State<SecondPage> {
                     if (snapshot.hasData) {
                       if (snapshot.data.length == 0)
                         return Center(
-                          child: Text('No Booking'),
+                          child: Text(lang.translate('No Booking')),
                         );
                       else
                         return Transform.translate(

@@ -10,6 +10,7 @@ class User {
   GeoPoint _geoPoint;
   String _reg;
   String _social_security;
+  String _social_security_number;
   String _address;
   List<String> _favourite;
   List<String> _booking;
@@ -35,6 +36,7 @@ class User {
         _imageUrl = map['imageurl'],
         _isTasker = map['istasker'],
         _social_security = map['social_security'],
+        _social_security_number = map['social_security_number'],
         _reg = map['reg'],
         _address = map['address'],
         _geoPoint = map['geopoint'],
@@ -71,6 +73,10 @@ class User {
 
   get socialsecurity {
     return _social_security;
+  }
+
+  get socialsecuritynumber {
+    return _social_security_number;
   }
 
   get reg {
@@ -123,6 +129,10 @@ class User {
 
   void setSocialSecurity(String value) {
     _social_security = value;
+  }
+
+  void setSocialSecurityNumber(String value) {
+    _social_security_number = value;
   }
 
   void setReg(String value) {

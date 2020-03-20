@@ -113,7 +113,7 @@ class MyServicesState extends State<MyServices> {
                 // decoration: BoxDecoration(
                 //     shape: BoxShape.circle,
                 //     border: Border.all(color: Colors.blue, width: 2)),
-                child:  Text('${record.hourlyrate} \$'),
+                child:  Text('${record.hourlyrate} R\$'),
           ),
         ))));
   }

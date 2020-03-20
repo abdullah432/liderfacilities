@@ -52,7 +52,7 @@ class EarningHistoryState extends State<EarningHistory> {
           searchTF(),
           noEarning == true
               ? Center(
-                  child: Text('No Earning'),
+                  child: Text(lang.translate('No Earning')),
                 )
               : FutureBuilder(
                   future: _customFirestore.loadAllRequests(),
@@ -60,7 +60,7 @@ class EarningHistoryState extends State<EarningHistory> {
                     if (snapshot.hasData) {
                       if (snapshot.data.length == 0)
                         return Center(
-                          child: Text('No Earning'),
+                          child: Text(lang.translate('No Earning')),
                         );
                       else
                         return Transform.translate(

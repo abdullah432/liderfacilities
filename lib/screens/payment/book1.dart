@@ -157,7 +157,7 @@ class Book1State extends State<Book1> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         Text(
-          '$servicePrice \$',
+          '$servicePrice R\$',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ],
@@ -206,9 +206,9 @@ class Book1State extends State<Book1> {
                     ),
                     Expanded(
                       child: Text(
-                        taskerAddress != null
-                            ? taskerAddress
-                            : 'Unknown Address',
+                        taskerAddress == null
+                            ? 'Unknown Address'
+                            : taskerAddress,
                         style: TextStyle(fontSize: 9, color: Colors.black38),
                       ),
                     )

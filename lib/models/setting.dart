@@ -30,7 +30,7 @@ class Setting {
 
   Future<String> getLanguageFromSP() async {
     final pref = await SharedPreferences.getInstance();
-    language = pref.getString('language') ?? 'English';
+    language = pref.getString('language') ?? 'Portuguese';
     debugPrint('getL: ' + language);
     return language;
   }

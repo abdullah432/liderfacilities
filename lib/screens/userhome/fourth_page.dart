@@ -124,7 +124,7 @@ class FourthPageState extends State<FourthPage> {
           padding: const EdgeInsets.only(right: 15, top: 15),
           child: Align(
             alignment: Alignment.topRight,
-            child: Text('Logout',
+            child: Text(lang.translate('Logout'),
                 style: TextStyle(
                     color: Colors.white, fontWeight: FontWeight.bold)),
           ),
@@ -298,6 +298,8 @@ class FourthPageState extends State<FourthPage> {
                   height: 1,
                   thickness: 1,
                 ),
+                Visibility(visible: _userData.email == 'liderfacilities10@gmail.com', 
+                child:
                 ListTile(
                   leading: CircleAvatar(
                     // radius: 20,
@@ -315,7 +317,7 @@ class FourthPageState extends State<FourthPage> {
                   onTap: () {
                     navigateToControlPanelPage();
                   },
-                ),
+                )),
                 Divider(
                   height: 1,
                   thickness: 1,

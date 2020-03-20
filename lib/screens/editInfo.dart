@@ -27,11 +27,14 @@ class EditInfoState extends State<EditInfo> {
   TextEditingController emailC = TextEditingController();
   TextEditingController phoneC = TextEditingController();
   TextEditingController regC = TextEditingController();
+  TextEditingController cnpj_cpfC = TextEditingController();
   //upload imageurl progress bar
   bool progress = false;
   //checkboxes
   bool cnpj = false;
   bool cpf = false;
+  //cnpj or cpf textbox will be invisible until ono box selected
+  bool cnpj_cpf_visibility = false;
   //
   AppLocalizations lang;
   //user location
@@ -52,9 +55,14 @@ class EditInfoState extends State<EditInfo> {
       regC.text = user.reg;
     }
     if (user.socialsecurity != null) {
+      print('social: ' + user.socialsecurity);
       if (user.socialsecurity == 'Cnpj')
         cnpj = true;
       else if (user.socialsecurity == 'Cpf') cpf = true;
+    }
+    if (user.socialsecuritynumber != null) {
+      cnpj_cpf_visibility = true;
+      cnpj_cpfC.text = user.socialsecuritynumber;
     }
 
     super.initState();
@@ -66,6 +74,7 @@ class EditInfoState extends State<EditInfo> {
     emailC.dispose();
     phoneC.dispose();
     regC.dispose();
+    cnpj_cpfC.dispose();
     super.dispose();
   }
 
@@ -73,72 +82,115 @@ class EditInfoState extends State<EditInfo> {
   Widget build(BuildContext context) {
     lang = AppLocalizations.of(context);
     return Scaffold(
-        appBar: AppBar(
-          title: Text(AppLocalizations.of(context).translate('EditInfo')),
-          actions: <Widget>[
-            Center(
-                child: GestureDetector(
-              onTap: () {
-                updateRecord(context);
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Text(AppLocalizations.of(context).translate('Update'),
-                    style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        // appBar: AppBar(
+        //   title: Text(AppLocalizations.of(context).translate('EditInfo')),
+        //   actions: <Widget>[
+        //     Center(
+        //         child: GestureDetector(
+        //       onTap: () {
+        //         updateRecord(context);
+        //       },
+        //       child: Padding(
+        //         padding: const EdgeInsets.all(10.0),
+        //         child: Text(AppLocalizations.of(context).translate('Update'),
+        //             style:
+        //                 TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        //       ),
+        //     ))
+        //   ],
+        // ),
+        body: SingleChildScrollView(
+      child: Container(
+          child: Form(
+        key: _formKey,
+        child: Column(
+          children: <Widget>[
+            uperPart(),
+            imageView(),
+            Padding(
+              padding: const EdgeInsets.only(top: 5),
+              child: Text(
+                AppLocalizations.of(context).translate('Change Profile'),
+                style: TextStyle(fontSize: 16),
               ),
-            ))
+            ),
+            nameTF(),
+            emailTF(),
+            phoneTF(),
+            Padding(
+              padding: const EdgeInsets.only(
+                  top: 10, bottom: 10, left: 22, right: 22),
+              child: Divider(
+                thickness: 1,
+              ),
+            ),
+            regTF(),
+            Padding(
+              padding: const EdgeInsets.only(
+                  top: 10, bottom: 10, left: 22, right: 22),
+              child: Divider(
+                thickness: 1,
+              ),
+            ),
+            checkboxes(),
+            Padding(
+              padding: const EdgeInsets.only(
+                  top: 10, bottom: 10, left: 22, right: 22),
+              child: Divider(
+                thickness: 1,
+              ),
+            ),
+            locationbox(),
+            uploadProgressBar(),
           ],
         ),
-        body: SingleChildScrollView(
-            child: Container(
-          child: Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: Form(
-                key: _formKey,
-                child: Column(
+      )),
+    ));
+  }
+
+  uperPart() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20),
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height / 6.3,
+        decoration: BoxDecoration(
+            color: Color.fromRGBO(26, 119, 186, 1),
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20))),
+        child: Padding(
+            padding: const EdgeInsets.only(top: 40, left: 10),
+            child: Align(
+                alignment: Alignment.topLeft,
+                child: Row(
                   children: <Widget>[
-                    imageView(),
                     Padding(
-                      padding: const EdgeInsets.only(top: 5),
-                      child: Text(
-                        AppLocalizations.of(context)
-                            .translate('Change Profile'),
-                        style: TextStyle(fontSize: 16),
-                      ),
+                      padding: const EdgeInsets.only(right: 10.0),
+                      child: GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Icon(Icons.arrow_back, color: Colors.white)),
                     ),
-                    nameTF(),
-                    emailTF(),
-                    phoneTF(),
+                    Text(
+                      AppLocalizations.of(context).translate('EditInfo'),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 19),
+                    ),
+                    Spacer(),
                     Padding(
-                      padding: const EdgeInsets.only(
-                          top: 10, bottom: 10, left: 22, right: 22),
-                      child: Divider(
-                        thickness: 1,
-                      ),
-                    ),
-                    regTF(),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          top: 10, bottom: 10, left: 22, right: 22),
-                      child: Divider(
-                        thickness: 1,
-                      ),
-                    ),
-                    checkboxes(),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          top: 10, bottom: 10, left: 22, right: 22),
-                      child: Divider(
-                        thickness: 1,
-                      ),
-                    ),
-                    locationbox(),
-                    uploadProgressBar(),
+                      padding: const EdgeInsets.only(right: 15),
+                      child: Text(AppLocalizations.of(context).translate('Update'),
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                    )),
                   ],
-                ),
-              )),
-        )));
+                ))),
+      ),
+    );
   }
 
   imageView() {
@@ -328,40 +380,76 @@ class EditInfoState extends State<EditInfo> {
   checkboxes() {
     return Padding(
         padding: const EdgeInsets.only(top: 10.0, bottom: 5),
-        child: Container(
-            width: MediaQuery.of(context).size.width / 1.25,
-            height: 30,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  "Cnpj",
-                  style: TextStyle(fontSize: 18),
-                ),
-                Checkbox(
-                  value: cnpj,
-                  onChanged: (bool value) {
-                    setState(() {
-                      cnpj = value;
-                      cpf = !value;
-                    });
-                  },
-                ),
-                VerticalDivider(color: Colors.black, width: 30),
-                Text(
-                  "Cpf",
-                  style: TextStyle(fontSize: 18),
-                ),
-                Checkbox(
-                  value: cpf,
-                  onChanged: (bool value) {
-                    setState(() {
-                      cpf = value;
-                      cnpj = !value;
-                    });
-                  },
-                ),
-              ],
+        child: Padding(
+            padding: const EdgeInsets.only(top: 5.0, bottom: 5),
+            child: Container(
+              width: MediaQuery.of(context).size.width / 1.25,
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        "Cnpj",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      Checkbox(
+                        value: cnpj,
+                        onChanged: (bool value) {
+                          setState(() {
+                            //when select make text box visible
+                            cnpj_cpf_visibility = true;
+
+                            cnpj = value;
+                            cpf = !value;
+                          });
+                        },
+                      ),
+                      VerticalDivider(color: Colors.black, width: 30),
+                      Text(
+                        "Cpf",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      Checkbox(
+                        value: cpf,
+                        onChanged: (bool value) {
+                          setState(() {
+                            //when select make text box visible
+                            cnpj_cpf_visibility = true;
+
+                            cpf = value;
+                            cnpj = !value;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  Visibility(
+                      visible: cnpj_cpf_visibility,
+                      child: Container(
+                        padding: EdgeInsets.only(
+                            left: 20, top: 3, bottom: 3, right: 14),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(25),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(color: Colors.black, blurRadius: 1)
+                            ]),
+                        child: TextFormField(
+                          // textAlign: TextAlign.center,
+                          keyboardType: TextInputType.phone,
+                          controller: cnpj_cpfC,
+                          // onSaved: (value) {
+                          //   _phonenumber = int.parse(value);
+                          // },
+                          decoration: InputDecoration(
+                              hintText: 'Enter here',
+                              border: InputBorder.none,
+                              fillColor: Colors.blue),
+                        ),
+                      )),
+                ],
+              ),
             )));
   }
 
@@ -520,6 +608,7 @@ class EditInfoState extends State<EditInfo> {
         try {
           db.document(user.uid).updateData({
             'social_security': social_security,
+            'social_security_number': cnpj_cpfC.text,
           });
         } catch (e) {
           print(e.toString());
@@ -546,24 +635,24 @@ class EditInfoState extends State<EditInfo> {
           print('user location:' + e.toString());
         }
 
-              //if user is tasker too. Then update location and geopoint values on all services
-      if (user.isTasker) {
-        var db = Firestore.instance;
-        // DocumentReference docRef = db.collection('users').document(user.uid);
-        // QuerySnapshot querySnapshot = await Firestore.instance
-        //     .collection("services")
-        //     .where('reference', isEqualTo: docRef)
-        //     .getDocuments();
-        CustomFirestore _customfirestore = new CustomFirestore();
-        var list = await _customfirestore.getAllTasker();
-        list.forEach((e) => {
-              db.collection("services").document(e.documentID).updateData({
-                'address': _userAddress,
-                'geopoint':
-                    GeoPoint(userLocation.latitude, userLocation.longitude)
-              })
-            });
-      }
+        //if user is tasker too. Then update location and geopoint values on all services
+        if (user.isTasker) {
+          var db = Firestore.instance;
+          // DocumentReference docRef = db.collection('users').document(user.uid);
+          // QuerySnapshot querySnapshot = await Firestore.instance
+          //     .collection("services")
+          //     .where('reference', isEqualTo: docRef)
+          //     .getDocuments();
+          CustomFirestore _customfirestore = new CustomFirestore();
+          var list = await _customfirestore.getAllTasker();
+          list.forEach((e) => {
+                db.collection("services").document(e.documentID).updateData({
+                  'address': _userAddress,
+                  'geopoint':
+                      GeoPoint(userLocation.latitude, userLocation.longitude)
+                })
+              });
+        }
       }
 
       progress = false;
