@@ -181,12 +181,17 @@ class EditInfoState extends State<EditInfo> {
                           fontSize: 19),
                     ),
                     Spacer(),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 15),
-                      child: Text(AppLocalizations.of(context).translate('Update'),
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-                    )),
+                    GestureDetector(
+                      onTap: () {
+                        updateRecord(context);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 15),
+                        child: Text(AppLocalizations.of(context).translate('Update'),
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                      )),
+                    ),
                   ],
                 ))),
       ),
@@ -367,7 +372,7 @@ class EditInfoState extends State<EditInfo> {
                   //   _phonenumber = int.parse(value);
                   // },
                   decoration: InputDecoration(
-                      hintText: 'Enter reg',
+                      hintText: lang.translate('Enter Reg'),
                       border: InputBorder.none,
                       fillColor: Colors.blue),
                 ),
@@ -443,7 +448,7 @@ class EditInfoState extends State<EditInfo> {
                           //   _phonenumber = int.parse(value);
                           // },
                           decoration: InputDecoration(
-                              hintText: 'Enter here',
+                              hintText: lang.translate('Enter here'),
                               border: InputBorder.none,
                               fillColor: Colors.blue),
                         ),
@@ -625,7 +630,7 @@ class EditInfoState extends State<EditInfo> {
         }
       }
       //location part
-      if (_userAddress != 'Not selected' && _userAddress != null) {
+      if (_userAddress != 'Not selected' && _userAddress != null && userLocation != null) {
         try {
           db.document(user.uid).updateData({
             'address': _userAddress,

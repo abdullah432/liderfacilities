@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:liderfacilites/models/User.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:liderfacilites/models/app_localization.dart';
 
 class Chat extends StatelessWidget {
   final String peerId;
@@ -85,6 +86,8 @@ class ChatScreenState extends State<ChatScreen> {
       new TextEditingController();
   final ScrollController listScrollController = new ScrollController();
   final FocusNode focusNode = new FocusNode();
+
+  AppLocalizations lang;
 
   @override
   void initState() {
@@ -457,6 +460,7 @@ class ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     primaryColor = Theme.of(context).primaryColor;
     themeColor = Theme.of(context).primaryColor;
+    lang = AppLocalizations.of(context);
     return WillPopScope(
       child: Stack(
         children: <Widget>[
@@ -702,7 +706,7 @@ class ChatScreenState extends State<ChatScreen> {
                 style: TextStyle(color: primaryColor, fontSize: 15.0),
                 controller: textEditingController,
                 decoration: InputDecoration.collapsed(
-                  hintText: 'Type your message...',
+                  hintText: lang.translate('Type your message...'),
                   hintStyle: TextStyle(color: greyColor),
                 ),
                 focusNode: focusNode,

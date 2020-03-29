@@ -298,8 +298,11 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
                 if (_setting.language != 'English') {
                   selectedService = value;
                   selService = selectServiceConvertToEnglish(value);
-                } else
+                } else{
                   selectedService = value;
+                  selService = value;
+                }
+
                 selectSubtype();
               });
             },
@@ -319,7 +322,7 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
       case 'MOTORISTA':
         return 'DRIVER';
         break;
-      case 'ELÉTRICOS':
+      case 'Eletricistas':
         return 'ELECTRICAL';
         break;
       case 'MUSICA':
@@ -592,6 +595,7 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
   }
 
   selectSubtype() {
+    print('selectService: '+selService.toString());
     switch (selService) {
       case 'CLEANING':
         if (_setting.language == 'English')

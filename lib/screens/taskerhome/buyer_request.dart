@@ -309,11 +309,11 @@ class BuyerRequestState extends State<BuyerRequest> {
   requiredTextWidget(record) {
     Widget widget;
     if (record.state == 'Waiting for tasker response')
-      widget = Text('New', style: TextStyle(color: Colors.green));
+      widget = Text(lang.translate('New'), style: TextStyle(color: Colors.green));
     else if (record.state == 'Accepted')
-      widget = Text('Accepted', style: TextStyle(color: Colors.green));
+      widget = Text(lang.translate('Accepted'), style: TextStyle(color: Colors.green));
     else
-      widget = Text(record.state, style: TextStyle(color: Colors.red));
+      widget = Text(lang.translate('Rejected'), style: TextStyle(color: Colors.red));
 
     return widget;
   }

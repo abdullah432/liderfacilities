@@ -89,7 +89,7 @@ class MakePaymentState extends State<MakePayment> {
                 },
               ),
               title: new Text(
-                "Payment",
+                lang.translate("Payment"),
                 style: TextStyle(
                   color: Color.fromRGBO(26, 119, 186, 1),
                 ),
@@ -462,7 +462,7 @@ class MakePaymentState extends State<MakePayment> {
 
   String validate(String value) {
     if (value.isEmpty) {
-      return "Can't be Empty";
+      return lang.translate("Can't be Empty");
     } else
       return null;
   }

@@ -32,7 +32,7 @@ class Services {
     'DE LIMPEZA',
     'DE AR-CONDICIONADO',
     'MOTORISTA',
-    'ELÉTRICOS',
+    'Eletricistas',
     'MUSICA',
     'HIDRÁULICOS',
     'MONTAGEM DE MÓVEIS',

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:liderfacilites/models/app_localization.dart';
 import 'package:liderfacilites/models/strings.dart';
 
 class PaymentCard {
@@ -31,9 +32,9 @@ enum CardType {
 }
 
 class CardUtils {
-  static String validateCVV(String value) {
+  static String validateCVV(String value, BuildContext context) {
     if (value.isEmpty) {
-      return Strings.fieldReq;
+      return AppLocalizations.of(context).translate('This field is required');
     }
 
     if (value.length < 3 || value.length > 4) {
@@ -42,9 +43,9 @@ class CardUtils {
     return null;
   }
 
-  static String validateDate(String value) {
+  static String validateDate(String value, BuildContext context) {
     if (value.isEmpty) {
-      return Strings.fieldReq;
+      return AppLocalizations.of(context).translate('This field is required');
     }
 
     int year;
@@ -183,15 +184,15 @@ class CardUtils {
 
   /// With the card number with Luhn Algorithm
   /// https://en.wikipedia.org/wiki/Luhn_algorithm
-  static String validateCardNum(String input) {
+  static String validateCardNum(String input, BuildContext context) {
     if (input.isEmpty) {
-      return Strings.fieldReq;
+      return AppLocalizations.of(context).translate('This field is required');
     }
 
     input = getCleanedNumber(input);
 
     if (input.length < 8) {
-      return Strings.numberIsInvalid;
+      return AppLocalizations.of(context).translate('Card is invalid');
     }
 
     int sum = 0;
@@ -211,7 +212,7 @@ class CardUtils {
       return null;
     }
 
-    return Strings.numberIsInvalid;
+    return AppLocalizations.of(context).translate('Card is invalid');
   }
 
   static CardType getCardTypeFrmNumber(String input) {

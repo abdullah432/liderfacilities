@@ -44,9 +44,9 @@ class FirstPageState extends State<FirstPage> {
   //current location
   final Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
   Position userLocation;
-  static double zoomValue = 13;
+  static double zoomValue = 12;
   // GeoPoint _geoPoint = new GeoPoint(0, 0);
-  GeoPoint _geoPoint = new GeoPoint(30.3753, 69.3451);
+  GeoPoint _geoPoint = new GeoPoint(-23.5352718, -46.6316168);
   BitmapDescriptor mylocationIcon;
   //Tasker progile image url
   String _imageUrl;
@@ -100,7 +100,7 @@ class FirstPageState extends State<FirstPage> {
     Marker marker = Marker(
         markerId: mId,
         position: LatLng(_geoPoint.latitude, _geoPoint.longitude),
-        infoWindow: InfoWindow(title: 'Your Location'),
+        infoWindow: InfoWindow(title: AppLocalizations.of(context).translate('Your Location')),
         icon: icon.getmyLocationIcon,
         onTap: () {
           setState(() {
@@ -234,8 +234,8 @@ class FirstPageState extends State<FirstPage> {
           markers: Set<Marker>.of(markers.values),
           initialCameraPosition: CameraPosition(
             target: LatLng(
-                _geoPoint.latitude ?? 30.3753, _geoPoint.longitude ?? 69.3451),
-            zoom: _geoPoint.latitude == 30.3753 ? 6 : zoomValue,
+                _geoPoint.latitude ?? -23.5352718, _geoPoint.longitude ?? -46.6316168),
+            zoom: _geoPoint.latitude == -23.5352718 ? 7 : zoomValue,
           ),
           onMapCreated: (GoogleMapController controller) {
             _controller.complete(controller);
@@ -270,12 +270,6 @@ class FirstPageState extends State<FirstPage> {
         bottomServiceView(),
       ],
     )
-
-        // floatingActionButton: FloatingActionButton.extended(
-        //   onPressed: _goToNewLocation,
-        //   label: Text('To the lake!'),
-        //   icon: Icon(Icons.directions_boat),
-        // ),
         );
   }
 
@@ -296,7 +290,7 @@ class FirstPageState extends State<FirstPage> {
       return icon.ac;
     else if (type == 'DRIVER' || type == 'MOTORISTA')
       return icon.car;
-    else if (type == 'ELECTRICAL' || type == 'ELÉTRICOS')
+    else if (type == 'ELECTRICAL' || type == 'Eletricistas')
       return icon.electrical;
     else if (type == 'MUSIC' || type == 'MUSICA')
       return icon.music;

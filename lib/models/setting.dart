@@ -52,9 +52,9 @@ class Setting {
   }
 
   void getLocationFromSP() async{
-    final pref = await SharedPreferences.getInstance();
-    double lat = pref.getDouble('latitude') ?? 30.3753;
-    double long = pref.getDouble('logitude') ?? 69.3451;
+    final pref = await SharedPreferences.getInstance(); 
+    double lat = pref.getDouble('latitude') ?? -23.5352718;
+    double long = pref.getDouble('logitude') ?? -46.6316168;
     _geoPoint = GeoPoint(lat,long);
   }
 
