@@ -39,6 +39,38 @@ class CustomFirestore {
     return true;
   }
 
+  Future<bool> updateServiceRecord(
+      id,
+      String type,
+      String subtype,
+      String hourlyrate,
+      String desc,
+      String serviceImgUrl,
+      GeoPoint geoPoint) async {
+    try {
+      await db.collection("services").document(id).setData({
+        'type': type,
+        'subtype': subtype,
+        'hourlyrate': hourlyrate,
+        'description': desc,
+        'reference': db.collection('users').document(_user.uid),
+        'imgurl': _user.imageUrl,
+        'taskername': _user.name,
+        'serviceimageurl': serviceImgUrl,
+        'geopoint': geoPoint
+      }).whenComplete(() {
+        return true;
+      }).catchError((onError) {
+        print('error during adding service: ' + onError.toString());
+        return false;
+      });
+    } catch (e) {
+      print('exception during adding service: ' + e.toString());
+      return false;
+    }
+    return true;
+  }
+
   updateToTasker() {
     db.collection('users').document(_user.uid).updateData(({'istasker': true}));
   }
@@ -298,5 +330,9 @@ class CustomFirestore {
     } catch (e) {
       print('Exception: ' + e);
     }
+  }
+  
+  deleteService(id) {
+    db.collection('services').document(id).delete();
   }
 }

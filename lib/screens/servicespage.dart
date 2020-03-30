@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:liderfacilites/models/Service.dart';
 import 'package:liderfacilites/models/User.dart';
 import 'package:liderfacilites/models/app_localization.dart';
+import 'package:liderfacilites/models/firestore.dart';
 import 'package:liderfacilites/screens/addservices.dart';
+import 'package:liderfacilites/screens/editservice.dart';
 
 class MyServices extends StatefulWidget {
   @override
@@ -19,6 +21,9 @@ class MyServicesState extends State<MyServices> {
   //reference of current user services
   DocumentReference docRef;
   var db = Firestore.instance;
+
+  //custom firestore
+  CustomFirestore _customFirestore = new CustomFirestore();
 
   @override
   Widget build(BuildContext context) {
@@ -82,40 +87,107 @@ class MyServicesState extends State<MyServices> {
         // key: ValueKey(record.name),
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 2.0),
         child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.0),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.only(top: 10, bottom: 10),
-            child: ListTile(
-              leading: CircleAvatar(
-                radius: 30,
-                // backgroundColor: Colors.black,
-                child: ClipOval(
-                    child: _imageUrl == null
-                        ? Image.asset(
-                            'assets/images/account.png',
-                          )
-                        : Image.network(
-                            _imageUrl,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: double.infinity,
-                          )),
-              ),
-              title: Text(record.name),
-              subtitle: Text(
-                record.description,
-                maxLines: 6,
-                overflow: TextOverflow.ellipsis,
-              ),
-              trailing: Container(
-                // decoration: BoxDecoration(
-                //     shape: BoxShape.circle,
-                //     border: Border.all(color: Colors.blue, width: 2)),
-                child:  Text('${record.hourlyrate} R\$'),
-          ),
-        ))));
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+            child: Column(
+              children: <Widget>[
+                Padding(
+                    padding: const EdgeInsets.only(top: 10, bottom: 10),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        radius: 30,
+                        // backgroundColor: Colors.black,
+                        child: ClipOval(
+                            child: _imageUrl == null
+                                ? Image.asset(
+                                    'assets/images/account.png',
+                                  )
+                                : Image.network(
+                                    _imageUrl,
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                  )),
+                      ),
+                      title: Text(record.name),
+                      subtitle: Text(
+                        record.description,
+                        maxLines: 6,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      trailing: Container(
+                        // decoration: BoxDecoration(
+                        //     shape: BoxShape.circle,
+                        //     border: Border.all(color: Colors.blue, width: 2)),
+                        child: Text('${record.hourlyrate} R\$'),
+                      ),
+                    )),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 6.0, right: 5),
+                  child: Row(
+                    children: <Widget>[
+                      Spacer(),
+                      //edit service
+                      GestureDetector(
+                        onTap: () {
+                          //edit service
+                          print('edit');
+                          Navigator.push(
+                            context,
+                              PageRouteBuilder(
+                                pageBuilder: (context, animation1, animation2) => EditService(data.documentID, record),
+                              )
+                          );
+
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.blue, width: 2)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Icon(
+                              Icons.edit,
+                              color: Colors.blue,
+                              size: 17,
+                            ),
+                          ),
+                        ),
+                      ),
+                      //delete service
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10.0, left: 15.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            //delete service
+                            print('doc: ' + data.documentID.toString());
+                            _customFirestore.deleteService(data.documentID);
+                            setState(() {
+
+                            });
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border:
+                                    Border.all(color: Colors.blue, width: 2)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Icon(
+                                Icons.delete,
+                                color: Colors.blue,
+                                size: 17,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            )));
   }
 
   // myServiceBody(BuildContext context) {
@@ -193,7 +265,9 @@ class MyServicesState extends State<MyServices> {
         uperPart(),
         Card(
             child: ListTile(
-              onTap: () {print('dlick');},
+          onTap: () {
+            print('dlick');
+          },
           leading: CircleAvatar(
             radius: 28,
             // backgroundColor: Colors.black,

@@ -80,18 +80,18 @@ class ThirdPageState extends State<ThirdPage> {
                     //   return Center(
                     //     child: Text('No Favourite Service'),
                     //   );
-                      if (snapshot.hasData) {
-                        // debugPrint('data length: '+snapshot.data.documents.toList().length.toString());
-                        if (snapshot.data.length == 0)
-                          return Center(
-                            child: Text(lang.translate('No Favorite Services')),
-                          );
-                        else
-                          return Transform.translate(
-                              offset: Offset(0, -25),
-                              child: SingleChildScrollView(
-                                  child: _buildList(context, snapshot.data)));
-                      }
+                    if (snapshot.hasData) {
+                      // debugPrint('data length: '+snapshot.data.documents.toList().length.toString());
+                      if (snapshot.data.length == 0)
+                        return Center(
+                          child: Text(lang.translate('No Favorite Services')),
+                        );
+                      else
+                        return Transform.translate(
+                            offset: Offset(0, -25),
+                            child: SingleChildScrollView(
+                                child: _buildList(context, snapshot.data)));
+                    }
 
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(
@@ -181,66 +181,71 @@ class ThirdPageState extends State<ThirdPage> {
     _imageUrl = record.imageurl;
 
     return Padding(
-        // key: ValueKey(record.name),
-        padding: const EdgeInsets.symmetric(horizontal: 12.0),
-        child: Card(
+      // key: ValueKey(record.name),
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      child: Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.0),
           ),
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 10, top: 10),
-            child: ListTile(
-              leading: CircleAvatar(
-                radius: 30,
-                // backgroundColor: Colors.black,
-                child: ClipOval(
-                    child: _imageUrl == null
-                        ? Image.asset(
-                            'assets/images/account.png',
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: double.infinity,
-                          )
-                        : Image.network(
-                            _imageUrl,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: double.infinity,
-                          )),
-              ),
-              title: Text(record.name),
-              subtitle: Text(
-                record.description,
-                maxLines: 6,
-                overflow: TextOverflow.ellipsis,
-              ),
-              trailing: Container(
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.blue, width: 2)),
-                child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        //todo tasker chat page
-                        Navigator.push(
+          child: Column(
+            children: <Widget>[
+              Padding(
+                  padding: const EdgeInsets.only(bottom: 5, top: 10),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      radius: 30,
+                      // backgroundColor: Colors.black,
+                      child: ClipOval(
+                          child: _imageUrl == null
+                              ? Image.asset(
+                                  'assets/images/account.png',
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                )
+                              : Image.network(
+                                  _imageUrl,
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                )),
+                    ),
+                    title: Text(record.name),
+                    subtitle: Text(
+                      record.description,
+                      maxLines: 6,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    trailing: Container(
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.blue, width: 2)),
+                      child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              //todo tasker chat page
+                              Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => Chat(
-                                            peerId: record.docReference.documentID,
+                                            peerId:
+                                                record.docReference.documentID,
                                             peerAvatar: _imageUrl,
                                             peername: record.name,
                                           )));
-                      },
-                      child: Icon(
-                        Icons.message,
-                        color: Colors.blue,
-                        size: 17,
-                      ),
-                    )),
-              ),
-            ),
-          ),
-        ));
+                            },
+                            child: Icon(
+                              Icons.message,
+                              color: Colors.blue,
+                              size: 17,
+                            ),
+                          )),
+                    ),
+                  )),
+              //edit and delete btn
+                          ],
+          )),
+    );
   }
 }

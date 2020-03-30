@@ -12,23 +12,20 @@ import 'package:liderfacilites/models/services.dart';
 import 'package:liderfacilites/models/setting.dart';
 import 'package:path/path.dart' as p;
 
-class AddService extends StatefulWidget {
+class EditService extends StatefulWidget {
   var serviceData;
   var serviceUid;
-  AddService() {
-    serviceData = null;
-  }
-  AddService.editService(this.serviceUid, this.serviceData);
+  EditService(this.serviceUid, this.serviceData);
   @override
   State<StatefulWidget> createState() {
-    return AddServiceState(serviceUid, serviceData);
+    return EditServiceState(serviceUid, serviceData);
   }
 }
 
-class AddServiceState extends State<AddService> with WidgetsBindingObserver {
+class EditServiceState extends State<EditService> with WidgetsBindingObserver {
   Service serviceData;
   var serviceUid;
-  AddServiceState(this.serviceUid, this.serviceData);
+  EditServiceState(this.serviceUid, this.serviceData);
   AppLocalizations lang;
   //for form validation
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -59,16 +56,18 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
   //snackbar
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
+  var language;
+
   @override
   void initState() {
+    //language of prviously selected type
+    language = checkTypeLang(serviceData.typeofservice);
     initServices();
     if (serviceData != null) {
       print('type: ' + serviceData.typeofservice);
       print('subtype: ' + serviceData.subtype);
-//      selectedService = serviceData.typeofservice;
-//      selectedSubCategory = serviceData.subtype;
-
-      if (_setting.language != 'English') {
+      print('lang: ' + language);
+      if (language != 'English') {
         selectedService = serviceData.typeofservice;
         selService = selectServiceConvertToEnglish(selectedService);
       } else {
@@ -89,7 +88,7 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
   }
 
   initServices() {
-    if (_setting.getLanguage() == 'English') {
+    if (language == 'English') {
       typeofservices = Services.typeofservicesInENG;
       debugPrint('englishinit');
     } else {
@@ -336,7 +335,7 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
                 subTypesList = ['SELECT SERVICE FIRST'];
                 selectedSubCategory = null;
 
-                if (_setting.language != 'English') {
+                if (language != 'English') {
                   selectedService = value;
                   selService = selectServiceConvertToEnglish(value);
                 } else {
@@ -344,7 +343,6 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
                   selService = value;
                 }
 
-                
                 selectSubtype();
               });
             },
@@ -436,7 +434,8 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
       ),
       child: Padding(
           padding: const EdgeInsets.only(left: 10, right: 10),
-          child: DropdownButtonHideUnderline(child: DropdownButton<String>(
+          child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
             isExpanded: true,
             // decoration: InputDecoration(
             //     enabledBorder:
@@ -682,155 +681,184 @@ class AddServiceState extends State<AddService> with WidgetsBindingObserver {
 
     switch (selService) {
       case 'CLEANING':
-        if (_setting.language == 'English')
+        if (language == 'English')
           subTypesList = Services.subtypeofcleaningInENG;
         else
           subTypesList = Services.subtypeofcleaningInBR;
         break;
       case 'AIR CONDITIONING':
-        if (_setting.language == 'English')
+        if (language == 'English')
           subTypesList = Services.subtypeofAirCONDITIONINGInENG;
         else
           subTypesList = Services.subtypeofAirCONDITIONINGInBR;
         break;
       case 'DRIVER':
-        if (_setting.language == 'English')
+        if (language == 'English')
           subTypesList = Services.subtypeofDriverInENG;
         else
           subTypesList = Services.subtypeofDriverInBR;
         break;
       case 'ELECTRICAL':
-        if (_setting.language == 'English')
+        if (language == 'English')
           subTypesList = Services.subtypeofElectricalInENG;
         else
           subTypesList = Services.subtypeofElectricalInBR;
         break;
       case 'MUSIC':
-        if (_setting.language == 'English')
+        if (language == 'English')
           subTypesList = Services.subtypeofMusicInENG;
         else
           subTypesList = Services.subtypeofMusicInBR;
         break;
       case 'HYDRAULIC':
-        if (_setting.language == 'English')
+        if (language == 'English')
           subTypesList = Services.subtypeofHYDRAULICInENG;
         else
           subTypesList = Services.subtypeofHYDRAULICInBR;
         break;
       case 'REFORM':
-        if (_setting.language == 'English')
+        if (language == 'English')
           subTypesList = Services.subtypeofREFORMInENG;
         else
           subTypesList = Services.subtypeofREFORMInBR;
         break;
       case 'FURNITURE ASSEMBLY':
-        if (_setting.language == 'English')
+        if (language == 'English')
           subTypesList = Services.subtypeofFURNITUREASSEMBLYInENG;
         else
           subTypesList = Services.subtypeofFURNITUREASSEMBLYInBR;
         break;
       case 'FREIGHT':
-        if (_setting.language == 'English')
+        if (language == 'English')
           subTypesList = Services.subtypeofFREIGHTInENG;
         else
           subTypesList = Services.subtypeofFREIGHTInBR;
         break;
       case 'TECHNICAL ASSISTANCE':
-        if (_setting.language == 'English')
+        if (language == 'English')
           subTypesList = Services.subtypeofTECHNICALASSISTANCEInENG;
         else
           subTypesList = Services.subtypeofTECHNICALASSISTANCEInBR;
         break;
       case 'GLASS':
-        if (_setting.language == 'English')
+        if (language == 'English')
           subTypesList = Services.subtypeofGLASSInENG;
         else
           subTypesList = Services.subtypeofGLASSInBR;
         break;
       case 'MASSAGES AND THERAPIES':
-        if (_setting.language == 'English')
+        if (language == 'English')
           subTypesList = Services.subtypeofMAINTENANCEInENG;
         else
           subTypesList = Services.subtypeofMAINTENANCEInBR;
         break;
       case 'PARTY ANIMATION':
-        if (_setting.language == 'English')
+        if (language == 'English')
           subTypesList = Services.subtypeofPARTYANIMATIONInENG;
         else
           subTypesList = Services.subtypeofPARTYANIMATIONInBR;
         break;
       case 'BIKEBOY':
-        if (_setting.language == 'English')
+        if (language == 'English')
           subTypesList = Services.subtypeofBIKEBOYInENG;
         else
           subTypesList = Services.subtypeofBIKEBOYInBR;
         break;
       case 'LOCKSMITH':
-        if (_setting.language == 'English')
+        if (language == 'English')
           subTypesList = Services.subtypeofLOCKSMITHInENG;
         else
           subTypesList = Services.subtypeofLOCKSMITHInBR;
         break;
       case 'ELDERLY CAREGIVER':
-        if (_setting.language == 'English')
+        if (language == 'English')
           subTypesList = Services.subtypeofELDERLYCAREGIVERInENG;
         else
           subTypesList = Services.subtypeofELDERLYCAREGIVERInBR;
         break;
       case 'PHOTOGRAPHER':
-        if (_setting.language == 'English')
+        if (language == 'English')
           subTypesList = Services.subtypeofPHOTOGRAPHERInENG;
         else
           subTypesList = Services.subtypeofPHOTOGRAPHERInBR;
         break;
       case 'GARDENER':
-        if (_setting.language == 'English')
+        if (language == 'English')
           subTypesList = Services.subtypeofGARDENERInENG;
         else
           subTypesList = Services.subtypeofGARDENERInBR;
         break;
       case 'CAR WASH':
-        if (_setting.language == 'English')
+        if (language == 'English')
           subTypesList = Services.subtypeofCARWASHInENG;
         else
           subTypesList = Services.subtypeofCARWASHInBR;
         break;
       case 'PETS':
-        if (_setting.language == 'English')
+        if (language == 'English')
           subTypesList = Services.subtypeofPETSInENG;
         else
           subTypesList = Services.subtypeofPETSInBR;
         break;
       case 'MANICURE':
-        if (_setting.language == 'English')
+        if (language == 'English')
           subTypesList = Services.subtypeofMANICUREInENG;
         else
           subTypesList = Services.subtypeofMANICUREInBR;
         break;
       case 'FOOD':
-        if (_setting.language == 'English')
+        if (language == 'English')
           subTypesList = Services.subtypeofFOODInENG;
         else
           subTypesList = Services.subtypeofFOODInBR;
         break;
       case 'AUTOMOBILES':
-        if (_setting.language == 'English')
+        if (language == 'English')
           subTypesList = Services.subtypeofAUTOMOBILESInENG;
         else
           subTypesList = Services.subtypeofAUTOMOBILESInBR;
         break;
       case 'MAINTENANCE':
-        if (_setting.language == 'English')
+        if (language == 'English')
           subTypesList = Services.subtypeofMAINTENANCEInENG;
         else
           subTypesList = Services.subtypeofMAINTENANCEInBR;
         break;
       case 'PERSONAL TRAINER':
-        if (_setting.language == 'English')
+        if (language == 'English')
           subTypesList = Services.subtypeofPERSONALTRAINERInENG;
         else
           subTypesList = Services.subtypeofPERSONALTRAINERInBR;
         break;
+    }
+  }
+
+  String checkTypeLang(value) {
+    switch (value) {
+      case 'DE LIMPEZA':
+      case 'DE AR-CONDICIONADO':
+      case 'MOTORISTA':
+      case 'Eletricistas':
+      case 'MUSICA':
+      case 'HIDRÁULICOS':
+      case 'MONTAGEM DE MÓVEIS':
+      case 'ASSISTÊNCIA TÉCNICA':
+      case 'MASSAGENS E TERAPIAS':
+      case 'CHAVEIRO':
+      case 'CUIDADOR IDOSO':
+      case 'FOTOGRAFO':
+      case 'JARDINEIRO':
+      case 'LAVAGEM DE CARRO':
+      case 'ALIMENTAÇÃO':
+      case 'AUTOMOVEIS':
+      case 'MANUTENÇÃO':
+      case 'ANIMACÃO DE FESTAS':
+      case 'VIDRACEIRO':
+      case 'DE REFORMA':
+      case 'FRETES':
+        return 'Portuguese';
+      default:
+        return 'English';
     }
   }
 }
