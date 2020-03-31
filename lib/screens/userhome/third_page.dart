@@ -177,6 +177,7 @@ class ThirdPageState extends State<ThirdPage> {
   }
 
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
+    print('testing');
     final record = Service.fromSnapshot(data);
     _imageUrl = record.imageurl;
 

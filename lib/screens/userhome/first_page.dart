@@ -235,7 +235,7 @@ class FirstPageState extends State<FirstPage> {
           initialCameraPosition: CameraPosition(
             target: LatLng(
                 _geoPoint.latitude ?? -23.5352718, _geoPoint.longitude ?? -46.6316168),
-            zoom: _geoPoint.latitude == -23.5352718 ? 7 : zoomValue,
+            zoom: _geoPoint.latitude == -23.5352718 ? 8 : zoomValue,
           ),
           onMapCreated: (GoogleMapController controller) {
             _controller.complete(controller);

@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Service {
   String _name;
   String _imgUrl;
+  String _serviceImgUrl;
   String _description;
   String _typeofservice;
   String _subservice;
@@ -32,6 +33,7 @@ class Service {
         _typeofservice = map['type'],
         _subservice = map['subtype'],
         _imgUrl = map['imgurl'],
+        _serviceImgUrl = map['serviceimageurl'],
         _hourlyrate = map['hourlyrate'],
         _documentReference = map['reference'],
         _address = map['address'],
@@ -62,6 +64,10 @@ class Service {
 
   get imageurl {
     return _imgUrl;
+  }
+
+  get serviceimageurl {
+    return _serviceImgUrl;
   }
 
   get hourlyrate {

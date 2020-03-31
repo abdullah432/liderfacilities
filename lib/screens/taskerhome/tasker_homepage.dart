@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -60,6 +61,7 @@ class TaskerHomeState extends State<TaskerHome> {
   LatLng latLng2;
 
   static CameraPosition _newLocation;
+
 
   @override
   void dispose() {

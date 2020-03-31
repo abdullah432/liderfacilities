@@ -614,6 +614,7 @@ class EditServiceState extends State<EditService> with WidgetsBindingObserver {
         }
       } else {
         var downloadUrl;
+        print('serviceimagefile: '+_serviceImageFile.toString());
         if (_serviceImageFile != null) {
           String filename = p.basename(_serviceImageFile.path);
           StorageReference fstorageRef =
@@ -622,7 +623,7 @@ class EditServiceState extends State<EditService> with WidgetsBindingObserver {
           StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
           downloadUrl = await storageTaskSnapshot.ref.getDownloadURL();
         } else {
-          downloadUrl = serviceData.imageurl;
+          downloadUrl = serviceData.serviceimageurl;
         }
 
         User user = new User();

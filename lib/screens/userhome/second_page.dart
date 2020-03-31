@@ -61,10 +61,12 @@ class SecondPageState extends State<SecondPage> {
                           child: Text(lang.translate('No Booking')),
                         );
                       else
-                        return Transform.translate(
-                            offset: Offset(0, -25),
-                            child: SingleChildScrollView(
-                                child: _buildList(context, snapshot.data)));
+                        return 
+                        // Transform.translate(
+                        //     offset: Offset(0, -25),
+                        //     child:  
+                            _buildList(context, snapshot.data);
+                            // );
                     }
 
                     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -138,15 +140,15 @@ class SecondPageState extends State<SecondPage> {
   }
 
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
-    return Column(
-      children: <Widget>[
+    print('before list');
+    return 
+ Expanded(child:
         ListView(
           shrinkWrap: true,
           children:
               snapshot.map((data) => _buildListItem(context, data)).toList(),
-        )
-      ],
-    );
+    ));
+
   }
 
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
@@ -163,7 +165,7 @@ class SecondPageState extends State<SecondPage> {
               borderRadius: BorderRadius.circular(12.0),
             ),
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 10, top: 10),
+              padding: const EdgeInsets.only(bottom: 10),
               child: Column(
                 children: <Widget>[
                   ListTile(
