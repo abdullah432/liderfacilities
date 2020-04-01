@@ -63,6 +63,9 @@ class ChatScreenState extends State<ChatScreen> {
 
   User _user = new User();
 
+   String defaultImageUrl = 'https://firebasestorage.googleapis.com/v0/b/liderfacilities-d080f.appspot.com/o/account.png?alt=media&token=14cd5642-ed68-405d-84d3-e8691d01577f';
+
+
   Color primaryColor;
   Color greyColor;
   Color greyColor2;
@@ -306,7 +309,7 @@ class ChatScreenState extends State<ChatScreen> {
                             height: 35.0,
                             padding: EdgeInsets.all(10.0),
                           ),
-                          imageUrl: peerAvatar,
+                          imageUrl: peerAvatar == null ? defaultImageUrl : peerAvatar,
                           width: 35.0,
                           height: 35.0,
                           fit: BoxFit.cover,

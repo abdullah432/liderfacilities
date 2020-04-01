@@ -4,6 +4,7 @@ class Booking {
   String _taskername;
   String _buyername;
   String _bookby;
+  String _bookto;
   String _type;
   String _subtype;
   var _uid;
@@ -30,6 +31,7 @@ class Booking {
         _taskername = map['taskername'],
         _buyername = map['buyername'],
         _bookby = map['bookby'],
+        _bookto = map['bookto'],
         _type = map['type'],
         _subtype = map['subtype'],
         _price = map['price'],
@@ -43,6 +45,10 @@ class Booking {
 
   get type {
     return _type;
+  }
+
+  get bookto {
+    return _bookto;
   }
 
   get subtype {

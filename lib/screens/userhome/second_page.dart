@@ -51,8 +51,7 @@ class SecondPageState extends State<SecondPage> {
               ? Center(
                   child: Text(lang.translate('No Booking')),
                 )
-              : 
-              FutureBuilder(
+              : FutureBuilder(
                   future: _customFirestore.loadBooking(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
@@ -61,12 +60,12 @@ class SecondPageState extends State<SecondPage> {
                           child: Text(lang.translate('No Booking')),
                         );
                       else
-                        return 
-                        // Transform.translate(
-                        //     offset: Offset(0, -25),
-                        //     child:  
+                        return
+                            // Transform.translate(
+                            //     offset: Offset(0, -25),
+                            //     child:
                             _buildList(context, snapshot.data);
-                            // );
+                      // );
                     }
 
                     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -141,14 +140,11 @@ class SecondPageState extends State<SecondPage> {
 
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
     print('before list');
-    return 
- Expanded(child:
-        ListView(
-          shrinkWrap: true,
-          children:
-              snapshot.map((data) => _buildListItem(context, data)).toList(),
+    return Expanded(
+        child: ListView(
+      shrinkWrap: true,
+      children: snapshot.map((data) => _buildListItem(context, data)).toList(),
     ));
-
   }
 
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
@@ -222,7 +218,7 @@ class SecondPageState extends State<SecondPage> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => Chat(
-                                            peerId: record.bookby,
+                                            peerId: record.bookto,
                                             peerAvatar: _imageUrl,
                                             peername: record.taskername,
                                           )));
@@ -246,11 +242,15 @@ class SecondPageState extends State<SecondPage> {
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left: 8.0),
-                            child: Text('State: ', style: TextStyle(fontWeight: FontWeight.bold),),
+                            child: Text(
+                              'State: ',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left: 4),
-                            child: Text(record.state, style: getStyle(record.state)),
+                            child: Text(record.state,
+                                style: getStyle(record.state)),
                           )
                         ],
                       ))
@@ -260,7 +260,7 @@ class SecondPageState extends State<SecondPage> {
   }
 
   getStyle(style) {
-    switch(style) {
+    switch (style) {
       case 'Waiting for tasker response':
         return TextStyle(color: Colors.green);
         break;
